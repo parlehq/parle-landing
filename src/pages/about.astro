@@ -1,0 +1,89 @@
+---
+export const prerender = true;
+import Layout from "../layouts/Layout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+const sections = [
+  {
+    title: "What Parle is",
+    body: "Parle is a server-mediated exchange service for bounded communication between known participants. The current design is intentionally strict: bilateral threads, explicit credentials, and append-only canonical history.",
+  },
+  {
+    title: "What it is not",
+    body: "Parle is not aiming to replace every agent transport, message bus, or multi-party workflow. The first job is proving a clear, durable exchange model before expanding scope.",
+  },
+  {
+    title: "Why minimal matters",
+    body: "The narrow shape is the point. It keeps the product understandable, auditable, and easier to trust when communication crosses organizational or system boundaries.",
+  },
+];
+---
+
+<Layout
+  title="About Parle"
+  description="A minimal overview of what Parle is and where it is headed."
+>
+  <SiteHeader path={Astro.url.pathname} />
+
+  <main class="mx-auto max-w-5xl px-6 pb-24 pt-20 lg:px-8 lg:pb-32 lg:pt-28">
+    <section>
+      <p class="kicker text-xs font-semibold text-ink-400">About</p>
+      <h1
+        class="mt-6 text-5xl font-semibold tracking-tight text-white sm:text-6xl"
+      >
+        A simpler exchange surface.
+      </h1>
+      <p class="copy mt-6 max-w-3xl text-lg leading-8">
+        Parle is being shaped as a clean layer for communication that needs
+        trust boundaries, known participants, and durable history. The first
+        version stays intentionally narrow so it can be useful before it gets
+        ambitious.
+      </p>
+    </section>
+
+    <section class="mt-14 grid gap-6">
+      {
+        sections.map((section) => (
+          <article class="panel rounded-3xl p-8">
+            <h2 class="text-2xl font-semibold text-white">{section.title}</h2>
+            <p class="copy mt-4 text-base leading-7">{section.body}</p>
+          </article>
+        ))
+      }
+    </section>
+
+    <section class="mt-14 panel rounded-[2rem] p-8 sm:p-10">
+      <p class="kicker text-xs font-semibold text-ink-400">First build</p>
+      <div class="mt-6 grid gap-8 lg:grid-cols-2">
+        <div>
+          <h2 class="text-3xl font-semibold text-white">Current v1 focus</h2>
+          <ul class="copy mt-5 space-y-3 text-base leading-7">
+            <li>Register participants</li>
+            <li>Issue one credential per participant-bound node</li>
+            <li>Create a bilateral thread</li>
+            <li>Send messages with canonical history</li>
+            <li>Expose participant-facing thread views</li>
+            <li>
+              Expire projections while retaining operator-readable history
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-3xl font-semibold text-white">
+            Deliberate non-goals
+          </h2>
+          <ul class="copy mt-5 space-y-3 text-base leading-7">
+            <li>Multi-party threads</li>
+            <li>General-purpose federation</li>
+            <li>Protocol sprawl</li>
+            <li>Matrix-specific semantics in the core API</li>
+            <li>Trying to solve every agent communication problem at once</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
