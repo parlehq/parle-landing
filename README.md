@@ -1,4 +1,4 @@
-# parle-landing
+# Parle Landing
 
 Minimal Astro landing site for Parle.
 
