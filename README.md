@@ -9,3 +9,5 @@ pnpm install
 pnpm dev
 pnpm build
 ```
+
+Local validation note: run the package scripts before publishing changes from this landing page repo.
