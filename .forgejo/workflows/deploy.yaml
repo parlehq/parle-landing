@@ -59,13 +59,29 @@ jobs:
             cat /tmp/pages-project.json >&2
             exit 1
           fi
-          curl -fsS \
-            -X POST \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            -H "Content-Type: application/json" \
-            --data '{"name":"parle-landing","production_branch":"main"}' \
-            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects" >/tmp/pages-project-create.json
-          echo "Created Cloudflare Pages project parle-landing."
+          for attempt in 1 2 3 4 5; do
+            create_status=$(curl -sS -o /tmp/pages-project-create.json -w "%{http_code}" \
+              -X POST \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              --data '{"name":"parle-landing","production_branch":"main"}' \
+              "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects")
+            if [ "$create_status" = "200" ]; then
+              echo "Created Cloudflare Pages project parle-landing."
+              break
+            fi
+            if [ "$create_status" = "409" ]; then
+              echo "Cloudflare Pages project parle-landing already exists after concurrent create."
+              break
+            fi
+            if [ "$attempt" = "5" ]; then
+              echo "Failed to create Cloudflare Pages project after $attempt attempts. HTTP $create_status" >&2
+              cat /tmp/pages-project-create.json >&2
+              exit 1
+            fi
+            echo "Cloudflare Pages project create attempt $attempt returned HTTP $create_status. Retrying..."
+            sleep $((attempt * 5))
+          done
 
       - name: Ensure production domains
         if: github.ref_name == 'main'
