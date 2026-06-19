@@ -1,0 +1,157 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main, "feature/**", "feat/**", "agent/**"]
+
+concurrency:
+  group: deploy-parle-landing-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: docker
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    container:
+      image: node:24-slim
+    env:
+      INFISICAL_PROJECT_ID: 4b249c02-8c44-4794-a1f2-db761cdcf84e
+      INFISICAL_ENVIRONMENT: prod
+      INFISICAL_URL: https://parle-vault.quoll-altair.ts.net
+      INFISICAL_SECRET_PATH: /forgejo/parle-landing-ci
+      INFISICAL_CI_ACCESS_TOKEN: ${{ secrets.INFISICAL_CENTOPS_CI_ACCESS_TOKEN }}
+    steps:
+      - name: Install system dependencies
+        run: apt-get update && apt-get install -y --no-install-recommends git ca-certificates curl python3
+
+      - name: Checkout
+        run: git clone --branch "$GITHUB_REF_NAME" "https://x-access-token:${FORGE_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" .
+        env:
+          FORGE_TOKEN: ${{ github.token }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Load deploy secrets
+        timeout-minutes: 1
+        run: |
+          set -euo pipefail
+          python3 scripts/fetch-secrets.py --timeout 20 CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID
+
+      - name: Ensure Cloudflare Pages project
+        run: |
+          set -euo pipefail
+          status=$(curl -sS -o /tmp/pages-project.json -w "%{http_code}" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/parle-landing")
+          if [ "$status" = "200" ]; then
+            echo "Cloudflare Pages project parle-landing already exists."
+            exit 0
+          fi
+          if [ "$status" != "404" ]; then
+            echo "Unexpected Cloudflare Pages project lookup status: $status" >&2
+            cat /tmp/pages-project.json >&2
+            exit 1
+          fi
+          for attempt in 1 2 3 4 5; do
+            create_status=$(curl -sS -o /tmp/pages-project-create.json -w "%{http_code}" \
+              -X POST \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              --data '{"name":"parle-landing","production_branch":"main"}' \
+              "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects")
+            if [ "$create_status" = "200" ]; then
+              echo "Created Cloudflare Pages project parle-landing."
+              break
+            fi
+            if [ "$create_status" = "409" ]; then
+              echo "Cloudflare Pages project parle-landing already exists after concurrent create."
+              break
+            fi
+            if [ "$attempt" = "5" ]; then
+              echo "Failed to create Cloudflare Pages project after $attempt attempts. HTTP $create_status" >&2
+              cat /tmp/pages-project-create.json >&2
+              exit 1
+            fi
+            echo "Cloudflare Pages project create attempt $attempt returned HTTP $create_status. Retrying..."
+            sleep $((attempt * 5))
+          done
+
+      - name: Ensure production domains
+        if: github.ref_name == 'main'
+        run: |
+          set -euo pipefail
+          ensure_domain() {
+            domain="$1"
+            curl -fsS \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/parle-landing/domains" \
+              -o /tmp/pages-domains.json
+            if DOMAIN="$domain" python3 - <<'PY'
+          import json
+          import os
+
+          domain = os.environ["DOMAIN"]
+          with open("/tmp/pages-domains.json", encoding="utf-8") as fh:
+              payload = json.load(fh)
+          for item in payload.get("result", []):
+              if item.get("name") == domain:
+                  raise SystemExit(0)
+          raise SystemExit(1)
+          PY
+            then
+              echo "Cloudflare Pages domain $domain already exists."
+              return 0
+            fi
+            curl -fsS \
+              -X POST \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              --data "{\"name\":\"${domain}\"}" \
+              "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/parle-landing/domains" >/tmp/pages-domain-create.json
+            echo "Created Cloudflare Pages domain $domain."
+          }
+          ensure_domain parlehq.com
+          ensure_domain www.parlehq.com
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        run: |
+          set -euo pipefail
+          set -o pipefail
+          pnpm exec wrangler pages deploy dist \
+            --project-name=parle-landing \
+            --branch="$GITHUB_REF_NAME" \
+            --commit-dirty=true \
+            2>&1 | tee /tmp/deploy-output.txt
+          deployment_url=$(grep -oE 'Take a peek over at https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | sed 's/^Take a peek over at //' | tail -1 || true)
+          alias_url=$(grep -oE 'Deployment alias URL: https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | sed 's/^Deployment alias URL: //' | tail -1 || true)
+          if [ "$GITHUB_REF_NAME" = "main" ]; then
+            alias_url="https://parlehq.com"
+          fi
+          echo "deployment_url=$deployment_url" >> "$GITHUB_OUTPUT"
+          echo "alias_url=$alias_url" >> "$GITHUB_OUTPUT"
+          echo "Deployment URL: ${deployment_url:-unknown}"
+          echo "Alias URL: ${alias_url:-unknown}"
+
+      - name: Summarize deployment
+        run: |
+          set -euo pipefail
+          cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ## parle-landing deploy
+
+          Branch: \`$GITHUB_REF_NAME\`
+
+          Alias URL: ${{ steps.deploy.outputs.alias_url }}
+
+          Deployment URL: ${{ steps.deploy.outputs.deployment_url }}
+          EOF
