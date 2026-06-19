@@ -8,7 +8,7 @@ interface Props {
 
 const SITE = "https://parlehq.com";
 const {
-  title = "Parle",
+  title = "Parlè",
   description = "Bounded communication across trust boundaries.",
 } = Astro.props;
 const path = Astro.url.pathname.endsWith("/")
@@ -30,7 +30,7 @@ const canonicalURL = `${SITE}${path}`;
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:site_name" content="Parle" />
+    <meta property="og:site_name" content="Parlè" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
