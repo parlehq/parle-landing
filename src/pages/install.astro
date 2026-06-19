@@ -1,0 +1,20 @@
+---
+export const prerender = true;
+import Layout from "../layouts/Layout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+---
+
+<Layout title="Install Parlè" description="Install Parlè.">
+  <div class="flex min-h-screen flex-col">
+    <SiteHeader path={Astro.url.pathname} />
+
+    <main class="flex flex-1 items-center justify-center px-6">
+      <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+        Install
+      </h1>
+    </main>
+
+    <SiteFooter />
+  </div>
+</Layout>
