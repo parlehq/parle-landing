@@ -117,8 +117,8 @@ jobs:
             --branch="$GITHUB_REF_NAME" \
             --commit-dirty=true \
             2>&1 | tee /tmp/deploy-output.txt
-          deployment_url=$(grep -oE 'https://[a-z0-9]+\.parle-landing\.pages\.dev' /tmp/deploy-output.txt | tail -1)
-          alias_url=$(grep -oE 'Deployment alias URL: https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | sed 's/^Deployment alias URL: //' | tail -1)
+          deployment_url=$(grep -oE 'Take a peek over at https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | sed 's/^Take a peek over at //' | tail -1 || true)
+          alias_url=$(grep -oE 'Deployment alias URL: https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | sed 's/^Deployment alias URL: //' | tail -1 || true)
           if [ "$GITHUB_REF_NAME" = "main" ]; then
             alias_url="https://parlehq.com"
           fi
