@@ -115,17 +115,17 @@ jobs:
           pnpm exec wrangler pages deploy dist \
             --project-name=parle-landing \
             --branch="$GITHUB_REF_NAME" \
+            --commit-dirty=true \
             2>&1 | tee /tmp/deploy-output.txt
-          deploy_url=$(grep -oE 'https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | tail -1)
-          branch_alias=$(printf '%s' "$GITHUB_REF_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
-          branch_url="https://${branch_alias}.parle-landing.pages.dev"
+          deployment_url=$(grep -oE 'https://[a-z0-9]+\.parle-landing\.pages\.dev' /tmp/deploy-output.txt | tail -1)
+          alias_url=$(grep -oE 'Deployment alias URL: https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | sed 's/^Deployment alias URL: //' | tail -1)
           if [ "$GITHUB_REF_NAME" = "main" ]; then
-            branch_url="https://parlehq.com"
+            alias_url="https://parlehq.com"
           fi
-          echo "url=$deploy_url" >> "$GITHUB_OUTPUT"
-          echo "branch_url=$branch_url" >> "$GITHUB_OUTPUT"
-          echo "Deployment URL: ${deploy_url:-unknown}"
-          echo "Branch alias URL: $branch_url"
+          echo "deployment_url=$deployment_url" >> "$GITHUB_OUTPUT"
+          echo "alias_url=$alias_url" >> "$GITHUB_OUTPUT"
+          echo "Deployment URL: ${deployment_url:-unknown}"
+          echo "Alias URL: ${alias_url:-unknown}"
 
       - name: Summarize deployment
         run: |
@@ -135,7 +135,7 @@ jobs:
 
           Branch: \`$GITHUB_REF_NAME\`
 
-          Branch alias URL: ${{ steps.deploy.outputs.branch_url }}
+          Alias URL: ${{ steps.deploy.outputs.alias_url }}
 
-          Deployment URL: ${{ steps.deploy.outputs.url }}
+          Deployment URL: ${{ steps.deploy.outputs.deployment_url }}
           EOF
