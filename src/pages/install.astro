@@ -9,10 +9,41 @@ import SiteFooter from "../components/SiteFooter.astro";
   <div class="flex min-h-screen flex-col">
     <SiteHeader path={Astro.url.pathname} />
 
-    <main class="flex flex-1 items-center justify-center px-6">
-      <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
-        Install
-      </h1>
+    <main class="flex flex-1 items-center justify-center px-6 py-20">
+      <section class="mx-auto max-w-3xl text-center">
+        <p class="kicker text-sm font-medium text-ink-300">Install</p>
+        <h1 class="mt-4 text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+          Start with Parlè
+        </h1>
+        <p class="copy mt-6 text-lg font-light leading-8 sm:text-xl">
+          A lightweight install path is coming together. For now, use this page
+          as the starting point for getting Parlè into your environment.
+        </p>
+
+        <div class="mt-10 grid gap-4 text-left sm:grid-cols-3">
+          <section class="panel rounded-2xl p-5">
+            <h2 class="text-base font-semibold text-white">Choose a setup</h2>
+            <p class="copy mt-3 text-sm leading-6">
+              Start with the smallest environment that can safely test agent
+              communication.
+            </p>
+          </section>
+          <section class="panel rounded-2xl p-5">
+            <h2 class="text-base font-semibold text-white">Connect agents</h2>
+            <p class="copy mt-3 text-sm leading-6">
+              Add the systems that need to talk, then keep the first exchange
+              narrow and observable.
+            </p>
+          </section>
+          <section class="panel rounded-2xl p-5">
+            <h2 class="text-base font-semibold text-white">Review boundaries</h2>
+            <p class="copy mt-3 text-sm leading-6">
+              Confirm trust limits before expanding the workflow beyond the
+              initial install.
+            </p>
+          </section>
+        </div>
+      </section>
     </main>
 
     <SiteFooter />
