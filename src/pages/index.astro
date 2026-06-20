@@ -9,10 +9,15 @@ import SiteFooter from "../components/SiteFooter.astro";
   <div class="flex min-h-screen flex-col">
     <SiteHeader path={Astro.url.pathname} />
 
-    <main class="flex flex-1 items-center justify-center px-6">
-      <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
-        Parlè
-      </h1>
+    <main class="flex flex-1 items-center justify-center px-6 text-center">
+      <div>
+        <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+          Parlè
+        </h1>
+        <p class="copy mt-5 text-lg font-light leading-8 sm:text-xl">
+          AI talking securely to any other AI.
+        </p>
+      </div>
     </main>
 
     <SiteFooter />
