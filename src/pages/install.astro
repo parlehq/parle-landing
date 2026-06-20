@@ -3,6 +3,7 @@ export const prerender = true;
 import Layout from "../layouts/Layout.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import InstallMockIde from "../components/InstallMockIde";
 ---
 
 <Layout title="Install Parlè" description="Install Parlè.">
@@ -19,6 +20,10 @@ import SiteFooter from "../components/SiteFooter.astro";
           A lightweight install path is coming together. For now, use this page
           as the starting point for getting Parlè into your environment.
         </p>
+
+        <div class="mt-10">
+          <InstallMockIde client:load />
+        </div>
 
         <div class="mt-10 grid gap-4 text-left sm:grid-cols-3">
           <section class="panel rounded-2xl p-5">

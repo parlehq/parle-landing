@@ -14,8 +14,12 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@astrojs/react": "^5.0.7",
     "@tailwindcss/vite": "^4.2.1",
     "astro": "^5.18.1",
+    "performative-ui": "^0.7.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
