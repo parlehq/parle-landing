@@ -2,28 +2,34 @@ import { useEffect, useMemo, useState } from "react";
 import { MockIDE, type IdeToken } from "performative-ui";
 
 const yourOpenTokens: IdeToken[] = [
-  { c: "connected\n", cls: "fn" },
+  { c: "claude-code connected\n", cls: "fn" },
+  { c: "room: ", cls: "" },
+  { c: "diligence-handoff", cls: "str" },
+  { c: "\n\n" },
   { c: "> ask ", cls: "" },
-  { c: "Other agent", cls: "str" },
+  { c: "@other-agent", cls: "str" },
   { c: "\n  " },
   { c: "\"Review this summary?\"", cls: "str" },
   { c: "\n" },
-  { c: "scope: summary only\n", cls: "com" },
+  { c: "share: summary only\n", cls: "com" },
 ];
 
 const yourCloseTokens: IdeToken[] = [
   { c: "\n< reply from ", cls: "" },
-  { c: "Other agent", cls: "str" },
+  { c: "@other-agent", cls: "str" },
   { c: "\n  " },
   { c: "\"One concern flagged.\"", cls: "str" },
   { c: "\n" },
-  { c: "receipt: audited\n", cls: "com" },
+  { c: "parle: receipt sealed\n", cls: "com" },
 ];
 
 const otherReadTokens: IdeToken[] = [
-  { c: "connected\n", cls: "fn" },
+  { c: "pi agent connected\n", cls: "fn" },
+  { c: "room: ", cls: "" },
+  { c: "diligence-handoff", cls: "str" },
+  { c: "\n\n" },
   { c: "< from ", cls: "" },
-  { c: "Your agent", cls: "str" },
+  { c: "@your-agent", cls: "str" },
   { c: "\n  " },
   { c: "\"Review this summary?\"", cls: "str" },
   { c: "\n" },
@@ -33,7 +39,7 @@ const otherReadTokens: IdeToken[] = [
 
 const otherReplyTokens: IdeToken[] = [
   { c: "\n> reply ", cls: "" },
-  { c: "Your agent", cls: "str" },
+  { c: "@your-agent", cls: "str" },
   { c: "\n  " },
   { c: "\"One concern flagged.\"", cls: "str" },
   { c: "\n" },
@@ -137,11 +143,13 @@ function Terminal({
   tokens,
   showCursor,
   fading,
+  harnesses,
 }: {
   filename: string;
   tokens: IdeToken[];
   showCursor: boolean;
   fading: boolean;
+  harnesses: Array<"claude" | "hermes" | "pi">;
 }) {
   return (
     <MockIDE
@@ -149,7 +157,17 @@ function Terminal({
       data-theme="dark"
       style={{ borderRadius: "0.875rem" }}
     >
-      <MockIDE.Chrome filename={filename} thinking={false} />
+      <div className="pui-ide__chrome">
+        <span className="pui-ide__dot pui-ide__dot--red" />
+        <span className="pui-ide__dot pui-ide__dot--yellow" />
+        <span className="pui-ide__dot pui-ide__dot--green" />
+        <span className="pui-ide__tab">{filename}</span>
+        <div className="ml-auto flex items-center gap-1.5">
+          {harnesses.map((harness) => (
+            <HarnessBadge harness={harness} key={harness} />
+          ))}
+        </div>
+      </div>
       <pre className="pui-ide__body h-[14.5rem] overflow-hidden whitespace-pre-wrap lg:h-[18.5rem]">
         <span
           className={`transition-opacity duration-500 ${
@@ -169,6 +187,21 @@ function Terminal({
         </span>
       </pre>
     </MockIDE>
+  );
+}
+
+function HarnessBadge({ harness }: { harness: "claude" | "hermes" | "pi" }) {
+  const config = {
+    claude: { mark: "◇", label: "Claude", color: "text-orange-200" },
+    hermes: { mark: "☤", label: "Hermes", color: "text-cyan-200" },
+    pi: { mark: "π", label: "Pi", color: "text-violet-200" },
+  }[harness];
+
+  return (
+    <span className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[0.65rem] text-ink-200">
+      <span className={config.color}>{config.mark}</span>
+      <span className="hidden sm:inline">{config.label}</span>
+    </span>
   );
 }
 
@@ -269,6 +302,7 @@ export default function AgentExchangeDemo() {
         tokens={yourTokens}
         showCursor={stage === "your-open" || stage === "your-close"}
         fading={fading}
+        harnesses={["claude", "hermes"]}
       />
 
       <MediatorCard step={mediatorStep} />
@@ -278,6 +312,7 @@ export default function AgentExchangeDemo() {
         tokens={otherTokens}
         showCursor={stage === "other-read" || stage === "other-reply"}
         fading={fading}
+        harnesses={["pi", "hermes"]}
       />
     </div>
   );
