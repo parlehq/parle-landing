@@ -1,0 +1,164 @@
+---
+const artRows = [
+  { text: "        .================.", tone: "frame" },
+  { text: "     .==|                |==.", tone: "frame" },
+  { text: "   .==  |    P A R L E   |  ==.", tone: "bright" },
+  { text: " agent  |   .--------.   |  agent", tone: "accent" },
+  { text: "        |   | scope  |   |", tone: "ink" },
+  { text: "        |   | audit  |   |", tone: "ink" },
+  { text: "   '==  |   '--------'   |  =='", tone: "frame" },
+  { text: "     '==|                |=='", tone: "frame" },
+  { text: "        '================'", tone: "frame" },
+  { text: "             bounded context", tone: "muted" },
+];
+---
+
+<section class="ascii-shell" aria-label="Parlè bounded agent exchange diagram">
+  <div class="terminal-bar">
+    <div class="window-dots" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <p>parle://room/diligence</p>
+  </div>
+
+  <div class="screen">
+    <div class="ascii-grid" aria-label="ASCII diagram">
+      {
+        artRows.map((row, index) => (
+          <span
+            class:list={["ascii-row", row.tone]}
+            style={`animation-delay: ${index * 55}ms`}
+          >
+            {row.text}
+          </span>
+        ))
+      }
+      <span class="cursor" aria-hidden="true">_</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ascii-shell {
+    overflow: hidden;
+    border: 1px solid rgba(147, 197, 253, 0.2);
+    border-radius: 1.35rem;
+    background: rgba(5, 9, 19, 0.84);
+    box-shadow:
+      0 24px 70px rgba(2, 6, 23, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(147, 197, 253, 0.14);
+    background: rgba(15, 23, 42, 0.72);
+    padding: 0.8rem 1rem;
+    color: rgba(219, 234, 254, 0.62);
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .window-dots {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .window-dots span {
+    height: 0.58rem;
+    width: 0.58rem;
+    border-radius: 999px;
+    background: rgba(147, 197, 253, 0.28);
+  }
+
+  .window-dots span:nth-child(2) {
+    background: rgba(96, 165, 250, 0.4);
+  }
+
+  .window-dots span:nth-child(3) {
+    background: rgba(239, 246, 255, 0.44);
+  }
+
+  .screen {
+    display: grid;
+    place-items: center;
+    min-height: clamp(16rem, 30vw, 22rem);
+    padding: clamp(1rem, 3vw, 2.25rem);
+  }
+
+  .ascii-grid {
+    display: grid;
+    color: rgba(239, 246, 255, 0.9);
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(0.82rem, 2.1vw, 1.08rem);
+    line-height: 1.34;
+    white-space: pre;
+  }
+
+  .ascii-row {
+    display: block;
+    opacity: 0;
+    transform: translateY(0.3rem);
+    animation: row-in 520ms ease forwards;
+    text-shadow: 0 0 18px rgba(96, 165, 250, 0.14);
+  }
+
+  .frame {
+    color: rgba(147, 197, 253, 0.48);
+  }
+
+  .muted {
+    color: rgba(147, 197, 253, 0.56);
+  }
+
+  .ink {
+    color: rgba(219, 234, 254, 0.72);
+  }
+
+  .accent {
+    color: rgba(96, 165, 250, 0.94);
+  }
+
+  .bright {
+    color: white;
+    text-shadow: 0 0 24px rgba(147, 197, 253, 0.46);
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 1ch;
+    color: rgba(96, 165, 250, 0.9);
+    animation: cursor-blink 1.1s steps(1, end) infinite;
+  }
+
+  @keyframes row-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ascii-row,
+    .cursor {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

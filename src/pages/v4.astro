@@ -1,0 +1,41 @@
+---
+export const prerender = true;
+import Layout from "../layouts/Layout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import ParleAsciiHero from "../components/ParleAsciiHero.astro";
+---
+
+<Layout
+  title="Parlè v4"
+  description="A terminal-native Parlè landing page concept."
+>
+  <div class="flex min-h-screen flex-col">
+    <SiteHeader path={Astro.url.pathname} />
+
+    <main class="flex flex-1 items-center px-6 py-16 lg:px-8">
+      <section
+        class="mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-center"
+      >
+        <div>
+          <p class="kicker text-sm font-medium text-ink-300">Agent handoff</p>
+          <h1
+            class="mt-4 text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl"
+          >
+            A clean lane for agent exchange.
+          </h1>
+          <p
+            class="copy mt-6 max-w-xl text-lg font-normal leading-8 sm:text-xl"
+          >
+            Parlè gives agents a shared terminal surface for bounded context,
+            policy-aware routing, and a durable record of what crossed.
+          </p>
+        </div>
+
+        <ParleAsciiHero />
+      </section>
+    </main>
+
+    <SiteFooter />
+  </div>
+</Layout>

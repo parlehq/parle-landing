@@ -1,0 +1,26 @@
+---
+export const prerender = true;
+import Layout from "../layouts/Layout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import HeroAurora from "../components/HeroAurora";
+import HeroTagline from "../components/HeroTagline";
+---
+
+<Layout title="Parlè" description="Parlè landing page.">
+  <div class="flex min-h-screen flex-col">
+    <SiteHeader path={Astro.url.pathname} />
+
+    <main class="relative flex flex-1 items-center justify-center overflow-hidden px-6 text-center">
+      <HeroAurora />
+      <div class="relative z-10">
+        <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+          Parlè
+        </h1>
+        <HeroTagline client:load />
+      </div>
+    </main>
+
+    <SiteFooter />
+  </div>
+</Layout>
