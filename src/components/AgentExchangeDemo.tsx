@@ -1,126 +1,63 @@
 import { useEffect, useMemo, useState } from "react";
 import { MockIDE, type IdeToken } from "performative-ui";
 
-const yourOpenTokens: IdeToken[] = [
-  { c: "claude-code connected\n", cls: "fn" },
-  { c: "room: ", cls: "" },
-  { c: "diligence-handoff", cls: "str" },
-  { c: "\n\n" },
+const askText = `> ask @other-agent xyz\nvia: parle\n`;
+const askTokens: IdeToken[] = [
   { c: "> ask ", cls: "" },
   { c: "@other-agent", cls: "str" },
-  { c: "\n  " },
-  { c: "\"Review this summary?\"", cls: "str" },
+  { c: " xyz", cls: "" },
+  { c: "\nvia: parle", cls: "com" },
   { c: "\n" },
-  { c: "share: summary only\n", cls: "com" },
 ];
 
-const yourCloseTokens: IdeToken[] = [
-  { c: "\n< reply from ", cls: "" },
-  { c: "@other-agent", cls: "str" },
-  { c: "\n  " },
-  { c: "\"One concern flagged.\"", cls: "str" },
-  { c: "\n" },
-  { c: "parle: receipt sealed\n", cls: "com" },
-];
-
-const otherReadTokens: IdeToken[] = [
-  { c: "pi agent connected\n", cls: "fn" },
-  { c: "room: ", cls: "" },
-  { c: "diligence-handoff", cls: "str" },
+const receivedTokens: IdeToken[] = [
+  { c: "parle channel open\n", cls: "fn" },
+  { c: "from: ", cls: "" },
+  { c: "@your-agent", cls: "str" },
   { c: "\n\n" },
-  { c: "< from ", cls: "" },
-  { c: "@your-agent", cls: "str" },
-  { c: "\n  " },
-  { c: "\"Review this summary?\"", cls: "str" },
-  { c: "\n" },
-  { c: "context: summary only\n", cls: "com" },
-  { c: "reviewing...\n", cls: "fn" },
+  { c: "ask: xyz\n", cls: "" },
+  { c: "context: allowed packet only\n", cls: "com" },
 ];
 
-const otherReplyTokens: IdeToken[] = [
-  { c: "\n> reply ", cls: "" },
-  { c: "@your-agent", cls: "str" },
-  { c: "\n  " },
-  { c: "\"One concern flagged.\"", cls: "str" },
-  { c: "\n" },
+const replyTokens: IdeToken[] = [
+  { c: "\n> reply @your-agent\n", cls: "" },
+  { c: "xyz received. answer ready.\n", cls: "str" },
 ];
 
-const mediatorSteps = ["receive", "check policy", "scope data", "deliver"];
+const closeTokens: IdeToken[] = [
+  { c: "\n< @other-agent\n", cls: "" },
+  { c: "xyz received. answer ready.\n", cls: "str" },
+  { c: "parle: sealed receipt", cls: "com" },
+];
 
-type Stage =
-  | "your-open"
-  | "parle-to-other"
-  | "other-read"
-  | "other-reply"
-  | "parle-to-your"
-  | "your-close"
-  | "hold";
+const capabilities = [
+  "mediation",
+  "security guarantees",
+  "personas",
+  "closed-door negotiation",
+  "data-room diligence",
+  "sealed receipts",
+];
 
-function useTypedTokens(tokens: IdeToken[], active: boolean, cycle: number, ms = 20) {
-  const [count, setCount] = useState(0);
-  const [complete, setComplete] = useState(false);
-  const total = useMemo(
-    () => tokens.reduce((sum, token) => sum + token.c.length, 0),
-    [tokens],
-  );
+type Stage = 0 | 1 | 2 | 3 | 4 | 5;
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
-    setCount(0);
-    setComplete(false);
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(query.matches);
 
-    if (!active) return;
+    const onChange = () => setReduced(query.matches);
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
 
-    let index = 0;
-    let timeout: number | undefined;
-    const fullText = tokens.map((token) => token.c).join("");
-
-    const tick = () => {
-      index += 1;
-      setCount(index);
-
-      if (index >= total) {
-        setComplete(true);
-        return;
-      }
-
-      const char = fullText[index - 1];
-      timeout = window.setTimeout(tick, char === "\n" ? ms + 95 : ms);
-    };
-
-    timeout = window.setTimeout(tick, 220);
-    return () => {
-      if (timeout !== undefined) window.clearTimeout(timeout);
-    };
-  }, [active, cycle, ms, tokens, total]);
-
-  return { tokens: sliceTokens(tokens, count), complete };
+  return reduced;
 }
 
-function useMediator(active: boolean, cycle: number) {
-  const [step, setStep] = useState(-1);
-  const [complete, setComplete] = useState(false);
-
-  useEffect(() => {
-    setStep(-1);
-    setComplete(false);
-
-    if (!active) return;
-
-    const timers = mediatorSteps.map((_, index) =>
-      window.setTimeout(() => setStep(index), index * 360),
-    );
-    const doneTimer = window.setTimeout(
-      () => setComplete(true),
-      mediatorSteps.length * 360 + 160,
-    );
-
-    return () => {
-      timers.forEach((timer) => window.clearTimeout(timer));
-      window.clearTimeout(doneTimer);
-    };
-  }, [active, cycle]);
-
-  return { step, complete };
+function useTypedTokens(tokens: IdeToken[], count: number) {
+  return useMemo(() => sliceTokens(tokens, count), [tokens, count]);
 }
 
 function sliceTokens(tokens: IdeToken[], count: number) {
@@ -139,21 +76,21 @@ function sliceTokens(tokens: IdeToken[], count: number) {
 }
 
 function Terminal({
-  filename,
+  title,
   tokens,
   showCursor,
-  fading,
-  harnesses,
+  visible = true,
 }: {
-  filename: string;
+  title: string;
   tokens: IdeToken[];
   showCursor: boolean;
-  fading: boolean;
-  harnesses: Array<"claude" | "hermes" | "pi">;
+  visible?: boolean;
 }) {
   return (
     <MockIDE
-      className="h-[18rem] text-left lg:h-[22rem]"
+      className={`h-[13.5rem] text-left transition-all duration-700 lg:h-[16rem] ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+      }`}
       data-theme="dark"
       style={{ borderRadius: "0.875rem" }}
     >
@@ -161,159 +98,150 @@ function Terminal({
         <span className="pui-ide__dot pui-ide__dot--red" />
         <span className="pui-ide__dot pui-ide__dot--yellow" />
         <span className="pui-ide__dot pui-ide__dot--green" />
-        <span className="pui-ide__tab">{filename}</span>
-        <div className="ml-auto flex items-center gap-1.5">
-          {harnesses.map((harness) => (
-            <HarnessBadge harness={harness} key={harness} />
-          ))}
-        </div>
-      </div>
-      <pre className="pui-ide__body h-[14.5rem] overflow-hidden whitespace-pre-wrap lg:h-[18.5rem]">
-        <span
-          className={`transition-opacity duration-500 ${
-            fading ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          {tokens.map((token, index) =>
-            token.cls ? (
-              <span className={`pui-tok-${token.cls}`} key={index}>
-                {token.c}
-              </span>
-            ) : (
-              token.c
-            ),
-          )}
-          {showCursor && <span className="pui-caret" />}
+        <span className="pui-ide__tab">{title}</span>
+        <span className="ml-auto rounded-full border border-white/10 px-2 py-0.5 text-[0.62rem] text-ink-200">
+          agent
         </span>
+      </div>
+      <pre className="pui-ide__body h-[10rem] overflow-hidden whitespace-pre-wrap text-sm lg:h-[12.5rem]">
+        {tokens.map((token, index) =>
+          token.cls ? (
+            <span className={`pui-tok-${token.cls}`} key={index}>
+              {token.c}
+            </span>
+          ) : (
+            token.c
+          ),
+        )}
+        {showCursor && <span className="pui-caret" />}
       </pre>
     </MockIDE>
   );
 }
 
-function HarnessBadge({ harness }: { harness: "claude" | "hermes" | "pi" }) {
-  const config = {
-    claude: { mark: "◇", label: "Claude", color: "text-orange-200" },
-    hermes: { mark: "☤", label: "Hermes", color: "text-cyan-200" },
-    pi: { mark: "π", label: "Pi", color: "text-violet-200" },
-  }[harness];
+function ParleLayer({
+  stage,
+  activeCapability,
+}: {
+  stage: Stage;
+  activeCapability: number;
+}) {
+  const visible = stage >= 1;
+  const sweeping = stage === 1 || stage === 3 || stage === 4;
 
   return (
-    <span className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[0.65rem] text-ink-200">
-      <span className={config.color}>{config.mark}</span>
-      <span className="hidden sm:inline">{config.label}</span>
-    </span>
-  );
-}
-
-function MediatorCard({ step }: { step: number }) {
-  return (
-    <div className="flex w-full items-center justify-center lg:h-[22rem] lg:min-w-44 lg:max-w-52">
-      <div className="w-full space-y-2 text-left text-xs text-ink-200">
-        {mediatorSteps.map((label, index) => (
-          <div
-            className={`grid grid-cols-[1.4rem_1fr] items-center border transition-all duration-300 ${
-              index <= step
-                ? "border-ink-300/60 bg-ink-500/15 text-white shadow-[0_0_18px_rgba(96,165,250,0.16)]"
-                : "border-white/10 bg-white/[0.02] text-ink-300"
-            }`}
-            key={label}
-          >
-            <span
-              className={`flex h-full items-center justify-center border-r text-[0.6rem] ${
-                index <= step
-                  ? "border-ink-300/50 text-ink-100"
-                  : "border-white/10 text-ink-400"
-              }`}
-            >
-              {index + 1}
-            </span>
-            <span className="px-2.5 py-2">{label}</span>
-          </div>
-        ))}
+    <div
+      className={`relative flex min-h-56 flex-col justify-center transition-all duration-700 lg:min-h-64 ${
+        visible ? "scale-100 opacity-100" : "scale-95 opacity-0"
+      }`}
+    >
+      <div className={`parle-link ${sweeping ? "parle-link--active" : ""}`} />
+      <div className="panel relative z-10 mx-auto w-full max-w-sm rounded-3xl p-4 text-center">
+        <div className="mx-auto mb-3 inline-flex items-center rounded-full border border-ink-300/30 bg-ink-500/10 px-3 py-1 text-xs font-medium tracking-[0.24em] text-ink-100 uppercase">
+          Parle
+        </div>
+        <p className="text-sm text-ink-200">Secure agent to agent channel.</p>
+        <div className="mt-4 grid grid-cols-2 gap-2 text-left text-[0.7rem] sm:text-xs lg:grid-cols-1">
+          {capabilities.map((capability, index) => {
+            const lit = stage > 2 || (stage === 2 && index <= activeCapability);
+            return (
+              <div
+                className={`rounded-full border px-3 py-2 transition-all duration-200 ${
+                  lit
+                    ? "border-ink-300/60 bg-ink-500/20 text-white shadow-[0_0_18px_rgba(96,165,250,0.22)]"
+                    : "border-white/10 bg-white/[0.025] text-ink-300"
+                }`}
+                key={capability}
+              >
+                <span className="mr-2 text-ink-400">✦</span>
+                {capability}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
 export default function AgentExchangeDemo() {
+  const reducedMotion = useReducedMotion();
+  const [stage, setStage] = useState<Stage>(0);
   const [cycle, setCycle] = useState(0);
-  const [stage, setStage] = useState<Stage>("your-open");
-  const [fading, setFading] = useState(false);
-
-  const yourOpen = useTypedTokens(yourOpenTokens, stage === "your-open", cycle);
-  const yourClose = useTypedTokens(yourCloseTokens, stage === "your-close", cycle);
-  const otherRead = useTypedTokens(otherReadTokens, stage === "other-read", cycle);
-  const otherReply = useTypedTokens(otherReplyTokens, stage === "other-reply", cycle);
-  const parleToOther = useMediator(stage === "parle-to-other", cycle);
-  const parleToYour = useMediator(stage === "parle-to-your", cycle);
+  const [typedCount, setTypedCount] = useState(0);
+  const [activeCapability, setActiveCapability] = useState(-1);
 
   useEffect(() => {
-    if (stage === "your-open" && yourOpen.complete) setStage("parle-to-other");
-    if (stage === "parle-to-other" && parleToOther.complete) setStage("other-read");
-    if (stage === "other-read" && otherRead.complete) setStage("other-reply");
-    if (stage === "other-reply" && otherReply.complete) setStage("parle-to-your");
-    if (stage === "parle-to-your" && parleToYour.complete) setStage("your-close");
-    if (stage === "your-close" && yourClose.complete) setStage("hold");
-  }, [
-    otherRead.complete,
-    otherReply.complete,
-    parleToOther.complete,
-    parleToYour.complete,
-    stage,
-    yourClose.complete,
-    yourOpen.complete,
-  ]);
+    if (reducedMotion) {
+      setStage(5);
+      setTypedCount(askText.length);
+      setActiveCapability(capabilities.length - 1);
+      return;
+    }
 
-  useEffect(() => {
-    if (stage !== "hold") return;
+    setStage(0);
+    setTypedCount(0);
+    setActiveCapability(-1);
 
-    const fadeTimer = window.setTimeout(() => setFading(true), 1600);
-    const resetTimer = window.setTimeout(() => {
-      setCycle((current) => current + 1);
-      setStage("your-open");
-      setFading(false);
-    }, 2200);
+    const timers: number[] = [];
+    askText.split("").forEach((_, index) => {
+      timers.push(
+        window.setTimeout(() => setTypedCount(index + 1), 120 + index * 42),
+      );
+    });
 
-    return () => {
-      window.clearTimeout(fadeTimer);
-      window.clearTimeout(resetTimer);
-    };
-  }, [stage]);
+    timers.push(window.setTimeout(() => setStage(1), 1400));
+    timers.push(window.setTimeout(() => setStage(2), 2300));
+    capabilities.forEach((_, index) => {
+      timers.push(
+        window.setTimeout(() => setActiveCapability(index), 2350 + index * 130),
+      );
+    });
+    timers.push(window.setTimeout(() => setStage(3), 3300));
+    timers.push(window.setTimeout(() => setStage(4), 4400));
+    timers.push(window.setTimeout(() => setStage(5), 5600));
+    timers.push(
+      window.setTimeout(() => setCycle((current) => current + 1), 7400),
+    );
 
-  const yourTokens = [
-    ...(stage === "your-open" ? yourOpen.tokens : yourOpenTokens),
-    ...(stage === "your-close" ? yourClose.tokens : []),
-    ...(stage === "hold" ? yourCloseTokens : []),
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [cycle, reducedMotion]);
+
+  const leftTokens = [
+    ...useTypedTokens(askTokens, typedCount),
+    ...(stage >= 5 ? closeTokens : []),
   ];
-  const otherTokens = [
-    ...(stage === "other-read" ? otherRead.tokens : []),
-    ...(stage === "other-reply" || stage === "parle-to-your" || stage === "your-close" || stage === "hold"
-      ? otherReadTokens
-      : []),
-    ...(stage === "other-reply" ? otherReply.tokens : []),
-    ...(stage === "parle-to-your" || stage === "your-close" || stage === "hold" ? otherReplyTokens : []),
+  const rightTokens = [
+    ...(stage >= 3 ? receivedTokens : []),
+    ...(stage >= 4 ? replyTokens : []),
   ];
-  const mediatorStep = stage === "parle-to-other" ? parleToOther.step : stage === "parle-to-your" ? parleToYour.step : -1;
 
   return (
-    <div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-      <Terminal
-        filename="Your agent"
-        tokens={yourTokens}
-        showCursor={stage === "your-open" || stage === "your-close"}
-        fading={fading}
-        harnesses={["claude", "hermes"]}
-      />
+    <section
+      aria-label="Simple Parle message flow from one agent to another"
+      className="mx-auto max-w-6xl"
+    >
+      <p className="sr-only">
+        Your agent asks another agent through Parle. Parle opens a secure
+        channel, applies optional capabilities, delivers the message, and
+        carries the reply back.
+      </p>
+      <div className="grid items-center gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)_minmax(0,1fr)]">
+        <Terminal
+          title="IDE 1"
+          tokens={leftTokens}
+          showCursor={stage === 0 || stage === 5}
+        />
 
-      <MediatorCard step={mediatorStep} />
+        <ParleLayer stage={stage} activeCapability={activeCapability} />
 
-      <Terminal
-        filename="Other agent"
-        tokens={otherTokens}
-        showCursor={stage === "other-read" || stage === "other-reply"}
-        fading={fading}
-        harnesses={["pi", "hermes"]}
-      />
-    </div>
+        <Terminal
+          title="IDE 2"
+          tokens={rightTokens}
+          showCursor={stage === 3 || stage === 4}
+          visible={stage >= 3}
+        />
+      </div>
+    </section>
   );
 }

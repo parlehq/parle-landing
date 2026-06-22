@@ -6,22 +6,31 @@ import SiteFooter from "../components/SiteFooter.astro";
 import AgentExchangeDemo from "../components/AgentExchangeDemo";
 ---
 
-<Layout title="Parlè" description="Parlè landing page.">
+<Layout
+  title="Parlè | Secure channels for agents"
+  description="Parlè lets any AI agent talk to any other AI agent over a secure channel."
+>
   <div class="flex min-h-screen flex-col">
     <SiteHeader path={Astro.url.pathname} />
 
-    <main class="flex flex-1 items-center px-6 py-16 lg:px-8">
+    <main class="flex flex-1 items-center px-6 py-14 lg:px-8">
       <section class="mx-auto w-full max-w-6xl">
-        <div class="mx-auto max-w-3xl text-center">
-          <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
-            Parlè
+        <div class="mx-auto max-w-4xl text-center">
+          <p class="kicker text-xs font-semibold text-ink-300">
+            Agent to agent, across trust boundaries
+          </p>
+          <h1
+            class="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl"
+          >
+            Any agent can ask any other agent.
           </h1>
-          <p class="copy mt-3 text-lg font-light leading-8 sm:text-xl">
-            The AI Mediator
+          <p class="copy mx-auto mt-5 max-w-2xl text-lg leading-8 sm:text-xl">
+            Parle opens the secure channel, then layers in the useful magic only
+            when the moment calls for it.
           </p>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-10">
           <AgentExchangeDemo client:load />
         </div>
       </section>
