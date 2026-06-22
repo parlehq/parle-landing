@@ -1,45 +1,47 @@
 import { useEffect, useMemo, useState } from "react";
 import { MockIDE, type IdeToken } from "performative-ui";
 
-const askText = `> ask @other-agent xyz\nvia: parle\n`;
-const askTokens: IdeToken[] = [
-  { c: "> ask ", cls: "" },
-  { c: "@other-agent", cls: "str" },
-  { c: " xyz", cls: "" },
-  { c: "\nvia: parle", cls: "com" },
+const ideOneTokens: IdeToken[] = [
+  { c: "agent: ", cls: "" },
+  { c: "ide-1", cls: "fn" },
   { c: "\n" },
+  { c: "> ask ", cls: "" },
+  { c: "@ide-2", cls: "str" },
+  { c: " through parle\n", cls: "" },
+  { c: "scope: private handoff\n", cls: "com" },
+  { c: "payload: xyz\n", cls: "" },
 ];
 
-const receivedTokens: IdeToken[] = [
-  { c: "parle channel open\n", cls: "fn" },
-  { c: "from: ", cls: "" },
-  { c: "@your-agent", cls: "str" },
-  { c: "\n\n" },
-  { c: "ask: xyz\n", cls: "" },
-  { c: "context: allowed packet only\n", cls: "com" },
+const ideOneCompleteTokens: IdeToken[] = [
+  ...ideOneTokens,
+  { c: "\n< reply ", cls: "" },
+  { c: "@ide-2", cls: "str" },
+  { c: "\nanswer: ready\n", cls: "" },
+  { c: "receipt: sealed", cls: "com" },
 ];
 
-const replyTokens: IdeToken[] = [
-  { c: "\n> reply @your-agent\n", cls: "" },
-  { c: "xyz received. answer ready.\n", cls: "str" },
+const ideTwoTokens: IdeToken[] = [
+  { c: "agent: ", cls: "" },
+  { c: "ide-2", cls: "fn" },
+  { c: "\n" },
+  { c: "< from ", cls: "" },
+  { c: "@ide-1", cls: "str" },
+  { c: " via parle\n", cls: "" },
+  { c: "policy: allowed context only\n", cls: "com" },
+  { c: "payload: xyz\n", cls: "" },
 ];
 
-const closeTokens: IdeToken[] = [
-  { c: "\n< @other-agent\n", cls: "" },
-  { c: "xyz received. answer ready.\n", cls: "str" },
-  { c: "parle: sealed receipt", cls: "com" },
+const ideTwoCompleteTokens: IdeToken[] = [
+  ...ideTwoTokens,
+  { c: "\n> reply ", cls: "" },
+  { c: "@ide-1", cls: "str" },
+  { c: "\nanswer: ready", cls: "" },
 ];
 
-const capabilities = [
-  "mediation",
-  "security guarantees",
-  "personas",
-  "closed-door negotiation",
-  "data-room diligence",
-  "sealed receipts",
-];
+const sequence = [0, 1, 2, 3, 4, 5] as const;
+type Stage = (typeof sequence)[number];
 
-type Stage = 0 | 1 | 2 | 3 | 4 | 5;
+type Direction = "forward" | "back" | "idle";
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -60,6 +62,10 @@ function useTypedTokens(tokens: IdeToken[], count: number) {
   return useMemo(() => sliceTokens(tokens, count), [tokens, count]);
 }
 
+function tokenLength(tokens: IdeToken[]) {
+  return tokens.reduce((sum, token) => sum + token.c.length, 0);
+}
+
 function sliceTokens(tokens: IdeToken[], count: number) {
   let remaining = count;
   const output: IdeToken[] = [];
@@ -78,28 +84,30 @@ function sliceTokens(tokens: IdeToken[], count: number) {
 function Terminal({
   title,
   tokens,
+  active,
+  dimmed,
   showCursor,
-  visible = true,
 }: {
   title: string;
   tokens: IdeToken[];
+  active: boolean;
+  dimmed: boolean;
   showCursor: boolean;
-  visible?: boolean;
 }) {
   return (
     <MockIDE
-      className={`h-[13.5rem] text-left transition-all duration-700 lg:h-[16rem] ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-      }`}
+      className={`h-[13.5rem] text-left transition-all duration-500 lg:h-[16rem] ${
+        active ? "translate-y-0 opacity-100" : "translate-y-2 opacity-35"
+      } ${dimmed ? "saturate-75" : "saturate-100"}`}
       data-theme="dark"
-      style={{ borderRadius: "0.875rem" }}
+      style={{ borderRadius: "0.25rem" }}
     >
       <div className="pui-ide__chrome">
         <span className="pui-ide__dot pui-ide__dot--red" />
         <span className="pui-ide__dot pui-ide__dot--yellow" />
         <span className="pui-ide__dot pui-ide__dot--green" />
         <span className="pui-ide__tab">{title}</span>
-        <span className="ml-auto rounded-full border border-white/10 px-2 py-0.5 text-[0.62rem] text-ink-200">
+        <span className="ml-auto border border-white/10 px-2 py-0.5 text-[0.62rem] text-ink-200">
           agent
         </span>
       </div>
@@ -119,46 +127,52 @@ function Terminal({
   );
 }
 
-function ParleLayer({
-  stage,
-  activeCapability,
-}: {
-  stage: Stage;
-  activeCapability: number;
-}) {
-  const visible = stage >= 1;
-  const sweeping = stage === 1 || stage === 3 || stage === 4;
+function ParleLayer({ stage }: { stage: Stage }) {
+  const active = stage === 1 || stage === 3;
+  const direction: Direction =
+    stage === 1 ? "forward" : stage === 3 ? "back" : "idle";
+  const settled = stage === 4;
 
   return (
-    <div
-      className={`relative flex min-h-56 flex-col justify-center transition-all duration-700 lg:min-h-64 ${
-        visible ? "scale-100 opacity-100" : "scale-95 opacity-0"
-      }`}
-    >
-      <div className={`parle-link ${sweeping ? "parle-link--active" : ""}`} />
-      <div className="panel relative z-10 mx-auto w-full max-w-sm rounded-3xl p-4 text-center">
-        <div className="mx-auto mb-3 inline-flex items-center rounded-full border border-ink-300/30 bg-ink-500/10 px-3 py-1 text-xs font-medium tracking-[0.24em] text-ink-100 uppercase">
-          Parle
+    <div className="relative flex min-h-52 flex-col justify-center lg:min-h-64">
+      <div
+        className={`parle-link ${active ? "parle-link--active" : ""} ${
+          direction === "back" ? "parle-link--back" : ""
+        }`}
+      />
+      <div
+        className={`panel relative z-10 mx-auto w-full max-w-sm border p-5 text-left transition-all duration-500 ${
+          stage === 0 || stage === 5
+            ? "translate-y-2 opacity-45"
+            : "translate-y-0 opacity-100"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="text-xs font-semibold tracking-[0.28em] text-white uppercase">
+            Parle
+          </div>
+          <div className="font-mono text-[0.65rem] tracking-[0.18em] text-ink-300 uppercase">
+            secure channel
+          </div>
         </div>
-        <p className="text-sm text-ink-200">Secure agent to agent channel.</p>
-        <div className="mt-4 grid grid-cols-2 gap-2 text-left text-[0.7rem] sm:text-xs lg:grid-cols-1">
-          {capabilities.map((capability, index) => {
-            const lit = stage > 2 || (stage === 2 && index <= activeCapability);
-            return (
-              <div
-                className={`rounded-full border px-3 py-2 transition-all duration-200 ${
-                  lit
-                    ? "border-ink-300/60 bg-ink-500/20 text-white shadow-[0_0_18px_rgba(96,165,250,0.22)]"
-                    : "border-white/10 bg-white/[0.025] text-ink-300"
-                }`}
-                key={capability}
-              >
-                <span className="mr-2 text-ink-400">✦</span>
-                {capability}
-              </div>
-            );
-          })}
+        <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3 font-mono text-xs uppercase tracking-[0.14em] text-ink-300">
+          <span>IDE 1</span>
+          <span className="text-ink-100">
+            {direction === "back" ? "←" : "→"}
+          </span>
+          <span className="text-right">IDE 2</span>
         </div>
+        <div className="mt-4 h-px bg-white/10">
+          <div
+            className={`h-px bg-ink-200 transition-all duration-500 ${
+              active || settled ? "w-full opacity-100" : "w-0 opacity-0"
+            } ${direction === "back" ? "ml-auto" : ""}`}
+          />
+        </div>
+        <p className="mt-4 text-sm leading-6 text-ink-200">
+          Identity, policy, mediation, persona, private negotiation, and
+          data-room context travel as one controlled layer.
+        </p>
       </div>
     </div>
   );
@@ -168,53 +182,64 @@ export default function AgentExchangeDemo() {
   const reducedMotion = useReducedMotion();
   const [stage, setStage] = useState<Stage>(0);
   const [cycle, setCycle] = useState(0);
-  const [typedCount, setTypedCount] = useState(0);
-  const [activeCapability, setActiveCapability] = useState(-1);
+  const [leftCount, setLeftCount] = useState(0);
+  const [rightCount, setRightCount] = useState(0);
 
   useEffect(() => {
     if (reducedMotion) {
-      setStage(5);
-      setTypedCount(askText.length);
-      setActiveCapability(capabilities.length - 1);
+      setStage(4);
+      setLeftCount(tokenLength(ideOneCompleteTokens));
+      setRightCount(tokenLength(ideTwoCompleteTokens));
       return;
     }
 
     setStage(0);
-    setTypedCount(0);
-    setActiveCapability(-1);
+    setLeftCount(0);
+    setRightCount(0);
 
     const timers: number[] = [];
-    askText.split("").forEach((_, index) => {
-      timers.push(
-        window.setTimeout(() => setTypedCount(index + 1), 120 + index * 42),
-      );
-    });
+    const leftTotal = tokenLength(ideOneTokens);
+    const rightTotal = tokenLength(ideTwoTokens);
 
-    timers.push(window.setTimeout(() => setStage(1), 1400));
-    timers.push(window.setTimeout(() => setStage(2), 2300));
-    capabilities.forEach((_, index) => {
+    for (let index = 0; index < leftTotal; index += 1) {
       timers.push(
-        window.setTimeout(() => setActiveCapability(index), 2350 + index * 130),
+        window.setTimeout(() => setLeftCount(index + 1), 120 + index * 24),
       );
-    });
-    timers.push(window.setTimeout(() => setStage(3), 3300));
-    timers.push(window.setTimeout(() => setStage(4), 4400));
-    timers.push(window.setTimeout(() => setStage(5), 5600));
+    }
+
+    timers.push(window.setTimeout(() => setStage(1), 1450));
+    timers.push(window.setTimeout(() => setStage(2), 2500));
+
+    for (let index = 0; index < rightTotal; index += 1) {
+      timers.push(
+        window.setTimeout(() => setRightCount(index + 1), 2580 + index * 24),
+      );
+    }
+
+    timers.push(window.setTimeout(() => setStage(3), 3900));
+    timers.push(window.setTimeout(() => setStage(4), 4950));
     timers.push(
-      window.setTimeout(() => setCycle((current) => current + 1), 7400),
+      window.setTimeout(
+        () => setLeftCount(tokenLength(ideOneCompleteTokens)),
+        5050,
+      ),
+    );
+    timers.push(
+      window.setTimeout(
+        () => setRightCount(tokenLength(ideTwoCompleteTokens)),
+        5050,
+      ),
+    );
+    timers.push(window.setTimeout(() => setStage(5), 6500));
+    timers.push(
+      window.setTimeout(() => setCycle((current) => current + 1), 7250),
     );
 
     return () => timers.forEach((timer) => window.clearTimeout(timer));
   }, [cycle, reducedMotion]);
 
-  const leftTokens = [
-    ...useTypedTokens(askTokens, typedCount),
-    ...(stage >= 5 ? closeTokens : []),
-  ];
-  const rightTokens = [
-    ...(stage >= 3 ? receivedTokens : []),
-    ...(stage >= 4 ? replyTokens : []),
-  ];
+  const leftTokens = useTypedTokens(ideOneCompleteTokens, leftCount);
+  const rightTokens = useTypedTokens(ideTwoCompleteTokens, rightCount);
 
   return (
     <section
@@ -222,24 +247,26 @@ export default function AgentExchangeDemo() {
       className="mx-auto max-w-6xl"
     >
       <p className="sr-only">
-        Your agent asks another agent through Parle. Parle opens a secure
-        channel, applies optional capabilities, delivers the message, and
-        carries the reply back.
+        The loop shows IDE 1, Parle, IDE 2, Parle, then both IDEs connected
+        before the animation resets.
       </p>
       <div className="grid items-center gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)_minmax(0,1fr)]">
         <Terminal
           title="IDE 1"
           tokens={leftTokens}
-          showCursor={stage === 0 || stage === 5}
+          active={stage === 0 || stage === 4}
+          dimmed={stage === 2 || stage === 3 || stage === 5}
+          showCursor={stage === 0}
         />
 
-        <ParleLayer stage={stage} activeCapability={activeCapability} />
+        <ParleLayer stage={stage} />
 
         <Terminal
           title="IDE 2"
           tokens={rightTokens}
-          showCursor={stage === 3 || stage === 4}
-          visible={stage >= 3}
+          active={stage === 2 || stage === 4}
+          dimmed={stage === 0 || stage === 1 || stage === 5}
+          showCursor={stage === 2}
         />
       </div>
     </section>
