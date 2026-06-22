@@ -1,104 +1,86 @@
-import { useEffect, useMemo, useState } from "react";
 import { MockIDE, type IdeToken } from "performative-ui";
 
-const ideOneTokens: IdeToken[] = [
-  { c: "agent: ", cls: "" },
-  { c: "ide-1", cls: "fn" },
-  { c: "\n" },
-  { c: "> ask ", cls: "" },
-  { c: "@ide-2", cls: "str" },
-  { c: " through parle\n", cls: "" },
-  { c: "scope: private handoff\n", cls: "com" },
-  { c: "payload: xyz\n", cls: "" },
+type StreamToken = IdeToken;
+
+type StreamLine = {
+  tokens: StreamToken[];
+  tone?: "muted" | "normal";
+};
+
+const leftStream: StreamLine[] = [
+  { tokens: plain("agent: ide-1") },
+  { tokens: mixed("> ask ", ["@ide-2", "str"], " through parle") },
+  { tokens: mixed("scope: ", ["private handoff", "com"]) },
+  { tokens: plain("payload: plan-delta") },
+  { tokens: mixed("parle: ", ["sealed ->", "fn"]), tone: "muted" },
+  { tokens: mixed("< ack ", ["@ide-2", "str"], " context received") },
+  { tokens: mixed("note: ", ["policy window ok", "com"]) },
+  { tokens: mixed("> send ", ["@ide-2", "str"], " redline chunk") },
+  { tokens: mixed("parle: ", ["transport ->", "fn"]), tone: "muted" },
+  { tokens: plain("receipt: mediated") },
+  { tokens: mixed("< reply ", ["@ide-2", "str"], " use narrow clause") },
+  { tokens: mixed("decision: ", ["accept", "fn"]) },
+  { tokens: mixed("> ask ", ["@ide-2", "str"], " verify source") },
+  { tokens: mixed("scope: ", ["data room only", "com"]) },
+  { tokens: mixed("parle: ", ["sealed ->", "fn"]), tone: "muted" },
+  { tokens: mixed("< answer ", ["@ide-2", "str"], " source matches") },
+  { tokens: plain("receipt: sealed") },
+  { tokens: mixed("> send ", ["@ide-2", "str"], " final patch") },
+  { tokens: mixed("parle: ", ["transport ->", "fn"]), tone: "muted" },
+  { tokens: mixed("< ack ", ["@ide-2", "str"], " ready to merge") },
 ];
 
-const ideOneCompleteTokens: IdeToken[] = [
-  ...ideOneTokens,
-  { c: "\n< reply ", cls: "" },
-  { c: "@ide-2", cls: "str" },
-  { c: "\nanswer: ready\n", cls: "" },
-  { c: "receipt: sealed", cls: "com" },
+const rightStream: StreamLine[] = [
+  { tokens: plain("agent: ide-2") },
+  { tokens: mixed("< from ", ["@ide-1", "str"], " via parle") },
+  { tokens: mixed("policy: ", ["allowed context", "com"]) },
+  { tokens: plain("payload: plan-delta") },
+  { tokens: mixed("> ack ", ["@ide-1", "str"], " context received") },
+  { tokens: mixed("parle: ", ["transport <-", "fn"]), tone: "muted" },
+  { tokens: mixed("< from ", ["@ide-1", "str"], " redline chunk") },
+  { tokens: mixed("review: ", ["clause too broad", "com"]) },
+  { tokens: mixed("> reply ", ["@ide-1", "str"], " use narrow clause") },
+  { tokens: plain("receipt: mediated") },
+  { tokens: mixed("< ask ", ["@ide-1", "str"], " verify source") },
+  { tokens: mixed("search: ", ["data room", "fn"]) },
+  { tokens: plain("match: source-id 42") },
+  { tokens: mixed("> answer ", ["@ide-1", "str"], " source matches") },
+  { tokens: mixed("parle: ", ["sealed <-", "fn"]), tone: "muted" },
+  { tokens: mixed("< from ", ["@ide-1", "str"], " final patch") },
+  { tokens: mixed("test: ", ["passing", "fn"]) },
+  { tokens: mixed("> ack ", ["@ide-1", "str"], " ready to merge") },
+  { tokens: plain("receipt: sealed") },
+  { tokens: mixed("standby: ", ["listening", "com"]) },
 ];
 
-const ideTwoTokens: IdeToken[] = [
-  { c: "agent: ", cls: "" },
-  { c: "ide-2", cls: "fn" },
-  { c: "\n" },
-  { c: "< from ", cls: "" },
-  { c: "@ide-1", cls: "str" },
-  { c: " via parle\n", cls: "" },
-  { c: "policy: allowed context only\n", cls: "com" },
-  { c: "payload: xyz\n", cls: "" },
-];
-
-const ideTwoCompleteTokens: IdeToken[] = [
-  ...ideTwoTokens,
-  { c: "\n> reply ", cls: "" },
-  { c: "@ide-1", cls: "str" },
-  { c: "\nanswer: ready", cls: "" },
-];
-
-const sequence = [0, 1, 2, 3, 4, 5] as const;
-type Stage = (typeof sequence)[number];
-
-type Direction = "forward" | "back" | "idle";
-
-function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(query.matches);
-
-    const onChange = () => setReduced(query.matches);
-    query.addEventListener("change", onChange);
-    return () => query.removeEventListener("change", onChange);
-  }, []);
-
-  return reduced;
+function plain(c: string): StreamToken[] {
+  return [{ c, cls: "" }];
 }
 
-function useTypedTokens(tokens: IdeToken[], count: number) {
-  return useMemo(() => sliceTokens(tokens, count), [tokens, count]);
-}
-
-function tokenLength(tokens: IdeToken[]) {
-  return tokens.reduce((sum, token) => sum + token.c.length, 0);
-}
-
-function sliceTokens(tokens: IdeToken[], count: number) {
-  let remaining = count;
-  const output: IdeToken[] = [];
-
-  for (const token of tokens) {
-    if (remaining <= 0) break;
-
-    const chars = token.c.slice(0, remaining);
-    output.push({ ...token, c: chars });
-    remaining -= chars.length;
-  }
-
-  return output;
+function mixed(
+  before: string,
+  highlighted: [string, string],
+  after = "",
+): StreamToken[] {
+  return [
+    { c: before, cls: "" },
+    { c: highlighted[0], cls: highlighted[1] },
+    { c: after, cls: "" },
+  ];
 }
 
 function Terminal({
   title,
-  tokens,
-  active,
-  dimmed,
-  showCursor,
+  lines,
+  side,
 }: {
   title: string;
-  tokens: IdeToken[];
-  active: boolean;
-  dimmed: boolean;
-  showCursor: boolean;
+  lines: StreamLine[];
+  side: "left" | "right";
 }) {
   return (
     <MockIDE
-      className={`h-[13.5rem] text-left transition-all duration-500 lg:h-[16rem] ${
-        active ? "translate-y-0 opacity-100" : "translate-y-2 opacity-35"
-      } ${dimmed ? "saturate-75" : "saturate-100"}`}
+      className="h-[13.5rem] text-left opacity-100 transition-all duration-500 lg:h-[16rem]"
       data-theme="dark"
       style={{ borderRadius: "0.25rem" }}
     >
@@ -112,41 +94,36 @@ function Terminal({
         </span>
       </div>
       <pre className="pui-ide__body h-[10rem] overflow-hidden whitespace-pre-wrap text-sm lg:h-[12.5rem]">
-        {tokens.map((token, index) =>
-          token.cls ? (
-            <span className={`pui-tok-${token.cls}`} key={index}>
-              {token.c}
+        <code className={`agent-stream agent-stream--${side}`}>
+          {[...lines, ...lines].map((line, index) => (
+            <span
+              className={`agent-line ${
+                line.tone === "muted" ? "agent-line--muted" : ""
+              }`}
+              key={index}
+            >
+              {line.tokens.map((token, tokenIndex) =>
+                token.cls ? (
+                  <span className={`pui-tok-${token.cls}`} key={tokenIndex}>
+                    {token.c}
+                  </span>
+                ) : (
+                  token.c
+                ),
+              )}
             </span>
-          ) : (
-            token.c
-          ),
-        )}
-        {showCursor && <span className="pui-caret" />}
+          ))}
+        </code>
       </pre>
     </MockIDE>
   );
 }
 
-function ParleLayer({ stage }: { stage: Stage }) {
-  const active = stage === 1 || stage === 3;
-  const direction: Direction =
-    stage === 1 ? "forward" : stage === 3 ? "back" : "idle";
-  const settled = stage === 4;
-
+function ParleLayer() {
   return (
     <div className="relative flex min-h-52 flex-col justify-center lg:min-h-64">
-      <div
-        className={`parle-link ${active ? "parle-link--active" : ""} ${
-          direction === "back" ? "parle-link--back" : ""
-        }`}
-      />
-      <div
-        className={`panel relative z-10 mx-auto w-full max-w-sm border p-5 text-left transition-all duration-500 ${
-          stage === 0 || stage === 5
-            ? "translate-y-2 opacity-45"
-            : "translate-y-0 opacity-100"
-        }`}
-      >
+      <div className="parle-link parle-link--active" />
+      <div className="panel relative z-10 mx-auto w-full max-w-sm border p-5 text-left opacity-100 transition-all duration-500">
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="text-xs font-semibold tracking-[0.28em] text-white uppercase">
             Parle
@@ -155,19 +132,16 @@ function ParleLayer({ stage }: { stage: Stage }) {
             secure channel
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3 font-mono text-xs uppercase tracking-[0.14em] text-ink-300">
+        <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3 font-mono text-xs tracking-[0.14em] text-ink-300 uppercase">
           <span>IDE 1</span>
-          <span className="text-ink-100">
-            {direction === "back" ? "←" : "→"}
+          <span className="parle-direction text-ink-100" aria-hidden="true">
+            <span className="parle-direction__forward">→</span>
+            <span className="parle-direction__back">←</span>
           </span>
           <span className="text-right">IDE 2</span>
         </div>
         <div className="mt-4 h-px bg-white/10">
-          <div
-            className={`h-px bg-ink-200 transition-all duration-500 ${
-              active || settled ? "w-full opacity-100" : "w-0 opacity-0"
-            } ${direction === "back" ? "ml-auto" : ""}`}
-          />
+          <div className="h-px w-full bg-ink-200 opacity-100 transition-all duration-500" />
         </div>
         <p className="mt-4 text-sm leading-6 text-ink-200">
           Identity, policy, mediation, persona, private negotiation, and
@@ -179,95 +153,21 @@ function ParleLayer({ stage }: { stage: Stage }) {
 }
 
 export default function AgentExchangeDemo() {
-  const reducedMotion = useReducedMotion();
-  const [stage, setStage] = useState<Stage>(0);
-  const [cycle, setCycle] = useState(0);
-  const [leftCount, setLeftCount] = useState(0);
-  const [rightCount, setRightCount] = useState(0);
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setStage(4);
-      setLeftCount(tokenLength(ideOneCompleteTokens));
-      setRightCount(tokenLength(ideTwoCompleteTokens));
-      return;
-    }
-
-    setStage(0);
-    setLeftCount(0);
-    setRightCount(0);
-
-    const timers: number[] = [];
-    const leftTotal = tokenLength(ideOneTokens);
-    const rightTotal = tokenLength(ideTwoTokens);
-
-    for (let index = 0; index < leftTotal; index += 1) {
-      timers.push(
-        window.setTimeout(() => setLeftCount(index + 1), 120 + index * 24),
-      );
-    }
-
-    timers.push(window.setTimeout(() => setStage(1), 1450));
-    timers.push(window.setTimeout(() => setStage(2), 2500));
-
-    for (let index = 0; index < rightTotal; index += 1) {
-      timers.push(
-        window.setTimeout(() => setRightCount(index + 1), 2580 + index * 24),
-      );
-    }
-
-    timers.push(window.setTimeout(() => setStage(3), 3900));
-    timers.push(window.setTimeout(() => setStage(4), 4950));
-    timers.push(
-      window.setTimeout(
-        () => setLeftCount(tokenLength(ideOneCompleteTokens)),
-        5050,
-      ),
-    );
-    timers.push(
-      window.setTimeout(
-        () => setRightCount(tokenLength(ideTwoCompleteTokens)),
-        5050,
-      ),
-    );
-    timers.push(window.setTimeout(() => setStage(5), 6500));
-    timers.push(
-      window.setTimeout(() => setCycle((current) => current + 1), 7250),
-    );
-
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [cycle, reducedMotion]);
-
-  const leftTokens = useTypedTokens(ideOneCompleteTokens, leftCount);
-  const rightTokens = useTypedTokens(ideTwoCompleteTokens, rightCount);
-
   return (
     <section
-      aria-label="Simple Parle message flow from one agent to another"
+      aria-label="Ongoing Parle discussion stream between agents"
       className="mx-auto max-w-6xl"
     >
       <p className="sr-only">
-        The loop shows IDE 1, Parle, IDE 2, Parle, then both IDEs connected
-        before the animation resets.
+        The loop shows IDE 1 and IDE 2 continuously exchanging short discussion
+        lines through Parle. Older lines scroll upward inside each IDE viewport.
       </p>
       <div className="grid items-center gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)_minmax(0,1fr)]">
-        <Terminal
-          title="IDE 1"
-          tokens={leftTokens}
-          active={stage === 0 || stage === 4}
-          dimmed={stage === 2 || stage === 3 || stage === 5}
-          showCursor={stage === 0}
-        />
+        <Terminal title="IDE 1" lines={leftStream} side="left" />
 
-        <ParleLayer stage={stage} />
+        <ParleLayer />
 
-        <Terminal
-          title="IDE 2"
-          tokens={rightTokens}
-          active={stage === 2 || stage === 4}
-          dimmed={stage === 0 || stage === 1 || stage === 5}
-          showCursor={stage === 2}
-        />
+        <Terminal title="IDE 2" lines={rightStream} side="right" />
       </div>
     </section>
   );
