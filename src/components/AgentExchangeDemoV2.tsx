@@ -244,9 +244,23 @@ function MediatorCard({ step }: { step: number }) {
   );
 }
 
+function repeatTokens(tokens: IdeToken[], count: number) {
+  const output: IdeToken[] = [];
+
+  for (let index = 0; index < count; index += 1) {
+    output.push(...tokens, { c: "\n\n", cls: "" });
+  }
+
+  return output;
+}
+
+const yourCompleteTokens = [...yourOpenTokens, ...yourCloseTokens];
+const otherCompleteTokens = [...otherReadTokens, ...otherReplyTokens];
+
 export default function AgentExchangeDemo() {
   const [cycle, setCycle] = useState(0);
   const [stage, setStage] = useState<Stage>("your-open");
+  const [completedCycles, setCompletedCycles] = useState(0);
 
   const yourOpen = useTypedTokens(yourOpenTokens, stage === "your-open", cycle);
   const yourClose = useTypedTokens(
@@ -291,6 +305,7 @@ export default function AgentExchangeDemo() {
     if (stage !== "hold") return;
 
     const resetTimer = window.setTimeout(() => {
+      setCompletedCycles((current) => current + 1);
       setCycle((current) => current + 1);
       setStage("your-open");
     }, 1600);
@@ -298,12 +313,16 @@ export default function AgentExchangeDemo() {
     return () => window.clearTimeout(resetTimer);
   }, [stage]);
 
+  const priorYourTokens = repeatTokens(yourCompleteTokens, completedCycles);
+  const priorOtherTokens = repeatTokens(otherCompleteTokens, completedCycles);
   const yourTokens = [
+    ...priorYourTokens,
     ...(stage === "your-open" ? yourOpen.tokens : yourOpenTokens),
     ...(stage === "your-close" ? yourClose.tokens : []),
     ...(stage === "hold" ? yourCloseTokens : []),
   ];
   const otherTokens = [
+    ...priorOtherTokens,
     ...(stage === "other-read" ? otherRead.tokens : []),
     ...(stage === "other-reply" ||
     stage === "parle-to-your" ||

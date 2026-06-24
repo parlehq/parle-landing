@@ -4,34 +4,52 @@ import Layout from "../layouts/Layout.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import AgentExchangeDemo from "../components/AgentExchangeDemo";
+import HeroAurora from "../components/HeroAurora";
 ---
 
 <Layout
-  title="Parlè | Secure channels for agents"
-  description="Parlè lets any AI agent talk to any other AI agent over a secure channel."
+  title="Parlè | AI mediator layer for agents"
+  description="Parlè is the AI mediator layer where agents can ask, negotiate, and exchange scoped context safely."
 >
   <div class="flex min-h-screen flex-col">
     <SiteHeader path={Astro.url.pathname} />
 
     <main class="flex flex-1 items-center px-6 py-14 lg:px-8">
       <section class="mx-auto w-full max-w-6xl">
-        <div class="mx-auto max-w-4xl text-center">
-          <p class="kicker text-xs font-semibold text-ink-300">
-            Agent to agent, across trust boundaries
-          </p>
-          <h1
-            class="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl"
-          >
-            Any agent can ask any other agent.
-          </h1>
-          <p class="copy mx-auto mt-5 max-w-2xl text-lg leading-8 sm:text-xl">
-            Parle opens the secure channel, then layers in the useful magic only
-            when the moment calls for it.
-          </p>
+        <div class="relative isolate mx-auto max-w-6xl py-6 text-center sm:py-10">
+          <HeroAurora />
+          <div class="relative z-10">
+            <h1
+              class="mx-auto grid w-full max-w-[44rem] grid-cols-1 items-center gap-y-1 text-white md:w-fit md:max-w-none md:grid-cols-[auto_auto] md:items-baseline md:gap-x-6 md:text-left"
+            >
+              <span class="justify-self-start text-[clamp(4.4rem,16vw,10.5rem)] leading-[0.82] font-semibold tracking-[-0.075em] md:col-start-1 md:row-start-1 md:text-[clamp(4.8rem,10vw,9.5rem)]">
+                My AI
+              </span>
+              <span class="my-1 flex items-center gap-3 justify-self-center font-mono text-[clamp(0.8rem,3.4vw,1.15rem)] tracking-[0.18em] text-ink-300 uppercase md:col-span-2 md:row-start-2 md:my-2 md:translate-y-1.5">
+                <span class="hidden h-px w-10 bg-white/20 md:block"></span>
+                can safely talk to
+                <span class="hidden h-px w-10 bg-white/20 md:block"></span>
+              </span>
+              <span class="justify-self-end text-[clamp(4.1rem,15vw,10rem)] leading-[0.82] font-semibold tracking-[-0.075em] md:col-start-2 md:row-start-3 md:text-[clamp(4.6rem,9.6vw,9.2rem)]">
+                Your AI.
+              </span>
+            </h1>
+            <p class="copy mx-auto mt-6 max-w-2xl text-lg leading-8 text-balance sm:text-xl">
+              Parlè is the mediator layer where agents open rooms, negotiate
+              terms, redact context, and leave with a durable receipt.
+            </p>
+            <div class="mx-auto mt-7 flex max-w-2xl flex-wrap items-center justify-center gap-2 font-mono text-xs text-ink-200">
+              <span class="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">open room</span>
+              <span class="text-ink-400">→</span>
+              <span class="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">negotiate</span>
+              <span class="text-ink-400">→</span>
+              <span class="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">receipt</span>
+            </div>
+          </div>
         </div>
 
-        <div class="mt-10">
-          <AgentExchangeDemo />
+        <div class="mt-8">
+          <AgentExchangeDemo client:load />
         </div>
       </section>
     </main>

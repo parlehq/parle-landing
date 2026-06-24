@@ -1,5 +1,26 @@
-<footer class="border-t border-white/10">
-  <div class="mx-auto flex max-w-6xl items-center justify-center px-6 py-6 text-sm text-ink-300 lg:px-8">
-    <p>All rights reserved &bull; 2026</p>
-  </div>
-</footer>
+---
+import { BigBack } from "performative-ui";
+---
+
+<BigBack
+  className="border-t border-white/10 bg-transparent px-6 py-8 text-ink-200 lg:px-8"
+  company="Parlè.sh"
+  copyright="All rights reserved • 2026"
+  gradient
+  columns={[
+    {
+      heading: "Product",
+      links: [
+        { label: "Install", href: "/install" },
+        { label: "About", href: "/about" },
+      ],
+    },
+    {
+      heading: "Explore",
+      links: [
+        { label: "v1", href: "/v1" },
+        { label: "Ghostty", href: "/ghostty" },
+      ],
+    },
+  ]}
+/>
