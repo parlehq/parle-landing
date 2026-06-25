@@ -172,6 +172,26 @@ body {
   }
 }
 
+.parle-comet {
+  stroke-dasharray: 86 914;
+  animation: parle-comet-flow 1.7s linear infinite;
+  transition: opacity 220ms ease;
+}
+
+.parle-comet--reverse {
+  animation-direction: reverse;
+}
+
+@keyframes parle-comet-flow {
+  from {
+    stroke-dashoffset: 1000;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

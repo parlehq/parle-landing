@@ -9,64 +9,42 @@ type TerminalLine = {
   muted?: boolean;
 };
 
-type DialogueStep =
-  | { kind: "line"; side: Side; line: TerminalLine }
-  | { kind: "parle"; index: number; duration?: number };
+type Phase = 0 | 1 | 2 | 3 | 4 | 5;
 
-type Concept = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  leftTitle: string;
-  rightTitle: string;
-  leftHarnesses: Harness[];
-  rightHarnesses: Harness[];
-  parleTitle: string;
-  parleSubtitle: string;
-  parleSteps: string[];
-  parleFootnote: string;
-  staticDemo?: boolean;
-  script: DialogueStep[];
-};
+const phaseDurations = [1200, 1900, 1500, 2300, 1500, 1400];
+const pipelineSteps = [
+  "open room",
+  "submit facts",
+  "scope projection",
+  "commit",
+  "receipt",
+];
 
-const concepts: Concept[] = [
-  {
-    eyebrow: "Primary flow",
-    title: "A request enters Parle before another agent sees it.",
-    description:
-      "Both agents talk to Parle first. Parle opens a bounded room, exchanges terms, redacts data, and commits the agreement with a receipt.",
-    leftTitle: "Your agent",
-    rightTitle: "Other agent",
-    leftHarnesses: ["claude", "hermes"],
-    rightHarnesses: ["pi", "hermes"],
-    parleTitle: "Parle mediation layer",
-    parleSubtitle: "bounded room",
-    parleSteps: [
-      "open room",
-      "exchange terms",
-      "redact data",
-      "commit agreement",
-    ],
-    parleFootnote:
-      "Agents can negotiate inside Parle while policy and data boundaries stay attached to every turn.",
-    script: [
-      line("left", plain("claude-code connected")),
-      line("left", mixed("room: ", ["diligence-handoff", "str"])),
-      line("left", mixed("> ask ", ["parle", "fn"], " for mediated review")),
-      line("left", mixed("share: ", ["summary only", "com"])),
-      parle(0),
-      parle(1),
-      parle(2),
-      line("right", plain("pi agent connected")),
-      line("right", mixed("< from ", ["parle", "fn"], " via allowed scope")),
-      line("right", mixed("context: ", ["summary only", "com"])),
-      line("right", mixed("> reply via ", ["Parle", "fn"], " concern flagged")),
-      parle(3),
-      line("left", mixed("< reply from ", ["parle", "fn"])),
-      line("left", mixed("result: ", ["one concern flagged", "str"])),
-      line("left", mixed("receipt: ", ["sealed", "com"])),
-    ],
-  },
+const leftBase: TerminalLine[] = [
+  { tokens: plain("claude-code connected") },
+  { tokens: mixed("room: ", ["diligence-handoff", "str"]) },
+];
+
+const leftSubmit: TerminalLine[] = [
+  { tokens: mixed("> submit fact -> ", ["parle", "fn"]) },
+  { tokens: mixed("share: ", ["summary only", "com"]) },
+];
+
+const leftReceipt: TerminalLine[] = [
+  { tokens: mixed("< projection from ", ["parle", "fn"]) },
+  { tokens: mixed("result: ", ["one concern flagged", "str"]) },
+  { tokens: mixed("receipt: ", ["sealed  room_completed", "com"]) },
+];
+
+const rightBase: TerminalLine[] = [
+  { tokens: plain("pi agent joined") },
+  { tokens: mixed("room: ", ["diligence-handoff", "str"]) },
+];
+
+const rightReply: TerminalLine[] = [
+  { tokens: mixed("< projection from ", ["parle", "fn"], " summary only") },
+  { tokens: mixed("> submit reply -> ", ["parle", "fn"]) },
+  { tokens: mixed("finding: ", ["concern flagged", "str"]) },
 ];
 
 function plain(c: string): IdeToken[] {
@@ -85,16 +63,12 @@ function mixed(
   ];
 }
 
-function line(side: Side, tokens: IdeToken[], muted = false): DialogueStep {
-  return { kind: "line", side, line: { tokens, muted } };
-}
-
-function parle(index: number, duration = 520): DialogueStep {
-  return { kind: "parle", index, duration };
-}
-
 function tokenLength(tokens: IdeToken[]) {
   return tokens.reduce((sum, token) => sum + token.c.length, 0);
+}
+
+function lineLength(lines: TerminalLine[]) {
+  return lines.reduce((sum, line) => sum + tokenLength(line.tokens), 0);
 }
 
 function sliceTokens(tokens: IdeToken[], count: number) {
@@ -106,6 +80,24 @@ function sliceTokens(tokens: IdeToken[], count: number) {
     const c = token.c.slice(0, remaining);
     output.push({ ...token, c });
     remaining -= c.length;
+  }
+
+  return output;
+}
+
+function sliceLines(lines: TerminalLine[], count: number) {
+  let remaining = count;
+  const output: TerminalLine[] = [];
+
+  for (const line of lines) {
+    if (remaining <= 0) break;
+
+    const length = tokenLength(line.tokens);
+    output.push({
+      ...line,
+      tokens: remaining >= length ? line.tokens : sliceTokens(line.tokens, remaining),
+    });
+    remaining -= length;
   }
 
   return output;
@@ -125,86 +117,77 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function useDialogue(script: DialogueStep[], reducedMotion: boolean) {
-  const [cycle, setCycle] = useState(0);
-  const [stepIndex, setStepIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
+function usePhaseClock(reducedMotion: boolean) {
+  const [phase, setPhase] = useState<Phase>(0);
 
   useEffect(() => {
-    if (reducedMotion) return;
-    const step = script[stepIndex];
-
-    if (!step) {
-      const reset = window.setTimeout(() => {
-        setStepIndex(0);
-        setCharIndex(0);
-        setCycle((current) => current + 1);
-      }, 1500);
-      return () => window.clearTimeout(reset);
+    if (reducedMotion) {
+      setPhase(5);
+      return;
     }
 
-    if (step.kind === "parle") {
-      const timer = window.setTimeout(() => {
-        setStepIndex((current) => current + 1);
-        setCharIndex(0);
-      }, step.duration ?? 520);
-      return () => window.clearTimeout(timer);
-    }
+    const timer = window.setTimeout(() => {
+      setPhase((current) => ((current + 1) % 6) as Phase);
+    }, phaseDurations[phase]);
 
-    const total = tokenLength(step.line.tokens);
-    if (charIndex >= total) {
-      const pause = window.setTimeout(() => {
-        setStepIndex((current) => current + 1);
-        setCharIndex(0);
-      }, 180);
-      return () => window.clearTimeout(pause);
-    }
-
-    const text = step.line.tokens.map((token) => token.c).join("");
-    const timer = window.setTimeout(
-      () => setCharIndex((current) => current + 1),
-      text[charIndex - 1] === " " ? 16 : 26,
-    );
     return () => window.clearTimeout(timer);
-  }, [charIndex, cycle, reducedMotion, script, stepIndex]);
+  }, [phase, reducedMotion]);
 
-  return useMemo(() => {
-    const visibleSteps = reducedMotion
-      ? script
-      : script.slice(0, stepIndex + 1);
-    const left: TerminalLine[] = [];
-    const right: TerminalLine[] = [];
-    let parleStep = reducedMotion ? maxParleStep(script) : -1;
-    let activeSide: Side | null = null;
-
-    visibleSteps.forEach((step, index) => {
-      if (step.kind === "parle") {
-        parleStep = Math.max(parleStep, step.index);
-        return;
-      }
-
-      const isActive = !reducedMotion && index === stepIndex;
-      const lineToShow = isActive
-        ? { ...step.line, tokens: sliceTokens(step.line.tokens, charIndex) }
-        : step.line;
-      if (step.side === "left") left.push(lineToShow);
-      if (step.side === "right") right.push(lineToShow);
-      if (isActive) activeSide = step.side;
-    });
-
-    return { left, right, parleStep, activeSide };
-  }, [charIndex, reducedMotion, script, stepIndex]);
+  return phase;
 }
 
-function maxParleStep(script: DialogueStep[]) {
-  return script.reduce(
-    (max, step) => (step.kind === "parle" ? Math.max(max, step.index) : max),
-    -1,
+function useTypedBlock(lines: TerminalLine[], activeKey: string, active: boolean) {
+  const [count, setCount] = useState(0);
+  const total = useMemo(() => lineLength(lines), [lines]);
+
+  useEffect(() => {
+    setCount(active ? 0 : total);
+  }, [active, activeKey, total]);
+
+  useEffect(() => {
+    if (!active || count >= total) return;
+
+    const timer = window.setTimeout(() => {
+      setCount((current) => current + 1);
+    }, 24);
+
+    return () => window.clearTimeout(timer);
+  }, [active, count, total]);
+
+  return active ? sliceLines(lines, count) : lines;
+}
+
+function useTerminalLines(side: Side, phase: Phase, reducedMotion: boolean) {
+  const leftSubmitTyped = useTypedBlock(leftSubmit, `left-submit-${phase}`, phase === 1);
+  const leftReceiptTyped = useTypedBlock(
+    leftReceipt,
+    `left-receipt-${phase}`,
+    phase === 5 && !reducedMotion,
   );
+  const rightReplyTyped = useTypedBlock(rightReply, `right-reply-${phase}`, phase === 3);
+
+  if (side === "left") {
+    return [
+      ...leftBase,
+      ...(phase >= 1 ? leftSubmitTyped : []),
+      ...(phase >= 5 ? leftReceiptTyped : []),
+    ];
+  }
+
+  return [
+    ...rightBase,
+    ...(phase >= 3 ? rightReplyTyped : []),
+  ];
 }
 
 function tailLines(lines: TerminalLine[], count = 7) {
   return lines.slice(Math.max(0, lines.length - count));
+}
+
+function activeSideForPhase(phase: Phase): Side | null {
+  if (phase === 1 || phase === 5) return "left";
+  if (phase === 3) return "right";
+  return null;
 }
 
 function Terminal({
@@ -222,7 +205,7 @@ function Terminal({
 
   return (
     <MockIDE
-      className="h-[13.5rem] text-left sm:h-[16rem] lg:h-[22rem]"
+      className="relative z-10 h-[13.5rem] text-left sm:h-[16rem] lg:h-[22rem]"
       data-theme="dark"
       style={{ borderRadius: "0.875rem" }}
     >
@@ -279,24 +262,134 @@ function HarnessBadge({ harness }: { harness: Harness }) {
   );
 }
 
-function ParleMediatorCard({
-  concept,
-  step,
-}: {
-  concept: Concept;
-  step: number;
-}) {
+function ConnectiveLayer({ phase, reducedMotion }: { phase: Phase; reducedMotion: boolean }) {
+  const leftActive = phase === 1;
+  const rightOutActive = phase === 2;
+  const rightInActive = phase === 3;
+  const receiptActive = phase === 4;
+
   return (
-    <div className="panel relative flex h-full min-h-72 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left lg:min-h-[22rem]">
+    <svg
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 top-1/2 z-0 hidden h-28 -translate-y-1/2 lg:block"
+      preserveAspectRatio="none"
+      viewBox="0 0 1000 120"
+    >
+      <defs>
+        <filter id="parle-channel-glow" x="-20%" y="-80%" width="140%" height="260%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <path
+        d="M 20 72 C 170 24 330 26 500 60"
+        fill="none"
+        pathLength="1000"
+        stroke="rgba(239,246,255,0.1)"
+        strokeLinecap="round"
+        strokeWidth="2"
+      />
+      <path
+        d="M 500 60 C 670 94 830 96 980 48"
+        fill="none"
+        pathLength="1000"
+        stroke="rgba(239,246,255,0.1)"
+        strokeLinecap="round"
+        strokeWidth="2"
+      />
+      <path
+        className={`parle-comet ${leftActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
+        d="M 20 72 C 170 24 330 26 500 60"
+        fill="none"
+        pathLength="1000"
+        stroke="rgba(96,165,250,0.95)"
+        strokeLinecap="round"
+        strokeWidth="4"
+        filter="url(#parle-channel-glow)"
+      />
+      <path
+        className={`parle-comet ${rightOutActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
+        d="M 500 60 C 670 94 830 96 980 48"
+        fill="none"
+        pathLength="1000"
+        stroke="rgba(191,219,254,0.75)"
+        strokeLinecap="round"
+        strokeWidth="2.5"
+        filter="url(#parle-channel-glow)"
+      />
+      <path
+        className={`parle-comet parle-comet--reverse ${rightInActive ? "opacity-100" : "opacity-0"}`}
+        d="M 500 60 C 670 94 830 96 980 48"
+        fill="none"
+        pathLength="1000"
+        stroke="rgba(147,197,253,0.9)"
+        strokeLinecap="round"
+        strokeWidth="3"
+        filter="url(#parle-channel-glow)"
+      />
+      <g className={rightOutActive || reducedMotion ? "opacity-100" : "opacity-0"}>
+        <rect
+          fill="rgba(15,23,42,0.85)"
+          height="22"
+          rx="11"
+          stroke="rgba(191,219,254,0.28)"
+          width="104"
+          x="610"
+          y="75"
+        />
+        <text
+          fill="rgba(219,234,254,0.9)"
+          fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
+          fontSize="10"
+          letterSpacing="1.2"
+          x="626"
+          y="90"
+        >
+          summary only
+        </text>
+      </g>
+      <g className={receiptActive || reducedMotion ? "opacity-100" : "opacity-0"}>
+        <rect
+          fill="rgba(96,165,250,0.18)"
+          height="24"
+          rx="12"
+          stroke="rgba(191,219,254,0.5)"
+          width="108"
+          x="446"
+          y="18"
+        />
+        <text
+          fill="rgba(239,246,255,0.96)"
+          fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
+          fontSize="10"
+          letterSpacing="1.3"
+          x="462"
+          y="34"
+        >
+          receipt sealed
+        </text>
+      </g>
+    </svg>
+  );
+}
+
+function ParleMediatorCard({ phase, reducedMotion }: { phase: Phase; reducedMotion: boolean }) {
+  const settledStep = phase >= 5 ? pipelineSteps.length - 1 : Math.min(phase, 4);
+
+  return (
+    <div className="panel relative z-10 flex h-full min-h-72 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left lg:min-h-[22rem]">
       <div className="absolute inset-x-8 top-16 h-28 rounded-full bg-ink-500/20 blur-3xl" />
       <div className="relative">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
           <div>
             <p className="text-[0.65rem] font-semibold tracking-[0.28em] text-ink-300 uppercase">
-              {concept.parleSubtitle}
+              mediator room
             </p>
             <h3 className="mt-2 text-lg font-semibold text-white">
-              {concept.parleTitle}
+              Parle mediation layer
             </h3>
           </div>
           <span className="rounded-full border border-ink-300/30 bg-ink-500/10 px-3 py-1 font-mono text-xs text-ink-100">
@@ -304,78 +397,89 @@ function ParleMediatorCard({
           </span>
         </div>
 
-        <div className="mt-5 space-y-3">
-          {concept.parleSteps.map((label, index) => (
-            <div
-              className={`grid grid-cols-[1.75rem_1fr] items-stretch overflow-hidden rounded-xl border transition-all duration-300 ${
-                index <= step
-                  ? "border-ink-300/60 bg-ink-500/15 text-white shadow-[0_0_28px_rgba(96,165,250,0.18)]"
-                  : "border-white/10 bg-white/[0.03] text-ink-300"
-              }`}
-              key={label}
-            >
-              <span
-                className={`flex items-center justify-center border-r text-[0.65rem] ${
-                  index <= step ? "border-ink-300/40" : "border-white/10"
+        <div className="relative mt-5 space-y-3 pl-1">
+          <div className="absolute top-6 bottom-6 left-[1.08rem] w-px bg-white/10" />
+          <div
+            className="absolute left-[1.08rem] w-px bg-ink-300/70 transition-all duration-500"
+            style={{ top: "1.5rem", height: `${Math.max(0, settledStep) * 3.25}rem` }}
+          />
+          {pipelineSteps.map((label, index) => {
+            const active = !reducedMotion && index === settledStep && phase !== 5;
+            const complete = reducedMotion || index <= settledStep;
+            return (
+              <div
+                className={`relative grid grid-cols-[2.25rem_1fr] items-center overflow-hidden rounded-xl border transition-all duration-300 ${
+                  active
+                    ? "border-ink-300/70 bg-ink-500/18 text-white shadow-[0_0_28px_rgba(96,165,250,0.18)]"
+                    : complete
+                      ? "border-ink-300/35 bg-ink-500/10 text-white"
+                      : "border-white/10 bg-white/[0.03] text-ink-300"
                 }`}
+                key={label}
               >
-                {index + 1}
-              </span>
-              <span className="px-3 py-2.5 text-sm">{label}</span>
-            </div>
-          ))}
+                <span className="relative z-10 flex h-full items-center justify-center">
+                  <span
+                    className={`grid size-5 place-items-center rounded-full border text-[0.58rem] ${
+                      complete
+                        ? "border-ink-300/60 bg-ink-500/30 text-ink-100"
+                        : "border-white/15 bg-ink-950 text-ink-400"
+                    }`}
+                  >
+                    {complete ? "✓" : index + 1}
+                  </span>
+                </span>
+                <span className="px-3 py-2.5 text-sm">{label}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div
+          className={`mt-4 inline-flex rounded-full border border-ink-300/40 bg-ink-500/15 px-3 py-1 font-mono text-xs text-ink-100 transition-opacity duration-300 ${
+            phase >= 4 || reducedMotion ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          receipt sealed
         </div>
       </div>
 
       <p className="relative mt-5 text-sm leading-6 text-ink-200">
-        {concept.parleFootnote}
+        Agents submit authored facts to the Mediator and read scoped projections,
+        never each other directly.
       </p>
-    </div>
-  );
-}
-
-function ConceptBlock({ concept }: { concept: Concept }) {
-  const reducedMotion = usePrefersReducedMotion();
-  const dialogue = useDialogue(
-    concept.script,
-    reducedMotion || Boolean(concept.staticDemo),
-  );
-
-  return (
-    <div>
-      <div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,21rem)_minmax(0,1fr)]">
-        <Terminal
-          title={concept.leftTitle}
-          lines={dialogue.left}
-          active={dialogue.activeSide === "left"}
-          harnesses={concept.leftHarnesses}
-        />
-        <ParleMediatorCard concept={concept} step={dialogue.parleStep} />
-        <Terminal
-          title={concept.rightTitle}
-          lines={dialogue.right}
-          active={dialogue.activeSide === "right"}
-          harnesses={concept.rightHarnesses}
-        />
-      </div>
     </div>
   );
 }
 
 export default function AgentExchangeDemo() {
+  const reducedMotion = usePrefersReducedMotion();
+  const phase = usePhaseClock(reducedMotion);
+  const leftLines = useTerminalLines("left", phase, reducedMotion);
+  const rightLines = useTerminalLines("right", phase, reducedMotion);
+  const activeSide = reducedMotion ? null : activeSideForPhase(phase);
+
   return (
-    <section
-      className="mx-auto space-y-10"
-      aria-label="Parle mediator concepts"
-    >
+    <section className="mx-auto" aria-label="Parle mediator demo">
       <p className="sr-only">
-        Two concept demos show agents typing to Parle first. Parle mediates
-        policy, context, negotiation, and receipts before an agent receives a
-        request.
+        Agents submit facts to Parle, read scoped projections, and receive a
+        sealed receipt. No direct agent-to-agent channel is shown.
       </p>
-      {concepts.map((concept) => (
-        <ConceptBlock concept={concept} key={concept.title} />
-      ))}
+      <div className="relative isolate grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,21rem)_minmax(0,1fr)]">
+        <ConnectiveLayer phase={phase} reducedMotion={reducedMotion} />
+        <Terminal
+          title="Your agent"
+          lines={leftLines}
+          active={activeSide === "left"}
+          harnesses={["claude", "hermes"]}
+        />
+        <ParleMediatorCard phase={phase} reducedMotion={reducedMotion} />
+        <Terminal
+          title="Other agent"
+          lines={rightLines}
+          active={activeSide === "right"}
+          harnesses={["pi", "hermes"]}
+        />
+      </div>
     </section>
   );
 }
