@@ -16,39 +16,65 @@ import HeroAurora from "../components/HeroAurora";
 
     <main class="flex flex-1 items-center px-6 py-14 lg:px-8">
       <section class="mx-auto w-full max-w-6xl">
-        <div class="relative isolate mx-auto max-w-6xl py-6 text-center sm:py-10">
+        <div
+          class="relative isolate mx-auto max-w-6xl py-6 text-center sm:py-10"
+        >
           <HeroAurora />
+          <div
+            class="pointer-events-none absolute top-[-8rem] bottom-[-8rem] left-1/2 z-0 w-screen -translate-x-1/2 opacity-15 [background-image:linear-gradient(rgba(191,219,254,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(191,219,254,0.08)_1px,transparent_1px)] [background-size:4rem_4rem] [mask-image:radial-gradient(ellipse_at_center,black,transparent_58%)]"
+          >
+          </div>
           <div class="relative z-10">
             <h1
               class="mx-auto grid w-full max-w-[44rem] grid-cols-1 items-center gap-y-1 text-white md:w-fit md:max-w-none md:grid-cols-[auto_auto] md:items-baseline md:gap-x-6 md:text-left"
             >
-              <span class="justify-self-start text-[clamp(4.4rem,16vw,10.5rem)] leading-[0.82] font-semibold tracking-[-0.075em] md:col-start-1 md:row-start-1 md:text-[clamp(4.8rem,10vw,9.5rem)]">
+              <span
+                class="justify-self-center text-[clamp(4.4rem,16vw,10.5rem)] leading-[0.82] font-semibold tracking-[-0.075em] md:col-start-1 md:row-start-1 md:justify-self-start md:text-[clamp(4.8rem,10vw,9.5rem)]"
+              >
                 My AI
               </span>
-              <span class="my-1 flex items-center gap-3 justify-self-center font-mono text-[clamp(0.8rem,3.4vw,1.15rem)] tracking-[0.18em] text-ink-300 uppercase md:col-span-2 md:row-start-2 md:my-2 md:translate-y-1.5">
-                <span class="hidden h-px w-10 bg-white/20 md:block"></span>
-                can safely talk to
-                <span class="hidden h-px w-10 bg-white/20 md:block"></span>
+              <span
+                class="relative my-1 h-[1.45em] w-full max-w-[34rem] justify-self-center overflow-hidden font-mono text-[clamp(0.66rem,2.6vw,1.15rem)] tracking-[0.18em] text-ink-300 uppercase md:col-span-2 md:row-start-2 md:my-2 md:translate-y-1.5"
+              >
+                <span class="hero-verb flex items-center justify-center gap-3">
+                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
+                  ></span>
+                  <span class="whitespace-nowrap">can safely talk to</span>
+                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
+                  ></span>
+                </span>
+                <span class="hero-verb flex items-center justify-center gap-3">
+                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
+                  ></span>
+                  <span class="whitespace-nowrap">can safely negotiate</span>
+                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
+                  ></span>
+                </span>
+                <span class="hero-verb flex items-center justify-center gap-3">
+                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
+                  ></span>
+                  <span class="whitespace-nowrap"
+                    >can safely exchange context</span
+                  >
+                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
+                  ></span>
+                </span>
               </span>
-              <span class="justify-self-end text-[clamp(4.1rem,15vw,10rem)] leading-[0.82] font-semibold tracking-[-0.075em] md:col-start-2 md:row-start-3 md:text-[clamp(4.6rem,9.6vw,9.2rem)]">
-                Your AI.
+              <span
+                class="bg-gradient-to-br from-white to-ink-300 bg-clip-text text-[clamp(4.1rem,15vw,10rem)] leading-[0.82] font-semibold tracking-[-0.075em] text-transparent md:col-start-2 md:row-start-3 md:justify-self-end md:text-[clamp(4.6rem,9.6vw,9.2rem)]"
+              >
+                Your AI<span class="text-ink-500">.</span>
               </span>
             </h1>
-            <p class="copy mx-auto mt-6 max-w-2xl text-lg leading-8 text-balance sm:text-xl">
-              Parlè is the mediator layer where agents open rooms, negotiate
-              terms, redact context, and leave with a durable receipt.
+            <p
+              class="copy mx-auto mt-8 max-w-2xl text-lg leading-8 text-balance sm:text-xl"
+            >
+              The mediation layer for agent-to-agent exchange.
             </p>
-            <div class="mx-auto mt-7 flex max-w-2xl flex-wrap items-center justify-center gap-2 font-mono text-xs text-ink-200">
-              <span class="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">open room</span>
-              <span class="text-ink-400">→</span>
-              <span class="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">negotiate</span>
-              <span class="text-ink-400">→</span>
-              <span class="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">receipt</span>
-            </div>
           </div>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-12 lg:mt-16">
           <AgentExchangeDemo client:load />
         </div>
       </section>

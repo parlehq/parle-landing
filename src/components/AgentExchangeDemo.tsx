@@ -12,13 +12,7 @@ type TerminalLine = {
 type Phase = 0 | 1 | 2 | 3 | 4 | 5;
 
 const phaseDurations = [1200, 1900, 1500, 2300, 1500, 1400];
-const pipelineSteps = [
-  "open room",
-  "submit facts",
-  "scope projection",
-  "commit",
-  "receipt",
-];
+const coreActions = ["policy", "scope", "receipt"] as const;
 
 const leftBase: TerminalLine[] = [
   { tokens: plain("claude-code connected") },
@@ -95,7 +89,8 @@ function sliceLines(lines: TerminalLine[], count: number) {
     const length = tokenLength(line.tokens);
     output.push({
       ...line,
-      tokens: remaining >= length ? line.tokens : sliceTokens(line.tokens, remaining),
+      tokens:
+        remaining >= length ? line.tokens : sliceTokens(line.tokens, remaining),
     });
     remaining -= length;
   }
@@ -136,7 +131,11 @@ function usePhaseClock(reducedMotion: boolean) {
   return phase;
 }
 
-function useTypedBlock(lines: TerminalLine[], activeKey: string, active: boolean) {
+function useTypedBlock(
+  lines: TerminalLine[],
+  activeKey: string,
+  active: boolean,
+) {
   const [count, setCount] = useState(0);
   const total = useMemo(() => lineLength(lines), [lines]);
 
@@ -158,13 +157,21 @@ function useTypedBlock(lines: TerminalLine[], activeKey: string, active: boolean
 }
 
 function useTerminalLines(side: Side, phase: Phase, reducedMotion: boolean) {
-  const leftSubmitTyped = useTypedBlock(leftSubmit, `left-submit-${phase}`, phase === 1);
+  const leftSubmitTyped = useTypedBlock(
+    leftSubmit,
+    `left-submit-${phase}`,
+    phase === 1,
+  );
   const leftReceiptTyped = useTypedBlock(
     leftReceipt,
     `left-receipt-${phase}`,
     phase === 5 && !reducedMotion,
   );
-  const rightReplyTyped = useTypedBlock(rightReply, `right-reply-${phase}`, phase === 3);
+  const rightReplyTyped = useTypedBlock(
+    rightReply,
+    `right-reply-${phase}`,
+    phase === 3,
+  );
 
   if (side === "left") {
     return [
@@ -174,10 +181,7 @@ function useTerminalLines(side: Side, phase: Phase, reducedMotion: boolean) {
     ];
   }
 
-  return [
-    ...rightBase,
-    ...(phase >= 3 ? rightReplyTyped : []),
-  ];
+  return [...rightBase, ...(phase >= 3 ? rightReplyTyped : [])];
 }
 
 function tailLines(lines: TerminalLine[], count = 7) {
@@ -262,21 +266,33 @@ function HarnessBadge({ harness }: { harness: Harness }) {
   );
 }
 
-function ConnectiveLayer({ phase, reducedMotion }: { phase: Phase; reducedMotion: boolean }) {
-  const leftActive = phase === 1;
-  const rightOutActive = phase === 2;
-  const rightInActive = phase === 3;
+function ConnectiveLayer({
+  phase,
+  reducedMotion,
+}: {
+  phase: Phase;
+  reducedMotion: boolean;
+}) {
+  const inboundActive = phase === 1;
+  const projectionActive = phase === 2;
+  const replyActive = phase === 3;
   const receiptActive = phase === 4;
 
   return (
     <svg
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-1/2 z-0 hidden h-28 -translate-y-1/2 lg:block"
+      className="pointer-events-none absolute inset-x-0 top-1/2 z-0 hidden h-40 -translate-y-1/2 lg:block"
       preserveAspectRatio="none"
-      viewBox="0 0 1000 120"
+      viewBox="0 0 1000 160"
     >
       <defs>
-        <filter id="parle-channel-glow" x="-20%" y="-80%" width="140%" height="260%">
+        <filter
+          id="parle-channel-glow"
+          x="-20%"
+          y="-80%"
+          width="140%"
+          height="260%"
+        >
           <feGaussianBlur stdDeviation="5" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
@@ -285,24 +301,24 @@ function ConnectiveLayer({ phase, reducedMotion }: { phase: Phase; reducedMotion
         </filter>
       </defs>
       <path
-        d="M 20 72 C 170 24 330 26 500 60"
+        d="M 18 88 C 150 48 280 44 408 76"
         fill="none"
         pathLength="1000"
-        stroke="rgba(239,246,255,0.1)"
+        stroke="rgba(239,246,255,0.09)"
         strokeLinecap="round"
         strokeWidth="2"
       />
       <path
-        d="M 500 60 C 670 94 830 96 980 48"
+        d="M 592 76 C 720 44 850 48 982 88"
         fill="none"
         pathLength="1000"
-        stroke="rgba(239,246,255,0.1)"
+        stroke="rgba(239,246,255,0.09)"
         strokeLinecap="round"
         strokeWidth="2"
       />
       <path
-        className={`parle-comet ${leftActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
-        d="M 20 72 C 170 24 330 26 500 60"
+        className={`parle-comet ${inboundActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
+        d="M 18 88 C 150 48 280 44 408 76"
         fill="none"
         pathLength="1000"
         stroke="rgba(96,165,250,0.95)"
@@ -311,18 +327,18 @@ function ConnectiveLayer({ phase, reducedMotion }: { phase: Phase; reducedMotion
         filter="url(#parle-channel-glow)"
       />
       <path
-        className={`parle-comet ${rightOutActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
-        d="M 500 60 C 670 94 830 96 980 48"
+        className={`parle-comet ${projectionActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
+        d="M 592 76 C 720 44 850 48 982 88"
         fill="none"
         pathLength="1000"
-        stroke="rgba(191,219,254,0.75)"
+        stroke="rgba(191,219,254,0.72)"
         strokeLinecap="round"
         strokeWidth="2.5"
         filter="url(#parle-channel-glow)"
       />
       <path
-        className={`parle-comet parle-comet--reverse ${rightInActive ? "opacity-100" : "opacity-0"}`}
-        d="M 500 60 C 670 94 830 96 980 48"
+        className={`parle-comet parle-comet--reverse ${replyActive ? "opacity-100" : "opacity-0"}`}
+        d="M 592 96 C 720 126 850 122 982 84"
         fill="none"
         pathLength="1000"
         stroke="rgba(147,197,253,0.9)"
@@ -330,28 +346,34 @@ function ConnectiveLayer({ phase, reducedMotion }: { phase: Phase; reducedMotion
         strokeWidth="3"
         filter="url(#parle-channel-glow)"
       />
-      <g className={rightOutActive || reducedMotion ? "opacity-100" : "opacity-0"}>
+      <g
+        className={
+          projectionActive || reducedMotion ? "opacity-100" : "opacity-0"
+        }
+      >
         <rect
-          fill="rgba(15,23,42,0.85)"
+          fill="rgba(15,23,42,0.82)"
           height="22"
           rx="11"
-          stroke="rgba(191,219,254,0.28)"
+          stroke="rgba(191,219,254,0.26)"
           width="104"
-          x="610"
-          y="75"
+          x="650"
+          y="38"
         />
         <text
           fill="rgba(219,234,254,0.9)"
-          fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
+          fontFamily="JetBrains Mono, ui-monospace, monospace"
           fontSize="10"
           letterSpacing="1.2"
-          x="626"
-          y="90"
+          x="666"
+          y="53"
         >
           summary only
         </text>
       </g>
-      <g className={receiptActive || reducedMotion ? "opacity-100" : "opacity-0"}>
+      <g
+        className={receiptActive || reducedMotion ? "opacity-100" : "opacity-0"}
+      >
         <rect
           fill="rgba(96,165,250,0.18)"
           height="24"
@@ -359,15 +381,15 @@ function ConnectiveLayer({ phase, reducedMotion }: { phase: Phase; reducedMotion
           stroke="rgba(191,219,254,0.5)"
           width="108"
           x="446"
-          y="18"
+          y="12"
         />
         <text
           fill="rgba(239,246,255,0.96)"
-          fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
+          fontFamily="JetBrains Mono, ui-monospace, monospace"
           fontSize="10"
           letterSpacing="1.3"
           x="462"
-          y="34"
+          y="28"
         >
           receipt sealed
         </text>
@@ -376,76 +398,59 @@ function ConnectiveLayer({ phase, reducedMotion }: { phase: Phase; reducedMotion
   );
 }
 
-function ParleMediatorCard({ phase, reducedMotion }: { phase: Phase; reducedMotion: boolean }) {
-  const settledStep = phase >= 5 ? pipelineSteps.length - 1 : Math.min(phase, 4);
+function ParleMediationCore({
+  phase,
+  reducedMotion,
+}: {
+  phase: Phase;
+  reducedMotion: boolean;
+}) {
+  const activeAction = phase <= 1 ? "policy" : phase <= 3 ? "scope" : "receipt";
 
   return (
-    <div className="panel relative z-10 flex h-full min-h-72 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left lg:min-h-[22rem]">
-      <div className="absolute inset-x-8 top-16 h-28 rounded-full bg-ink-500/20 blur-3xl" />
-      <div className="relative">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
-          <div>
-            <p className="text-[0.65rem] font-semibold tracking-[0.28em] text-ink-300 uppercase">
-              mediator room
-            </p>
-            <h3 className="mt-2 text-lg font-semibold text-white">
-              Parle mediation layer
-            </h3>
-          </div>
-          <span className="rounded-full border border-ink-300/30 bg-ink-500/10 px-3 py-1 font-mono text-xs text-ink-100">
+    <div className="relative z-10 grid min-h-72 place-items-center overflow-visible lg:min-h-[22rem]">
+      <div className="absolute inset-0 rounded-[3rem] bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.2),transparent_58%)] blur-2xl" />
+      <div className="parle-core-ring absolute size-72 rounded-full border border-ink-300/15" />
+      <div className="parle-core-ring parle-core-ring--slow absolute size-56 rounded-full border border-ink-300/20" />
+
+      <div className="relative grid size-40 place-items-center rounded-full border border-ink-300/35 bg-ink-950/70 shadow-[0_0_80px_rgba(96,165,250,0.22)] backdrop-blur-md">
+        <div className="absolute inset-4 rounded-full bg-ink-500/10 blur-xl" />
+        <div className="relative text-center">
+          <p className="font-mono text-[0.62rem] tracking-[0.32em] text-ink-300 uppercase">
+            mediation
+          </p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
             Parlè
-          </span>
-        </div>
-
-        <div className="relative mt-5 space-y-3 pl-1">
-          <div className="absolute top-6 bottom-6 left-[1.08rem] w-px bg-white/10" />
-          <div
-            className="absolute left-[1.08rem] w-px bg-ink-300/70 transition-all duration-500"
-            style={{ top: "1.5rem", height: `${Math.max(0, settledStep) * 3.25}rem` }}
-          />
-          {pipelineSteps.map((label, index) => {
-            const active = !reducedMotion && index === settledStep && phase !== 5;
-            const complete = reducedMotion || index <= settledStep;
-            return (
-              <div
-                className={`relative grid grid-cols-[2.25rem_1fr] items-center overflow-hidden rounded-xl border transition-all duration-300 ${
-                  active
-                    ? "border-ink-300/70 bg-ink-500/18 text-white shadow-[0_0_28px_rgba(96,165,250,0.18)]"
-                    : complete
-                      ? "border-ink-300/35 bg-ink-500/10 text-white"
-                      : "border-white/10 bg-white/[0.03] text-ink-300"
-                }`}
-                key={label}
-              >
-                <span className="relative z-10 flex h-full items-center justify-center">
-                  <span
-                    className={`grid size-5 place-items-center rounded-full border text-[0.58rem] ${
-                      complete
-                        ? "border-ink-300/60 bg-ink-500/30 text-ink-100"
-                        : "border-white/15 bg-ink-950 text-ink-400"
-                    }`}
-                  >
-                    {complete ? "✓" : index + 1}
-                  </span>
-                </span>
-                <span className="px-3 py-2.5 text-sm">{label}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        <div
-          className={`mt-4 inline-flex rounded-full border border-ink-300/40 bg-ink-500/15 px-3 py-1 font-mono text-xs text-ink-100 transition-opacity duration-300 ${
-            phase >= 4 || reducedMotion ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          receipt sealed
+          </p>
         </div>
       </div>
 
-      <p className="relative mt-5 text-sm leading-6 text-ink-200">
-        Agents submit authored facts to the Mediator and read scoped projections,
-        never each other directly.
+      <div className="absolute inset-0">
+        {coreActions.map((action, index) => {
+          const positions = [
+            "top-7 left-1/2 -translate-x-1/2",
+            "top-1/2 right-0 -translate-y-1/2",
+            "bottom-7 left-1/2 -translate-x-1/2",
+          ];
+          const active = reducedMotion || action === activeAction;
+          return (
+            <div
+              className={`absolute ${positions[index]} rounded-full border px-3 py-1 font-mono text-xs tracking-[0.16em] uppercase transition-all duration-300 ${
+                active
+                  ? "border-ink-300/60 bg-ink-500/18 text-white shadow-[0_0_26px_rgba(96,165,250,0.18)]"
+                  : "border-white/10 bg-white/[0.03] text-ink-300"
+              }`}
+              key={action}
+            >
+              {action}
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="absolute right-0 bottom-0 left-0 mx-auto max-w-xs text-center text-sm leading-6 text-ink-200">
+        Agents submit authored facts through the mediation layer and read scoped
+        projections, never each other directly.
       </p>
     </div>
   );
@@ -472,7 +477,7 @@ export default function AgentExchangeDemo() {
           active={activeSide === "left"}
           harnesses={["claude", "hermes"]}
         />
-        <ParleMediatorCard phase={phase} reducedMotion={reducedMotion} />
+        <ParleMediationCore phase={phase} reducedMotion={reducedMotion} />
         <Terminal
           title="Other agent"
           lines={rightLines}
