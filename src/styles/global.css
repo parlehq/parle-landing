@@ -22,11 +22,15 @@
 }
 
 html {
+  max-width: 100%;
+  overflow-x: clip;
   scroll-behavior: smooth;
 }
 
 body {
+  max-width: 100%;
   min-height: 100vh;
+  overflow-x: clip;
   background:
     radial-gradient(circle at top, rgba(59, 130, 246, 0.22), transparent 36%),
     radial-gradient(
@@ -100,8 +104,50 @@ a.pui-bigback__wordmark {
 }
 
 @media (max-width: 640px) {
+  .footer-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.75rem;
+  }
+
   .footer-quickstart {
     margin: 0;
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+.pui-ide__body.parle-terminal-body {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  box-sizing: border-box;
+  height: 10rem;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 1.25rem 1.25rem;
+  white-space: pre-wrap;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  color: var(--color-ink-200);
+}
+
+.parle-terminal-lines {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .pui-ide__body.parle-terminal-body {
+    height: 12.5rem;
+    padding-bottom: 1.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pui-ide__body.parle-terminal-body {
+    height: 18.5rem;
+    padding-bottom: 5rem;
   }
 }
 
@@ -225,44 +271,116 @@ a.pui-bigback__wordmark {
   }
 }
 
-.parle-comet {
-  stroke-dasharray: 86 914;
-  animation: parle-comet-flow 1.7s linear infinite;
-  transition: opacity 220ms ease;
+.parle-orbit-wisp {
+  stroke: rgba(191, 219, 254, 0.2);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-dasharray: 44 180;
+  filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.22));
+  animation: parle-orbit-wisp 7.5s ease-in-out infinite;
 }
 
-.parle-comet--reverse {
-  animation-direction: reverse;
+.parle-orbit-wisp--slow {
+  animation-duration: 10s;
+  animation-delay: -3s;
+  opacity: 0.74;
 }
 
-@keyframes parle-comet-flow {
-  from {
-    stroke-dashoffset: 1000;
+.parle-orbit-wisp--faint {
+  animation-duration: 12s;
+  animation-delay: -5s;
+  opacity: 0.5;
+  stroke-width: 0.9;
+}
+
+@keyframes parle-orbit-wisp {
+  0% {
+    stroke-dashoffset: 220;
+    opacity: 0.18;
   }
 
-  to {
-    stroke-dashoffset: 0;
+  36% {
+    opacity: 0.72;
   }
+
+  100% {
+    stroke-dashoffset: -220;
+    opacity: 0.18;
+  }
+}
+
+.parle-inflow {
+  stroke: rgba(147, 197, 253, 0);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 18 44;
+  filter: drop-shadow(0 0 12px rgba(96, 165, 250, 0.35));
+  opacity: 0;
+}
+
+.parle-inflow--active {
+  animation: parle-inflow-pulse 1.15s cubic-bezier(0.18, 0, 0, 1) both;
+}
+
+@keyframes parle-inflow-pulse {
+  0% {
+    opacity: 0;
+    stroke: rgba(147, 197, 253, 0);
+    stroke-dashoffset: 70;
+  }
+
+  18% {
+    opacity: 1;
+    stroke: rgba(219, 234, 254, 0.78);
+  }
+
+  100% {
+    opacity: 0;
+    stroke: rgba(147, 197, 253, 0.16);
+    stroke-dashoffset: -70;
+  }
+}
+
+.parle-core-circle {
+  animation: parle-core-circle-drift 9s ease-in-out infinite alternate;
+}
+
+.parle-core-circle--inner {
+  animation-duration: 12s;
+  animation-delay: -3s;
 }
 
 .parle-core-ring {
-  animation: parle-core-drift 7s ease-in-out infinite alternate;
+  transform: rotate(-6deg) scaleY(0.62);
+  animation: parle-core-drift 8s ease-in-out infinite alternate;
 }
 
 .parle-core-ring--slow {
-  animation-duration: 10s;
+  animation-duration: 11s;
   animation-delay: -2s;
 }
 
-@keyframes parle-core-drift {
+@keyframes parle-core-circle-drift {
   from {
-    opacity: 0.42;
+    opacity: 0.34;
     transform: scale(0.96) rotate(0deg);
   }
 
   to {
-    opacity: 0.8;
-    transform: scale(1.06) rotate(8deg);
+    opacity: 0.72;
+    transform: scale(1.04) rotate(8deg);
+  }
+}
+
+@keyframes parle-core-drift {
+  from {
+    opacity: 0.34;
+    transform: rotate(-8deg) scale(0.98) scaleY(0.58);
+  }
+
+  to {
+    opacity: 0.78;
+    transform: rotate(5deg) scale(1.05) scaleY(0.66);
   }
 }
 

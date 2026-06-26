@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MockIDE, type IdeToken } from "performative-ui";
 
 type Harness = "claude" | "hermes" | "pi";
@@ -301,7 +301,7 @@ function Terminal({
 
   return (
     <MockIDE
-      className="relative z-10 h-[13.5rem] text-left sm:h-[16rem] lg:h-[22rem]"
+      className="relative z-20 h-[13.5rem] text-left sm:h-[16rem] lg:h-[22rem]"
       data-theme="dark"
       style={{ borderRadius: "0.875rem" }}
     >
@@ -316,8 +316,8 @@ function Terminal({
           ))}
         </div>
       </div>
-      <pre className="pui-ide__body relative h-[10rem] overflow-hidden whitespace-pre-wrap text-xs leading-6 sm:h-[12.5rem] sm:text-sm lg:h-[18.5rem]">
-        <span className="absolute right-5 bottom-24 left-5 block space-y-1.5 sm:bottom-26 sm:space-y-2 lg:bottom-28">
+      <pre className="pui-ide__body parle-terminal-body">
+        <span className="parle-terminal-lines">
           {visible.map((line, index) => (
             <span
               className={`block min-h-[1.4em] ${line.muted ? "opacity-70" : ""}`}
@@ -358,6 +358,224 @@ function HarnessBadge({ harness }: { harness: Harness }) {
   );
 }
 
+type OrbitParticle = {
+  side: Side;
+  theta: number;
+  radius: number;
+  speed: number;
+  decay: number;
+  size: number;
+  lane: number;
+};
+
+function makeOrbitParticle(side: Side, index: number): OrbitParticle {
+  const left = side === "left";
+  const seed = index * 0.73 + (left ? 0.2 : 1.1);
+  const theta = left
+    ? Math.PI * (0.82 + (seed % 0.42))
+    : Math.PI * (-0.18 + (seed % 0.42));
+
+  return {
+    side,
+    theta,
+    radius: 0.72 + ((seed * 1.37) % 0.28),
+    speed: (left ? 0.34 : -0.34) + ((seed % 0.18) - 0.09),
+    decay: 0.018 + ((seed * 0.37) % 0.012),
+    size: 1.1 + ((seed * 1.9) % 2.2),
+    lane: ((seed * 1.31) % 1) - 0.5,
+  };
+}
+
+function respawnParticle(particle: OrbitParticle, burstSide?: Side) {
+  const side = burstSide ?? particle.side;
+  const left = side === "left";
+  particle.side = side;
+  particle.theta = left
+    ? Math.PI * (0.86 + Math.random() * 0.28)
+    : Math.PI * (-0.14 + Math.random() * 0.28);
+  particle.radius = 0.86 + Math.random() * 0.22;
+  particle.speed = (left ? 0.42 : -0.42) + (Math.random() - 0.5) * 0.16;
+  particle.decay = 0.018 + Math.random() * 0.014;
+  particle.size = 1 + Math.random() * 2.2;
+  particle.lane = Math.random() - 0.5;
+}
+
+function OrbitField({
+  phase,
+  reducedMotion,
+  mobile = false,
+}: {
+  phase: Phase;
+  reducedMotion: boolean;
+  mobile?: boolean;
+}) {
+  const refs = useRef<SVGCircleElement[]>([]);
+  const burstRefs = useRef<SVGCircleElement[]>([]);
+  const burstRef = useRef<OrbitParticle | null>(null);
+  const previousPhase = useRef<Phase>(phase);
+  const particles = useMemo(
+    () =>
+      Array.from({ length: mobile ? 14 : 18 }, (_, index) =>
+        makeOrbitParticle(index % 2 === 0 ? "left" : "right", index),
+      ),
+    [mobile],
+  );
+
+  useEffect(() => {
+    if (reducedMotion) return;
+    let frame = 0;
+    let last = performance.now();
+    const centerX = mobile ? 30 : 500;
+    const centerY = mobile ? 60 : 80;
+    const outerX = mobile ? 22 : 248;
+    const outerY = mobile ? 52 : 86;
+    const inner = mobile ? 0.16 : 0.18;
+
+    const drawParticle = (
+      circle: SVGCircleElement | undefined,
+      particle: OrbitParticle,
+      glow = false,
+    ) => {
+      if (!circle) return;
+      const squash = 0.5 + particle.radius * 0.18;
+      const laneOffset = particle.lane * (mobile ? 5 : 14);
+      const x = centerX + Math.cos(particle.theta) * outerX * particle.radius;
+      const y =
+        centerY +
+        Math.sin(particle.theta) * outerY * particle.radius * squash +
+        laneOffset;
+      const fadeIn = Math.min(1, (1.04 - particle.radius) / 0.16);
+      const fadeOut = Math.min(1, (particle.radius - inner) / 0.32);
+      const opacity = Math.max(0, Math.min(1, fadeIn, fadeOut));
+      circle.setAttribute("cx", x.toFixed(2));
+      circle.setAttribute("cy", y.toFixed(2));
+      const particleScale = mobile ? (glow ? 0.72 : 0.5) : glow ? 1.35 : 1.35;
+      circle.setAttribute("r", (particle.size * particleScale).toFixed(2));
+      circle.setAttribute(
+        "opacity",
+        (opacity * (glow ? 0.95 : 0.64)).toFixed(3),
+      );
+    };
+
+    const tick = (now: number) => {
+      const dt = Math.min(48, now - last) / 1000;
+      last = now;
+
+      particles.forEach((particle, index) => {
+        particle.theta += particle.speed * dt;
+        particle.radius -= particle.decay * dt * 7;
+        if (particle.radius < inner) respawnParticle(particle);
+        drawParticle(refs.current[index], particle);
+      });
+
+      if (burstRef.current) {
+        const burst = burstRef.current;
+        burst.theta += burst.speed * dt * 1.45;
+        burst.radius -= burst.decay * dt * 16;
+        [0, 1, 2].forEach((_, index) => {
+          const clone = {
+            ...burst,
+            theta: burst.theta - index * 0.05,
+            radius: burst.radius + index * 0.035,
+            size: burst.size - index * 0.8,
+          };
+          drawParticle(burstRefs.current[index], clone, true);
+        });
+        if (burst.radius < inner * 0.9) burstRef.current = null;
+      } else {
+        burstRefs.current.forEach((circle) =>
+          circle?.setAttribute("opacity", "0"),
+        );
+      }
+
+      frame = requestAnimationFrame(tick);
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [mobile, particles, reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion || previousPhase.current === phase) {
+      previousPhase.current = phase;
+      return;
+    }
+    if (phase === 1 || phase === 3 || phase === 4) {
+      const side: Side = phase === 3 ? "right" : "left";
+      const gustCount = phase === 4 ? 3 : 7;
+      particles.slice(0, gustCount).forEach((particle, index) => {
+        respawnParticle(particle, side);
+        particle.radius = 0.96 + index * 0.018;
+        particle.decay = 0.024 + index * 0.002;
+        particle.size = 1.4 + (index % 3) * 0.65;
+      });
+      const particle = makeOrbitParticle(side, phase * 11);
+      respawnParticle(particle, side);
+      particle.radius = 1.06;
+      particle.size = phase === 4 ? 3.2 : 4.1;
+      particle.decay = 0.026;
+      particle.speed = side === "left" ? 0.72 : -0.72;
+      burstRef.current = particle;
+    }
+    previousPhase.current = phase;
+  }, [particles, phase, reducedMotion]);
+
+  if (reducedMotion) {
+    const staticDots = mobile
+      ? [
+          [21, 32, 0.7],
+          [37, 44, 0.9],
+          [40, 76, 0.6],
+          [22, 88, 0.8],
+        ]
+      : [
+          [342, 66, 1.8],
+          [432, 44, 2.2],
+          [574, 116, 1.5],
+          [662, 92, 2],
+        ];
+    return (
+      <g>
+        {staticDots.map(([cx, cy, r], index) => (
+          <circle
+            cx={cx}
+            cy={cy}
+            fill="rgba(191,219,254,0.42)"
+            key={index}
+            r={r}
+          />
+        ))}
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      {particles.map((_, index) => (
+        <circle
+          fill="rgba(191,219,254,0.86)"
+          key={index}
+          ref={(node) => {
+            if (node) refs.current[index] = node;
+          }}
+        />
+      ))}
+      {[0, 1, 2].map((_, index) => (
+        <circle
+          fill={
+            index === 0 ? "rgba(239,246,255,0.98)" : "rgba(147,197,253,0.56)"
+          }
+          filter={index === 0 ? "url(#parle-channel-glow)" : undefined}
+          key={`burst-${index}`}
+          ref={(node) => {
+            if (node) burstRefs.current[index] = node;
+          }}
+        />
+      ))}
+    </g>
+  );
+}
+
 function ConnectiveLayer({
   phase,
   reducedMotion,
@@ -366,7 +584,6 @@ function ConnectiveLayer({
   reducedMotion: boolean;
 }) {
   const inboundActive = phase === 1;
-  const projectionActive = phase === 2;
   const replyActive = phase === 3;
   const receiptActive = phase === 4;
 
@@ -374,149 +591,94 @@ function ConnectiveLayer({
     <>
       <svg
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-1/2 z-0 w-28 -translate-x-1/2 lg:hidden"
-        preserveAspectRatio="none"
-        viewBox="0 0 100 100"
-      >
-        <path
-          d="M 50 0 C 40 18 40 30 50 42"
-          fill="none"
-          pathLength="1000"
-          stroke="rgba(239,246,255,0.1)"
-          strokeLinecap="round"
-          strokeWidth="1.5"
-        />
-        <path
-          d="M 50 58 C 60 70 60 84 50 100"
-          fill="none"
-          pathLength="1000"
-          stroke="rgba(239,246,255,0.1)"
-          strokeLinecap="round"
-          strokeWidth="1.5"
-        />
-        <path
-          className={`parle-comet ${inboundActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
-          d="M 50 0 C 40 18 40 30 50 42"
-          fill="none"
-          pathLength="1000"
-          stroke="rgba(96,165,250,0.95)"
-          strokeLinecap="round"
-          strokeWidth="4"
-        />
-        <path
-          className={`parle-comet ${projectionActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
-          d="M 50 58 C 60 70 60 84 50 100"
-          fill="none"
-          pathLength="1000"
-          stroke="rgba(191,219,254,0.72)"
-          strokeLinecap="round"
-          strokeWidth="2"
-        />
-        <path
-          className={`parle-comet parle-comet--reverse ${replyActive ? "opacity-100" : "opacity-0"}`}
-          d="M 50 58 C 60 70 60 84 50 100"
-          fill="none"
-          pathLength="1000"
-          stroke="rgba(147,197,253,0.85)"
-          strokeLinecap="round"
-          strokeWidth="2.7"
-        />
-        <path
-          className={`parle-comet parle-comet--reverse ${receiptActive ? "opacity-100" : "opacity-0"}`}
-          d="M 50 0 C 40 18 40 30 50 42"
-          fill="none"
-          pathLength="1000"
-          stroke="rgba(191,219,254,0.9)"
-          strokeLinecap="round"
-          strokeWidth="2.5"
-        />
-      </svg>
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-1/2 z-0 hidden h-44 -translate-y-1/2 lg:block"
-        preserveAspectRatio="none"
-        viewBox="0 0 1000 160"
+        className="pointer-events-none absolute top-1/2 left-1/2 z-0 h-[33rem] w-[15rem] -translate-x-1/2 -translate-y-1/2 overflow-visible lg:hidden"
+        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 60 120"
       >
         <defs>
           <filter
             id="parle-channel-glow"
-            x="-20%"
-            y="-80%"
-            width="140%"
-            height="260%"
+            x="-120%"
+            y="-120%"
+            width="340%"
+            height="340%"
           >
-            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feGaussianBlur stdDeviation="3" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <radialGradient id="parle-flow-core-mobile" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(191,219,254,0.2)" />
+            <stop offset="100%" stopColor="rgba(96,165,250,0)" />
+          </radialGradient>
         </defs>
-        <path
-          d="M 18 88 C 148 40 278 42 408 76"
-          fill="none"
-          pathLength="1000"
-          stroke="rgba(239,246,255,0.09)"
-          strokeLinecap="round"
-          strokeWidth="2"
+        <ellipse
+          cx="30"
+          cy="60"
+          rx="23"
+          ry="52"
+          fill="url(#parle-flow-core-mobile)"
+          opacity="0.72"
         />
         <path
-          d="M 592 76 C 722 42 852 40 982 88"
+          className={`parle-inflow ${inboundActive ? "parle-inflow--active" : ""}`}
+          d="M 30 0 C 18 20 18 38 29 50"
           fill="none"
-          pathLength="1000"
-          stroke="rgba(239,246,255,0.09)"
-          strokeLinecap="round"
-          strokeWidth="2"
         />
         <path
-          className={`parle-comet ${inboundActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
-          d="M 18 88 C 148 40 278 42 408 76"
+          className={`parle-inflow ${replyActive ? "parle-inflow--active" : ""}`}
+          d="M 30 120 C 42 100 42 82 31 70"
           fill="none"
-          pathLength="1000"
-          stroke="rgba(96,165,250,0.98)"
-          strokeLinecap="round"
-          strokeWidth="5"
-          filter="url(#parle-channel-glow)"
+        />
+        <OrbitField phase={phase} reducedMotion={reducedMotion} mobile />
+      </svg>
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 left-1/2 z-0 hidden h-[24rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 overflow-visible lg:block"
+        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 1000 160"
+      >
+        <defs>
+          <filter
+            id="parle-channel-glow"
+            x="-120%"
+            y="-120%"
+            width="340%"
+            height="340%"
+          >
+            <feGaussianBlur stdDeviation="7" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <radialGradient id="parle-flow-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(191,219,254,0.24)" />
+            <stop offset="58%" stopColor="rgba(96,165,250,0.08)" />
+            <stop offset="100%" stopColor="rgba(96,165,250,0)" />
+          </radialGradient>
+        </defs>
+        <ellipse
+          cx="500"
+          cy="80"
+          rx="238"
+          ry="84"
+          fill="url(#parle-flow-core)"
+          opacity="0.78"
         />
         <path
-          className={`parle-comet ${projectionActive || (reducedMotion && phase === 5) ? "opacity-100" : "opacity-0"}`}
-          d="M 592 76 C 722 42 852 40 982 88"
+          className={`parle-inflow ${inboundActive ? "parle-inflow--active" : ""}`}
+          d="M 112 92 C 222 70 308 58 382 46 C 444 36 500 28 552 44"
           fill="none"
-          pathLength="1000"
-          stroke="rgba(191,219,254,0.7)"
-          strokeLinecap="round"
-          strokeWidth="2.2"
-          filter="url(#parle-channel-glow)"
         />
         <path
-          className={`parle-comet parle-comet--reverse ${replyActive ? "opacity-100" : "opacity-0"}`}
-          d="M 592 98 C 722 128 852 124 982 84"
+          className={`parle-inflow ${replyActive ? "parle-inflow--active" : ""}`}
+          d="M 888 68 C 778 90 692 102 618 114 C 556 124 500 132 448 116"
           fill="none"
-          pathLength="1000"
-          stroke="rgba(147,197,253,0.9)"
-          strokeLinecap="round"
-          strokeWidth="3"
-          filter="url(#parle-channel-glow)"
         />
-        <path
-          className={`parle-comet parle-comet--reverse ${receiptActive ? "opacity-100" : "opacity-0"}`}
-          d="M 18 104 C 148 126 278 118 408 88"
-          fill="none"
-          pathLength="1000"
-          stroke="rgba(191,219,254,0.9)"
-          strokeLinecap="round"
-          strokeWidth="2.7"
-          filter="url(#parle-channel-glow)"
-        />
-        <g
-          className={
-            projectionActive || reducedMotion ? "opacity-100" : "opacity-0"
-          }
-        >
-          <circle cx="688" cy="48" fill="rgba(191,219,254,0.72)" r="3" />
-          <circle cx="716" cy="45" fill="rgba(191,219,254,0.5)" r="2" />
-          <circle cx="738" cy="44" fill="rgba(191,219,254,0.32)" r="1.5" />
-        </g>
+        <OrbitField phase={phase} reducedMotion={reducedMotion} />
         <g
           className={
             receiptActive || reducedMotion ? "opacity-100" : "opacity-0"
@@ -526,17 +688,17 @@ function ConnectiveLayer({
             cx="500"
             cy="80"
             fill="none"
-            r="44"
-            stroke="rgba(96,165,250,0.55)"
-            strokeWidth="2"
+            r="48"
+            stroke="rgba(96,165,250,0.46)"
+            strokeWidth="1.5"
           />
           <path
             d="M 488 81 L 497 90 L 515 68"
             fill="none"
-            stroke="rgba(239,246,255,0.95)"
+            stroke="rgba(239,246,255,0.9)"
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth="4"
+            strokeWidth="3.4"
           />
         </g>
       </svg>
@@ -551,31 +713,33 @@ function ParleMediationCore({
   phase: Phase;
   reducedMotion: boolean;
 }) {
-  const activeNode = phase <= 1 ? 0 : phase <= 3 ? 1 : 2;
+  const activeNode: Side | null =
+    phase === 1 ? "left" : phase === 3 ? "right" : null;
 
   return (
     <div className="relative z-10 grid min-h-64 place-items-center overflow-visible py-10 lg:min-h-[22rem] lg:py-0">
       <div className="pointer-events-none absolute inset-x-1/2 top-[-4rem] z-0 h-16 w-px bg-gradient-to-b from-transparent via-ink-300/30 to-ink-300/0 lg:hidden" />
       <div className="pointer-events-none absolute inset-x-1/2 bottom-[-4rem] z-0 h-16 w-px bg-gradient-to-b from-ink-300/0 via-ink-300/20 to-transparent lg:hidden" />
       <div className="absolute inset-0 rounded-[3rem] bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.2),transparent_58%)] blur-2xl" />
-      <div className="parle-core-ring absolute size-72 rounded-full border border-ink-300/15 sm:size-80" />
-      <div className="parle-core-ring parle-core-ring--slow absolute size-52 rounded-full border border-ink-300/20 sm:size-60" />
+      <div className="parle-core-circle absolute size-72 rounded-full border border-ink-300/12 sm:size-80" />
+      <div className="parle-core-circle parle-core-circle--inner absolute size-52 rounded-full border border-ink-300/14 sm:size-60" />
 
-      {[0, 1, 2].map((index) => {
-        const positions = [
-          "top-8 left-1/2 -translate-x-1/2",
-          "top-1/2 right-8 -translate-y-1/2",
-          "bottom-8 left-1/2 -translate-x-1/2",
-        ];
-        const active = reducedMotion || index === activeNode;
+      {[
+        { side: "left" as const, position: "top-1/2 left-8 -translate-y-1/2" },
+        {
+          side: "right" as const,
+          position: "top-1/2 right-8 -translate-y-1/2",
+        },
+      ].map((node) => {
+        const active = reducedMotion || node.side === activeNode;
         return (
           <span
-            className={`absolute ${positions[index]} size-2 rounded-full transition-all duration-300 ${
+            className={`absolute ${node.position} size-2 rounded-full transition-all duration-300 ${
               active
                 ? "bg-ink-100 shadow-[0_0_22px_rgba(147,197,253,0.8)]"
                 : "bg-ink-300/25"
             }`}
-            key={index}
+            key={node.side}
           />
         );
       })}
@@ -583,14 +747,11 @@ function ParleMediationCore({
       <div className="relative grid size-40 place-items-center rounded-full border border-ink-300/35 bg-ink-950/70 shadow-[0_0_80px_rgba(96,165,250,0.22)] backdrop-blur-md sm:size-44">
         <div className="absolute inset-4 rounded-full bg-ink-500/10 blur-xl" />
         <div className="relative text-center">
-          <p className="font-mono text-[0.62rem] tracking-[0.32em] text-ink-300 uppercase">
-            mediation
-          </p>
-          <p className="mt-2 text-3xl font-semibold tracking-tight text-white">
+          <p className="text-3xl font-semibold tracking-tight text-white">
             Parlè
           </p>
           <p className="mt-2 h-4 font-mono text-[0.62rem] tracking-[0.18em] text-ink-300 uppercase">
-            {activeNode === 0 ? "policy" : activeNode === 1 ? "scope" : "seal"}
+            {phase <= 1 ? "policy" : phase <= 3 ? "scope" : "seal"}
           </p>
         </div>
       </div>
