@@ -323,12 +323,10 @@ function Terminal({
   title,
   lines,
   active,
-  harnesses,
 }: {
   title: string;
   lines: TerminalLine[];
   active: boolean;
-  harnesses: Harness[];
 }) {
   return (
     <MockIDE
@@ -340,11 +338,8 @@ function Terminal({
         <span className="pui-ide__dot pui-ide__dot--red" />
         <span className="pui-ide__dot pui-ide__dot--yellow" />
         <span className="pui-ide__dot pui-ide__dot--green" />
-        <span className="pui-ide__tab">{title}</span>
-        <div className="ml-auto flex items-center gap-1.5">
-          {harnesses.map((harness) => (
-            <HarnessBadge harness={harness} key={harness} />
-          ))}
+        <div className="ml-auto">
+          <span className="pui-ide__tab">{title}</span>
         </div>
       </div>
       <pre className="pui-ide__body parle-terminal-body">
@@ -374,20 +369,6 @@ function Terminal({
   );
 }
 
-function HarnessBadge({ harness }: { harness: Harness }) {
-  const config = {
-    claude: { mark: "◇", label: "Claude", color: "text-orange-200" },
-    hermes: { mark: "☤", label: "Hermes", color: "text-cyan-200" },
-    pi: { mark: "π", label: "Pi", color: "text-violet-200" },
-  }[harness];
-
-  return (
-    <span className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/4 px-2 py-1 text-[0.65rem] text-ink-200">
-      <span className={config.color}>{config.mark}</span>
-      <span className="hidden sm:inline">{config.label}</span>
-    </span>
-  );
-}
 
 type OrbitParticle = {
   side: Side;
@@ -793,7 +774,10 @@ function ParleMediationCore({
       <div className="relative grid size-40 place-items-center rounded-full border border-ink-300/35 bg-ink-950/70 shadow-[0_0_80px_rgba(96,165,250,0.22)] backdrop-blur-md sm:size-44">
         <div className="absolute inset-4 rounded-full bg-ink-500/10 blur-xl" />
         <div className="relative text-center">
-          <p className="text-3xl font-semibold tracking-tight text-white">
+          <p
+            className="text-4xl tracking-wide text-white"
+            style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
+          >
             Parlè
           </p>
           <p className="mt-2 h-4 font-mono text-[0.62rem] tracking-widest text-ink-300 uppercase">
@@ -838,14 +822,12 @@ export default function AgentExchangeDemo() {
           title="My AI"
           lines={leftLines}
           active={activeSide === "left"}
-          harnesses={scenario.leftHarnesses}
         />
         <ParleMediationCore phase={phase} reducedMotion={reducedMotion} />
         <Terminal
           title="Your AI"
           lines={rightLines}
           active={activeSide === "right"}
-          harnesses={scenario.rightHarnesses}
         />
       </div>
     </section>
