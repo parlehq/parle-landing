@@ -5,6 +5,26 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import AgentExchangeDemo from "../components/AgentExchangeDemo";
 import HeroAurora from "../components/HeroAurora";
+
+const heroVerbs = [
+  "can safely talk to",
+  "can safely negotiate with",
+  "can safely exchange context with",
+  "can safely coordinate with",
+];
+
+// The hero verbs cross-fade one at a time. Timing scales with the count:
+// each verb holds for `verbStepSeconds`, and the keyframe gives each one an
+// even slot of the loop so any number of verbs stays evenly spaced.
+const verbStepSeconds = 3.5;
+const verbCycleSeconds = heroVerbs.length * verbStepSeconds;
+const verbSlotPct = 100 / heroVerbs.length;
+const verbHoldPct = Number((verbSlotPct * 0.8).toFixed(2));
+const verbFadePct = Number(verbSlotPct.toFixed(2));
+const heroVerbKeyframes = `@keyframes hero-verb-cycle {
+  0%, ${verbHoldPct}% { opacity: 1; transform: translateY(0); }
+  ${verbFadePct}%, 100% { opacity: 0; transform: translateY(-0.55em); }
+}`;
 ---
 
 <Layout
@@ -24,6 +44,7 @@ import HeroAurora from "../components/HeroAurora";
             class="pointer-events-none absolute -top-32 -bottom-32 left-1/2 z-0 w-dvw max-w-dvw -translate-x-1/2 opacity-15 bg-[linear-gradient(rgba(191,219,254,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(191,219,254,0.08)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_at_center,black,transparent_58%)]"
           >
           </div>
+          <style is:inline set:html={heroVerbKeyframes}></style>
           <div class="relative z-10">
             <h1
               class="mx-auto grid w-full max-w-176 grid-cols-1 items-center gap-y-3 text-white md:w-fit md:max-w-none md:grid-cols-[auto_auto] md:items-baseline md:gap-x-6 md:gap-y-1 md:text-left"
@@ -35,30 +56,20 @@ import HeroAurora from "../components/HeroAurora";
               </span>
               <span
                 class="relative my-0 h-[1.45em] w-full max-w-136 justify-self-center overflow-hidden font-mono text-[clamp(0.66rem,2.6vw,1.15rem)] tracking-widest text-ink-300 uppercase md:col-span-2 md:row-start-2 md:my-2 md:translate-y-1.5"
+                style={`--hero-verb-cycle: ${verbCycleSeconds}s`}
               >
-                <span class="hero-verb flex items-center justify-center gap-3">
-                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
-                  ></span>
-                  <span class="whitespace-nowrap">can safely talk to</span>
-                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
-                  ></span>
-                </span>
-                <span class="hero-verb flex items-center justify-center gap-3">
-                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
-                  ></span>
-                  <span class="whitespace-nowrap">can safely negotiate</span>
-                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
-                  ></span>
-                </span>
-                <span class="hero-verb flex items-center justify-center gap-3">
-                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
-                  ></span>
-                  <span class="whitespace-nowrap"
-                    >can safely exchange context</span
-                  >
-                  <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10"
-                  ></span>
-                </span>
+                {
+                  heroVerbs.map((verb, i) => (
+                    <span
+                      class="hero-verb flex items-center justify-center gap-3"
+                      style={`--hero-verb-delay: ${(i * verbStepSeconds).toFixed(2)}s`}
+                    >
+                      <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10" />
+                      <span class="whitespace-nowrap">{verb}</span>
+                      <span class="hero-connector-rule h-px w-8 bg-white/20 md:w-10" />
+                    </span>
+                  ))
+                }
               </span>
               <span
                 class="bg-linear-to-br from-white to-ink-300 bg-clip-text text-[clamp(4.1rem,15vw,10rem)] leading-[0.82] font-semibold tracking-[-0.075em] text-transparent md:col-start-2 md:row-start-3 md:justify-self-end md:text-[clamp(4.6rem,9.6vw,9.2rem)]"

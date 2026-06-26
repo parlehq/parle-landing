@@ -150,20 +150,18 @@ body {
   animation: hero-rule-draw 720ms ease-out both;
 }
 
+/*
+ * Timing is data-driven: --hero-verb-cycle (total loop) and per-verb
+ * --hero-verb-delay are set inline from the page, and the matching
+ * @keyframes is generated there from the verb count. See index.astro.
+ */
 .hero-verb {
   position: absolute;
   inset: 0;
   opacity: 0;
   transform: translateY(0.65em);
-  animation: hero-verb-cycle 10.5s ease-in-out infinite;
-}
-
-.hero-verb:nth-child(2) {
-  animation-delay: 3.5s;
-}
-
-.hero-verb:nth-child(3) {
-  animation-delay: 7s;
+  animation: hero-verb-cycle var(--hero-verb-cycle, 10.5s) ease-in-out infinite;
+  animation-delay: var(--hero-verb-delay, 0s);
 }
 
 @keyframes hero-rule-draw {
@@ -178,18 +176,35 @@ body {
   }
 }
 
-@keyframes hero-verb-cycle {
-  0%,
-  27% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.parle-hover-wordmark {
+  --parle-hover-x: 50%;
+  --parle-hover-y: 50%;
 
-  33%,
-  100% {
-    opacity: 0;
-    transform: translateY(-0.55em);
-  }
+  position: relative;
+}
+
+.parle-hover-wordmark__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle 2.15em at var(--parle-hover-x) var(--parle-hover-y),
+    #60a5fa 0%,
+    #93c5fd 34%,
+    #dbeafe 58%,
+    #ffffff 72%,
+    transparent 84%
+  );
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  -webkit-background-clip: text;
+}
+
+.parle-hover-wordmark:hover .parle-hover-wordmark__glow,
+.parle-hover-wordmark:focus-visible .parle-hover-wordmark__glow {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
