@@ -22,6 +22,10 @@ type Scenario = {
 };
 
 const phaseDurations = [800, 1900, 1100, 2300, 1100, 1400];
+const flowDelays: Partial<Record<Phase, number>> = {
+  1: 520,
+  3: 1080,
+};
 
 const scenarios: Scenario[] = [
   {
@@ -135,6 +139,10 @@ function baseLines(role: string, room: string): TerminalLine[] {
   ];
 }
 
+function feedBreak(): TerminalLine[] {
+  return [{ tokens: plain("") }, { tokens: plain("") }];
+}
+
 function tokenLength(tokens: IdeToken[]) {
   return tokens.reduce((sum, token) => sum + token.c.length, 0);
 }
@@ -239,46 +247,70 @@ function useTypedBlock(
   return active ? sliceLines(lines, count) : lines;
 }
 
+function completedLines(side: Side, scenario: Scenario): TerminalLine[] {
+  if (side === "left") {
+    return [
+      ...baseLines("claude-code", scenario.room),
+      ...scenario.submit,
+      ...scenario.receipt,
+    ];
+  }
+
+  return [...baseLines("pi agent", scenario.room), ...scenario.reply];
+}
+
 function useTerminalLines(
   side: Side,
   phase: Phase,
-  scenario: Scenario,
   scenarioIndex: number,
+  cycle: number,
   reducedMotion: boolean,
-  holdComplete: boolean,
 ) {
+  const scenario = scenarios[scenarioIndex];
+  const role = side === "left" ? "claude-code" : "pi agent";
+  const introTyped = useTypedBlock(
+    baseLines(role, scenario.room),
+    `intro-${side}-${scenarioIndex}-${cycle}`,
+    phase === 0 && !reducedMotion,
+  );
+  const introLines =
+    phase === 0 && !reducedMotion ? introTyped : baseLines(role, scenario.room);
   const submitTyped = useTypedBlock(
     scenario.submit,
-    `submit-${scenarioIndex}-${phase}`,
+    `submit-${scenarioIndex}-${cycle}`,
     phase === 1,
   );
   const receiptTyped = useTypedBlock(
     scenario.receipt,
-    `receipt-${scenarioIndex}-${phase}`,
+    `receipt-${scenarioIndex}-${cycle}`,
     phase === 5 && !reducedMotion,
   );
   const replyTyped = useTypedBlock(
     scenario.reply,
-    `reply-${scenarioIndex}-${phase}`,
+    `reply-${scenarioIndex}-${cycle}`,
     phase === 3,
   );
 
+  const startCycle = Math.max(0, cycle - 3);
+  const history: TerminalLine[] = [];
+  for (let itemCycle = startCycle; itemCycle < cycle; itemCycle += 1) {
+    if (history.length > 0) history.push(...feedBreak());
+    history.push(
+      ...completedLines(side, scenarios[itemCycle % scenarios.length]),
+    );
+  }
+  if (history.length > 0) history.push(...feedBreak());
+
   if (side === "left") {
     return [
-      ...baseLines("claude-code", scenario.room),
-      ...(phase >= 1 || holdComplete ? submitTyped : []),
-      ...(phase >= 5 || holdComplete ? receiptTyped : []),
+      ...history,
+      ...introLines,
+      ...(phase >= 1 ? submitTyped : []),
+      ...(phase >= 5 ? receiptTyped : []),
     ];
   }
 
-  return [
-    ...baseLines("pi agent", scenario.room),
-    ...(phase >= 3 || holdComplete ? replyTyped : []),
-  ];
-}
-
-function tailLines(lines: TerminalLine[], count = 7) {
-  return lines.slice(Math.max(0, lines.length - count));
+  return [...history, ...introLines, ...(phase >= 3 ? replyTyped : [])];
 }
 
 function activeSideForPhase(phase: Phase): Side | null {
@@ -298,8 +330,6 @@ function Terminal({
   active: boolean;
   harnesses: Harness[];
 }) {
-  const visible = tailLines(lines, 5);
-
   return (
     <MockIDE
       className="relative z-20 h-[13.5rem] text-left sm:h-[16rem] lg:h-[22rem]"
@@ -319,7 +349,7 @@ function Terminal({
       </div>
       <pre className="pui-ide__body parle-terminal-body">
         <span className="parle-terminal-lines">
-          {visible.map((line, index) => (
+          {lines.map((line, index) => (
             <span
               className={`block min-h-[1.4em] ${line.muted ? "opacity-70" : ""}`}
               key={index}
@@ -333,7 +363,7 @@ function Terminal({
                   token.c
                 ),
               )}
-              {active && index === visible.length - 1 && (
+              {active && index === lines.length - 1 && (
                 <span className="pui-caret" />
               )}
             </span>
@@ -501,24 +531,29 @@ function OrbitField({
       previousPhase.current = phase;
       return;
     }
-    if (phase === 1 || phase === 3 || phase === 4) {
+
+    let timer = 0;
+    if (phase === 1 || phase === 3) {
       const side: Side = phase === 3 ? "right" : "left";
-      const gustCount = phase === 4 ? 3 : 7;
-      particles.slice(0, gustCount).forEach((particle, index) => {
+      const runBurst = () => {
+        particles.slice(0, 7).forEach((particle, index) => {
+          respawnParticle(particle, side);
+          particle.radius = 0.96 + index * 0.018;
+          particle.decay = 0.024 + index * 0.002;
+          particle.size = 1.4 + (index % 3) * 0.65;
+        });
+        const particle = makeOrbitParticle(side, phase * 11);
         respawnParticle(particle, side);
-        particle.radius = 0.96 + index * 0.018;
-        particle.decay = 0.024 + index * 0.002;
-        particle.size = 1.4 + (index % 3) * 0.65;
-      });
-      const particle = makeOrbitParticle(side, phase * 11);
-      respawnParticle(particle, side);
-      particle.radius = 1.06;
-      particle.size = phase === 4 ? 3.2 : 4.1;
-      particle.decay = 0.026;
-      particle.speed = side === "left" ? 0.72 : -0.72;
-      burstRef.current = particle;
+        particle.radius = 1.06;
+        particle.size = 4.1;
+        particle.decay = 0.026;
+        particle.speed = side === "left" ? 0.72 : -0.72;
+        burstRef.current = particle;
+      };
+      timer = window.setTimeout(runBurst, flowDelays[phase] ?? 0);
     }
     previousPhase.current = phase;
+    return () => window.clearTimeout(timer);
   }, [particles, phase, reducedMotion]);
 
   if (reducedMotion) {
@@ -587,6 +622,8 @@ function ConnectiveLayer({
   const inboundActive = phase === 1;
   const replyActive = phase === 3;
   const receiptActive = phase === 4;
+  const inboundDelay = `${flowDelays[1] ?? 0}ms`;
+  const replyDelay = `${flowDelays[3] ?? 0}ms`;
 
   return (
     <>
@@ -627,11 +664,13 @@ function ConnectiveLayer({
           className={`parle-inflow ${inboundActive ? "parle-inflow--active" : ""}`}
           d="M 30 0 C 18 20 18 38 29 50"
           fill="none"
+          style={{ animationDelay: inboundActive ? inboundDelay : "0ms" }}
         />
         <path
           className={`parle-inflow ${replyActive ? "parle-inflow--active" : ""}`}
           d="M 30 120 C 42 100 42 82 31 70"
           fill="none"
+          style={{ animationDelay: replyActive ? replyDelay : "0ms" }}
         />
         <OrbitField phase={phase} reducedMotion={reducedMotion} mobile />
       </svg>
@@ -673,11 +712,13 @@ function ConnectiveLayer({
           className={`parle-inflow ${inboundActive ? "parle-inflow--active" : ""}`}
           d="M 112 92 C 222 70 308 58 382 46 C 444 36 500 28 552 44"
           fill="none"
+          style={{ animationDelay: inboundActive ? inboundDelay : "0ms" }}
         />
         <path
           className={`parle-inflow ${replyActive ? "parle-inflow--active" : ""}`}
           d="M 888 68 C 778 90 692 102 618 114 C 556 124 500 132 448 116"
           fill="none"
+          style={{ animationDelay: replyActive ? replyDelay : "0ms" }}
         />
         <OrbitField phase={phase} reducedMotion={reducedMotion} />
         <g
@@ -767,28 +808,21 @@ function ParleMediationCore({
 export default function AgentExchangeDemo() {
   const reducedMotion = usePrefersReducedMotion();
   const { phase, cycle } = usePhaseClock(reducedMotion);
-  const holdComplete = !reducedMotion && phase === 0 && cycle > 0;
-  const scenarioIndex = reducedMotion
-    ? 0
-    : holdComplete
-      ? (cycle + scenarios.length - 1) % scenarios.length
-      : cycle % scenarios.length;
+  const scenarioIndex = reducedMotion ? 0 : cycle % scenarios.length;
   const scenario = scenarios[scenarioIndex];
   const leftLines = useTerminalLines(
     "left",
     phase,
-    scenario,
     scenarioIndex,
+    cycle,
     reducedMotion,
-    holdComplete,
   );
   const rightLines = useTerminalLines(
     "right",
     phase,
-    scenario,
     scenarioIndex,
+    cycle,
     reducedMotion,
-    holdComplete,
   );
   const activeSide = reducedMotion ? null : activeSideForPhase(phase);
 
