@@ -27,6 +27,33 @@ const flowDelays: Partial<Record<Phase, number>> = {
   3: 1080,
 };
 
+const guaranteeWords = [
+  "policy",
+  "scope",
+  "seal",
+  "audit",
+  "identity",
+  "consent",
+  "grant",
+  "revoke",
+  "redact",
+  "refuse",
+  "accept",
+  "retain",
+  "expire",
+  "budget",
+  "meter",
+  "projection",
+  "provenance",
+  "quarantine",
+  "invite",
+  "pass",
+  "affordance",
+  "idempotency",
+  "sandbox",
+  "receipt",
+];
+
 const scenarios: Scenario[] = [
   {
     room: "diligence-handoff",
@@ -368,7 +395,6 @@ function Terminal({
     </MockIDE>
   );
 }
-
 
 type OrbitParticle = {
   side: Side;
@@ -731,12 +757,16 @@ function ConnectiveLayer({
 
 function ParleMediationCore({
   phase,
+  cycle,
   reducedMotion,
 }: {
   phase: Phase;
+  cycle: number;
   reducedMotion: boolean;
 }) {
   const activeNode: Side = phase <= 2 ? "left" : "right";
+  const guaranteeWord =
+    guaranteeWords[(cycle * 6 + phase) % guaranteeWords.length];
 
   return (
     <div className="relative z-10 grid min-h-64 place-items-center overflow-visible py-10 lg:min-h-88 lg:py-0">
@@ -781,7 +811,7 @@ function ParleMediationCore({
             Parlè
           </p>
           <p className="mt-2 h-4 font-mono text-[0.62rem] tracking-widest text-ink-300 uppercase">
-            {phase <= 1 ? "policy" : phase <= 3 ? "scope" : "seal"}
+            {guaranteeWord}
           </p>
         </div>
       </div>
@@ -823,7 +853,11 @@ export default function AgentExchangeDemo() {
           lines={leftLines}
           active={activeSide === "left"}
         />
-        <ParleMediationCore phase={phase} reducedMotion={reducedMotion} />
+        <ParleMediationCore
+          phase={phase}
+          cycle={cycle}
+          reducedMotion={reducedMotion}
+        />
         <Terminal
           title="Your AI"
           lines={rightLines}
