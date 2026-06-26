@@ -21,7 +21,7 @@ type Scenario = {
   receipt: TerminalLine[];
 };
 
-const phaseDurations = [1200, 1900, 1500, 2300, 1500, 1400];
+const phaseDurations = [800, 1900, 1100, 2300, 1100, 1400];
 
 const scenarios: Scenario[] = [
   {
@@ -245,6 +245,7 @@ function useTerminalLines(
   scenario: Scenario,
   scenarioIndex: number,
   reducedMotion: boolean,
+  holdComplete: boolean,
 ) {
   const submitTyped = useTypedBlock(
     scenario.submit,
@@ -265,14 +266,14 @@ function useTerminalLines(
   if (side === "left") {
     return [
       ...baseLines("claude-code", scenario.room),
-      ...(phase >= 1 ? submitTyped : []),
-      ...(phase >= 5 ? receiptTyped : []),
+      ...(phase >= 1 || holdComplete ? submitTyped : []),
+      ...(phase >= 5 || holdComplete ? receiptTyped : []),
     ];
   }
 
   return [
     ...baseLines("pi agent", scenario.room),
-    ...(phase >= 3 ? replyTyped : []),
+    ...(phase >= 3 || holdComplete ? replyTyped : []),
   ];
 }
 
@@ -449,7 +450,7 @@ function OrbitField({
       const opacity = Math.max(0, Math.min(1, fadeIn, fadeOut));
       circle.setAttribute("cx", x.toFixed(2));
       circle.setAttribute("cy", y.toFixed(2));
-      const particleScale = mobile ? (glow ? 0.72 : 0.5) : glow ? 1.35 : 1.35;
+      const particleScale = mobile ? (glow ? 0.28 : 0.2) : 1.35;
       circle.setAttribute("r", (particle.size * particleScale).toFixed(2));
       circle.setAttribute(
         "opacity",
@@ -523,10 +524,10 @@ function OrbitField({
   if (reducedMotion) {
     const staticDots = mobile
       ? [
-          [21, 32, 0.7],
-          [37, 44, 0.9],
-          [40, 76, 0.6],
-          [22, 88, 0.8],
+          [21, 32, 0.42],
+          [37, 44, 0.54],
+          [40, 76, 0.36],
+          [22, 88, 0.48],
         ]
       : [
           [342, 66, 1.8],
@@ -713,8 +714,7 @@ function ParleMediationCore({
   phase: Phase;
   reducedMotion: boolean;
 }) {
-  const activeNode: Side | null =
-    phase === 1 ? "left" : phase === 3 ? "right" : null;
+  const activeNode: Side = phase <= 2 ? "left" : "right";
 
   return (
     <div className="relative z-10 grid min-h-64 place-items-center overflow-visible py-10 lg:min-h-[22rem] lg:py-0">
@@ -725,13 +725,18 @@ function ParleMediationCore({
       <div className="parle-core-circle parle-core-circle--inner absolute size-52 rounded-full border border-ink-300/14 sm:size-60" />
 
       {[
-        { side: "left" as const, position: "top-1/2 left-8 -translate-y-1/2" },
+        {
+          side: "left" as const,
+          position:
+            "top-8 left-1/2 -translate-x-1/2 lg:top-1/2 lg:left-8 lg:translate-x-0 lg:-translate-y-1/2",
+        },
         {
           side: "right" as const,
-          position: "top-1/2 right-8 -translate-y-1/2",
+          position:
+            "bottom-8 left-1/2 -translate-x-1/2 lg:top-1/2 lg:right-8 lg:bottom-auto lg:left-auto lg:translate-x-0 lg:-translate-y-1/2",
         },
       ].map((node) => {
-        const active = reducedMotion || node.side === activeNode;
+        const active = node.side === (reducedMotion ? "left" : activeNode);
         return (
           <span
             className={`absolute ${node.position} size-2 rounded-full transition-all duration-300 ${
@@ -762,7 +767,12 @@ function ParleMediationCore({
 export default function AgentExchangeDemo() {
   const reducedMotion = usePrefersReducedMotion();
   const { phase, cycle } = usePhaseClock(reducedMotion);
-  const scenarioIndex = reducedMotion ? 0 : cycle % scenarios.length;
+  const holdComplete = !reducedMotion && phase === 0 && cycle > 0;
+  const scenarioIndex = reducedMotion
+    ? 0
+    : holdComplete
+      ? (cycle + scenarios.length - 1) % scenarios.length
+      : cycle % scenarios.length;
   const scenario = scenarios[scenarioIndex];
   const leftLines = useTerminalLines(
     "left",
@@ -770,6 +780,7 @@ export default function AgentExchangeDemo() {
     scenario,
     scenarioIndex,
     reducedMotion,
+    holdComplete,
   );
   const rightLines = useTerminalLines(
     "right",
@@ -777,6 +788,7 @@ export default function AgentExchangeDemo() {
     scenario,
     scenarioIndex,
     reducedMotion,
+    holdComplete,
   );
   const activeSide = reducedMotion ? null : activeSideForPhase(phase);
 
