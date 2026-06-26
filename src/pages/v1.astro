@@ -11,10 +11,14 @@ import HeroTagline from "../components/HeroTagline";
   <div class="flex min-h-screen flex-col">
     <SiteHeader path={Astro.url.pathname} />
 
-    <main class="relative flex flex-1 items-center justify-center overflow-hidden px-6 text-center">
+    <main
+      class="relative flex flex-1 items-center justify-center overflow-hidden px-6 text-center"
+    >
       <HeroAurora />
       <div class="relative z-10">
-        <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+        <h1
+          class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl"
+        >
           Parlè
         </h1>
         <HeroTagline client:load />

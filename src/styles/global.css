@@ -1,3 +1,21 @@
+/*
+ * global.css - USE SPARINGLY
+ *
+ * Inline Tailwind utility classes on the element are the default. Reach for
+ * this file ONLY when inline classes genuinely cannot express the styling.
+ * Legitimate cases:
+ *   1. Tailwind theme tokens (@theme) and required @import setup.
+ *   2. Base document styles on :root / html / body.
+ *   3. Overrides of third-party (performative-ui) markup that need selector
+ *      specificity utilities cannot reach.
+ *   4. @keyframes and the animation classes that drive them.
+ *   5. prefers-reduced-motion fallbacks.
+ *
+ * Anything expressible as inline Tailwind (colors, spacing, borders, simple
+ * layout, hover/responsive variants) does NOT belong here. Put it on the
+ * element instead.
+ */
+
 @import "tailwindcss";
 @import "performative-ui/styles.css";
 
@@ -42,81 +60,7 @@ body {
   color: #eff6ff;
 }
 
-.copy {
-  color: rgba(239, 246, 255, 0.78);
-}
-
-.panel {
-  border: 1px solid rgba(147, 197, 253, 0.16);
-  background: rgba(15, 23, 42, 0.55);
-  box-shadow: 0 20px 60px rgba(2, 6, 23, 0.35);
-}
-
-.kicker {
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-a.pui-bigback__wordmark {
-  cursor: pointer;
-}
-
-.footer-top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: clamp(28px, 5vw, 56px);
-}
-
-.footer-top .pui-bigback__cols {
-  flex: 0 1 auto;
-}
-
-.footer-quickstart {
-  align-self: center;
-  margin: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  padding: 0.9rem 2.1rem;
-  border-radius: 10px;
-  border: 1px solid rgba(239, 246, 255, 0.6);
-  background: rgba(239, 246, 255, 0.92);
-  color: var(--color-ink-950);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 1.05rem;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    background 0.18s ease,
-    border-color 0.18s ease,
-    transform 0.18s ease;
-}
-
-.footer-quickstart:hover {
-  background: #ffffff;
-  border-color: #ffffff;
-  transform: translateY(-1px);
-}
-
-@media (max-width: 640px) {
-  .footer-top {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.75rem;
-  }
-
-  .footer-quickstart {
-    margin: 0;
-    align-self: stretch;
-    justify-content: center;
-  }
-}
-
+/* Third-party (performative-ui) overrides: need to win on specificity. */
 .pui-ide__body.parle-terminal-body {
   position: relative;
   display: flex;
@@ -130,10 +74,6 @@ a.pui-bigback__wordmark {
   font-size: 0.75rem;
   line-height: 1.5rem;
   color: var(--color-ink-200);
-}
-
-.parle-terminal-lines {
-  display: block;
 }
 
 @media (min-width: 640px) {
@@ -151,164 +91,7 @@ a.pui-bigback__wordmark {
   }
 }
 
-.parle-link {
-  position: absolute;
-  top: 50%;
-  left: -15%;
-  right: -15%;
-  height: 2px;
-  overflow: hidden;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(191, 219, 254, 0.24),
-    transparent
-  );
-}
-
-.parle-link::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(239, 246, 255, 0.95),
-    rgba(96, 165, 250, 0.9),
-    transparent
-  );
-}
-
-.parle-link--active::after {
-  animation: parle-pulse 3.6s ease-in-out infinite;
-}
-
-.agent-stream {
-  display: block;
-  animation: parle-stream 22s linear infinite;
-  will-change: transform;
-}
-
-.agent-stream--right {
-  animation-delay: -5.4s;
-}
-
-.agent-line {
-  display: block;
-  min-height: 1.5em;
-}
-
-.agent-line--muted {
-  opacity: 0.72;
-}
-
-.parle-direction {
-  position: relative;
-  display: inline-grid;
-  min-width: 1em;
-  place-items: center;
-}
-
-.parle-direction__forward,
-.parle-direction__back {
-  grid-area: 1 / 1;
-  animation: parle-direction-forward 7.2s steps(1, end) infinite;
-}
-
-.parle-direction__back {
-  animation-name: parle-direction-back;
-}
-
-@keyframes parle-pulse {
-  0%,
-  38%,
-  100% {
-    transform: translateX(-100%);
-  }
-
-  50%,
-  88% {
-    transform: translateX(100%);
-  }
-
-  50.01% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes parle-stream {
-  from {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(-50%);
-  }
-}
-
-@keyframes parle-direction-forward {
-  0%,
-  49.99% {
-    opacity: 1;
-  }
-
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes parle-direction-back {
-  0%,
-  49.99% {
-    opacity: 0;
-  }
-
-  50%,
-  100% {
-    opacity: 1;
-  }
-}
-
-.parle-orbit-wisp {
-  stroke: rgba(191, 219, 254, 0.2);
-  stroke-width: 1.35;
-  stroke-linecap: round;
-  stroke-dasharray: 44 180;
-  filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.22));
-  animation: parle-orbit-wisp 7.5s ease-in-out infinite;
-}
-
-.parle-orbit-wisp--slow {
-  animation-duration: 10s;
-  animation-delay: -3s;
-  opacity: 0.74;
-}
-
-.parle-orbit-wisp--faint {
-  animation-duration: 12s;
-  animation-delay: -5s;
-  opacity: 0.5;
-  stroke-width: 0.9;
-}
-
-@keyframes parle-orbit-wisp {
-  0% {
-    stroke-dashoffset: 220;
-    opacity: 0.18;
-  }
-
-  36% {
-    opacity: 0.72;
-  }
-
-  100% {
-    stroke-dashoffset: -220;
-    opacity: 0.18;
-  }
-}
-
+/* Animation systems: keyframe-driven, cannot be expressed inline. */
 .parle-inflow {
   stroke: rgba(147, 197, 253, 0);
   stroke-width: 1.6;
@@ -350,16 +133,6 @@ a.pui-bigback__wordmark {
   animation-delay: -3s;
 }
 
-.parle-core-ring {
-  transform: rotate(-6deg) scaleY(0.62);
-  animation: parle-core-drift 8s ease-in-out infinite alternate;
-}
-
-.parle-core-ring--slow {
-  animation-duration: 11s;
-  animation-delay: -2s;
-}
-
 @keyframes parle-core-circle-drift {
   from {
     opacity: 0.34;
@@ -369,18 +142,6 @@ a.pui-bigback__wordmark {
   to {
     opacity: 0.72;
     transform: scale(1.04) rotate(8deg);
-  }
-}
-
-@keyframes parle-core-drift {
-  from {
-    opacity: 0.34;
-    transform: rotate(-8deg) scale(0.98) scaleY(0.58);
-  }
-
-  to {
-    opacity: 0.78;
-    transform: rotate(5deg) scale(1.05) scaleY(0.66);
   }
 }
 
@@ -443,25 +204,6 @@ a.pui-bigback__wordmark {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 1ms !important;
-  }
-
-  .agent-stream,
-  .parle-link--active::after,
-  .parle-direction__forward,
-  .parle-direction__back {
-    animation: none !important;
-  }
-
-  .agent-stream {
-    transform: translateY(-38%);
-  }
-
-  .parle-link--active::after {
-    transform: translateX(0);
-  }
-
-  .parle-direction__back {
-    opacity: 0;
   }
 
   .hero-connector-rule {

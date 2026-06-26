@@ -18,7 +18,7 @@ const tokens: IdeToken[] = [
   { c: "# Start talking\n", cls: "com" },
   { c: "parle", cls: "fn" },
   { c: " send ", cls: "" },
-  { c: "\"hello\"", cls: "str" },
+  { c: '"hello"', cls: "str" },
   { c: "\n" },
 ];
 

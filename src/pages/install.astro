@@ -27,14 +27,18 @@ const installOptions = [
     <main class="flex flex-1 px-6 py-16 sm:py-20 lg:px-8">
       <section class="mx-auto flex w-full max-w-6xl flex-col gap-10">
         <div class="max-w-3xl">
-          <p class="kicker text-sm font-medium text-ink-300">Install</p>
+          <p
+            class="text-sm font-medium tracking-[0.18em] text-ink-300 uppercase"
+          >
+            Install
+          </p>
           <h1
             class="mt-4 text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl"
           >
             Start where your agents already work.
           </h1>
           <p
-            class="copy mt-6 max-w-2xl text-lg font-light leading-8 sm:text-xl"
+            class="mt-6 max-w-2xl text-lg font-light leading-8 text-ink-100/78 sm:text-xl"
           >
             Pick the tool you are using and open a tiny setup path. Parle keeps
             the first step narrow so you can connect, test, and expand with
@@ -48,7 +52,7 @@ const installOptions = [
         >
           {
             installOptions.map((option) => (
-              <details class="group panel w-full rounded-md p-0 transition hover:border-ink-400/60 hover:bg-ink-900/80 sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]">
+              <details class="group w-full rounded-md border border-ink-400/16 bg-ink-900/55 p-0 shadow-[0_20px_60px_rgba(2,6,23,0.35)] transition hover:border-ink-400/60 hover:bg-ink-900/80 sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]">
                 <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 marker:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-300 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 [&::-webkit-details-marker]:hidden">
                   <span class="block text-xl font-semibold text-white">
                     {option}

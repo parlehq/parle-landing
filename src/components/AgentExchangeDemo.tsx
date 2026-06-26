@@ -348,7 +348,7 @@ function Terminal({
         </div>
       </div>
       <pre className="pui-ide__body parle-terminal-body">
-        <span className="parle-terminal-lines">
+        <span className="block">
           {lines.map((line, index) => (
             <span
               className={`block min-h-[1.4em] ${line.muted ? "opacity-70" : ""}`}
