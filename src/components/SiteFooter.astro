@@ -1,26 +1,60 @@
 ---
-import { BigBack } from "performative-ui";
 ---
 
-<BigBack
-  className="border-t border-white/10 bg-transparent px-6 py-8 text-ink-200 lg:px-8"
-  company="Parlè.sh"
-  copyright="All rights reserved • 2026"
-  gradient
-  columns={[
-    {
-      heading: "Product",
-      links: [
-        { label: "Install", href: "/install" },
-        { label: "About", href: "/about" },
-      ],
-    },
-    {
-      heading: "Explore",
-      links: [
-        { label: "v1", href: "/v1" },
-        { label: "Ghostty", href: "/ghostty" },
-      ],
-    },
-  ]}
-/>
+<footer
+  class="pui-bigback border-t border-white/10 bg-transparent px-6 py-8 text-ink-200 lg:px-8"
+>
+  <div class="footer-inner mx-auto w-full max-w-4xl">
+  <div class="footer-top">
+    <nav class="pui-bigback__cols" aria-label="Footer">
+      <div class="pui-bigback__col">
+        <div class="pui-bigback__heading">Product</div>
+        <ul class="pui-bigback__list">
+          <li><a class="pui-bigback__link" href="/install">Install</a></li>
+          <li><a class="pui-bigback__link" href="/about">About</a></li>
+        </ul>
+      </div>
+      <div class="pui-bigback__col">
+        <div class="pui-bigback__heading">Explore</div>
+        <ul class="pui-bigback__list">
+          <li><a class="pui-bigback__link" href="/v1">v1</a></li>
+          <li><a class="pui-bigback__link" href="/ghostty">Ghostty</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <a class="footer-quickstart" href="/install">Get Started</a>
+  </div>
+
+  <a class="pui-bigback__wordmark" href="/install" aria-label="Parlè.sh - Get started">
+    <svg
+      class="pui-bigback__svg"
+      viewBox="0 0 1000 200"
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="Parlè.sh"
+    >
+      <defs>
+        <linearGradient id="parle-wordmark-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="var(--pui-grad-from)"></stop>
+          <stop offset="50%" stop-color="var(--pui-grad-mid)"></stop>
+          <stop offset="100%" stop-color="var(--pui-grad-to)"></stop>
+        </linearGradient>
+      </defs>
+      <text
+        x="500"
+        y="100"
+        text-anchor="middle"
+        dominant-baseline="central"
+        textLength="1000"
+        lengthAdjust="spacingAndGlyphs"
+        fill="url(#parle-wordmark-grad)">Parlè.sh</text
+      >
+    </svg>
+  </a>
+
+  <div class="pui-bigback__base">
+    <span class="pui-bigback__copyright">All rights reserved • 2026</span>
+  </div>
+  </div>
+</footer>
