@@ -34,3 +34,9 @@ Cloudflare Pages via Forgejo Actions. Pipeline: `.forgejo/workflows/deploy.yaml`
 - Prefer static pages and simple Astro components.
 - Validate with `pnpm build` before handoff.
 - No em dashes in file output.
+
+### Styling
+
+- Inline Tailwind utility classes are the default. `src/styles/global.css` is sparing-use-only (theme tokens, base document styles, third-party overrides that need specificity, keyframes, reduced-motion). See the docstring at the top of that file.
+- Prefer canonical Tailwind scale utilities over arbitrary bracket values. Snap to the nearest standard utility, for example `tracking-widest` instead of `tracking-[0.18em]`, `h-64` instead of `h-[16rem]`, `-top-32` instead of `top-[-8rem]`, `bg-white/4` instead of `bg-white/[0.04]`. This keeps spacing, sizing, and typography consistent across the site.
+- Arbitrary bracket values are acceptable only when there is genuinely no close canonical equivalent and the value is doing real visual work: gradients, masks, box-shadows with rgba, `clamp()` display type, bespoke `grid-template` / `minmax()` layouts, and em-based sizes tied to typography. Do not reach for arbitrary values for basic layout or spacing.

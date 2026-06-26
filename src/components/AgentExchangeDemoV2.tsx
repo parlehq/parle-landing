@@ -163,7 +163,7 @@ function Terminal({
 
   return (
     <MockIDE
-      className="h-[18rem] text-left lg:h-[22rem]"
+      className="h-72 text-left lg:h-88"
       data-theme="dark"
       style={{ borderRadius: "0.875rem" }}
     >
@@ -178,7 +178,7 @@ function Terminal({
           ))}
         </div>
       </div>
-      <pre className="pui-ide__body h-[14.5rem] overflow-hidden whitespace-pre-wrap lg:h-[18.5rem]">
+      <pre className="pui-ide__body h-58 overflow-hidden whitespace-pre-wrap lg:h-74">
         <span
           className="block transition-transform duration-300 ease-out"
           style={{ transform: `translateY(-${offsetLines * 1.5}em)` }}
@@ -207,7 +207,7 @@ function HarnessBadge({ harness }: { harness: "claude" | "hermes" | "pi" }) {
   }[harness];
 
   return (
-    <span className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[0.65rem] text-ink-200">
+    <span className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/4 px-2 py-1 text-[0.65rem] text-ink-200">
       <span className={config.color}>{config.mark}</span>
       <span className="hidden sm:inline">{config.label}</span>
     </span>
@@ -216,14 +216,14 @@ function HarnessBadge({ harness }: { harness: "claude" | "hermes" | "pi" }) {
 
 function MediatorCard({ step }: { step: number }) {
   return (
-    <div className="flex w-full items-center justify-center lg:h-[22rem] lg:min-w-44 lg:max-w-52">
+    <div className="flex w-full items-center justify-center lg:h-88 lg:min-w-44 lg:max-w-52">
       <div className="w-full space-y-2 text-left text-xs text-ink-200">
         {mediatorSteps.map((label, index) => (
           <div
             className={`grid grid-cols-[1.4rem_1fr] items-center border transition-all duration-300 ${
               index <= step
                 ? "border-ink-300/60 bg-ink-500/15 text-white shadow-[0_0_18px_rgba(96,165,250,0.16)]"
-                : "border-white/10 bg-white/[0.02] text-ink-300"
+                : "border-white/10 bg-white/2 text-ink-300"
             }`}
             key={label}
           >

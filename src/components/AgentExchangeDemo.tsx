@@ -332,7 +332,7 @@ function Terminal({
 }) {
   return (
     <MockIDE
-      className="relative z-20 h-[13.5rem] text-left sm:h-[16rem] lg:h-[22rem]"
+      className="relative z-20 h-54 text-left sm:h-64 lg:h-88"
       data-theme="dark"
       style={{ borderRadius: "0.875rem" }}
     >
@@ -382,7 +382,7 @@ function HarnessBadge({ harness }: { harness: Harness }) {
   }[harness];
 
   return (
-    <span className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[0.65rem] text-ink-200">
+    <span className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/4 px-2 py-1 text-[0.65rem] text-ink-200">
       <span className={config.color}>{config.mark}</span>
       <span className="hidden sm:inline">{config.label}</span>
     </span>
@@ -629,7 +629,7 @@ function ConnectiveLayer({
     <>
       <svg
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 z-0 h-[33rem] w-[15rem] -translate-x-1/2 -translate-y-1/2 overflow-visible lg:hidden"
+        className="pointer-events-none absolute top-1/2 left-1/2 z-0 h-132 w-60 -translate-x-1/2 -translate-y-1/2 overflow-visible lg:hidden"
         preserveAspectRatio="xMidYMid meet"
         viewBox="0 0 60 120"
       >
@@ -676,7 +676,7 @@ function ConnectiveLayer({
       </svg>
       <svg
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 z-0 hidden h-[24rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 overflow-visible lg:block"
+        className="pointer-events-none absolute top-1/2 left-1/2 z-0 hidden h-96 w-152 -translate-x-1/2 -translate-y-1/2 overflow-visible lg:block"
         preserveAspectRatio="xMidYMid meet"
         viewBox="0 0 1000 160"
       >
@@ -758,9 +758,9 @@ function ParleMediationCore({
   const activeNode: Side = phase <= 2 ? "left" : "right";
 
   return (
-    <div className="relative z-10 grid min-h-64 place-items-center overflow-visible py-10 lg:min-h-[22rem] lg:py-0">
-      <div className="pointer-events-none absolute inset-x-1/2 top-[-4rem] z-0 h-16 w-px bg-gradient-to-b from-transparent via-ink-300/30 to-ink-300/0 lg:hidden" />
-      <div className="pointer-events-none absolute inset-x-1/2 bottom-[-4rem] z-0 h-16 w-px bg-gradient-to-b from-ink-300/0 via-ink-300/20 to-transparent lg:hidden" />
+    <div className="relative z-10 grid min-h-64 place-items-center overflow-visible py-10 lg:min-h-88 lg:py-0">
+      <div className="pointer-events-none absolute inset-x-1/2 -top-16 z-0 h-16 w-px bg-linear-to-b from-transparent via-ink-300/30 to-ink-300/0 lg:hidden" />
+      <div className="pointer-events-none absolute inset-x-1/2 -bottom-16 z-0 h-16 w-px bg-linear-to-b from-ink-300/0 via-ink-300/20 to-transparent lg:hidden" />
       <div className="absolute inset-0 rounded-[3rem] bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.2),transparent_58%)] blur-2xl" />
       <div className="parle-core-circle absolute size-72 rounded-full border border-ink-300/12 sm:size-80" />
       <div className="parle-core-circle parle-core-circle--inner absolute size-52 rounded-full border border-ink-300/14 sm:size-60" />
@@ -796,7 +796,7 @@ function ParleMediationCore({
           <p className="text-3xl font-semibold tracking-tight text-white">
             Parlè
           </p>
-          <p className="mt-2 h-4 font-mono text-[0.62rem] tracking-[0.18em] text-ink-300 uppercase">
+          <p className="mt-2 h-4 font-mono text-[0.62rem] tracking-widest text-ink-300 uppercase">
             {phase <= 1 ? "policy" : phase <= 3 ? "scope" : "seal"}
           </p>
         </div>
