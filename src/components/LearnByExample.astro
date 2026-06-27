@@ -1,10 +1,9 @@
 ---
-type StepTone = "input" | "thinking" | "tool" | "citation" | "output";
-
 type ExampleStep = {
   label: string;
   text: string;
-  tone?: StepTone;
+  // Bare Tailwind color name (e.g. "cyan", "emerald"). Safelisted in global.css.
+  color?: string;
 };
 
 interface Props {
@@ -31,36 +30,19 @@ const {
   mirrored = false,
 } = Astro.props;
 
-const toneStyles: Record<StepTone, { border: string; text: string }> = {
-  input: { border: "border-orange-300/60", text: "text-orange-200" },
-  thinking: { border: "border-violet-300/60", text: "text-violet-200" },
-  tool: { border: "border-fuchsia-300/60", text: "text-fuchsia-200" },
-  citation: { border: "border-cyan-300/60", text: "text-cyan-200" },
-  output: { border: "border-emerald-300/60", text: "text-emerald-200" },
-};
-
-function toneFromLabel(label: string): StepTone {
-  const normalized = label.toLowerCase();
-  if (normalized.includes("tool") || normalized.includes("trace")) {
-    return "tool";
-  }
-  if (normalized.includes("citation") || normalized.includes("guardrail")) {
-    return "citation";
-  }
-  return "thinking";
-}
+const DEFAULT_COLOR = "violet";
 
 const timeline = [
-  { label: "Input", text: prompt, tone: "input" as StepTone, delay: 0 },
+  { label: "Input", text: prompt, color: "orange", delay: 0 },
   ...steps.map((step, index) => ({
     ...step,
-    tone: step.tone ?? toneFromLabel(step.label),
+    color: step.color ?? DEFAULT_COLOR,
     delay: (index + 1) * 140,
   })),
   {
     label: "Output",
     text: outcome,
-    tone: "output" as StepTone,
+    color: "emerald",
     delay: (steps.length + 1) * 140,
   },
 ];
@@ -118,27 +100,31 @@ const timeline = [
       </div>
 
       <ol class="relative border-y border-white/10">
-        <span
-          class="learn-example-line pointer-events-none absolute top-6 bottom-[5.5rem] left-5 w-px bg-linear-to-b from-orange-300 via-violet-400 to-cyan-300"
-          aria-hidden="true"
-        >
-        </span>
         {
           timeline.map((step, index) => {
-            const tone = step.tone;
-            const styles = toneStyles[tone];
             const stepNumber = String(index + 1).padStart(2, "0");
+            const nextColor = timeline[index + 1]?.color;
             return (
               <li
-                class="learn-example-step grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-white/10 py-5 last:border-b-0 sm:py-6"
+                class="learn-example-step relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-white/10 py-5 last:border-b-0 sm:py-6"
                 style={`animation-delay: ${step.delay}ms`}
               >
+                {nextColor && (
+                  <span
+                    class:list={[
+                      "learn-example-line pointer-events-none absolute top-10 left-5 h-full w-px -translate-x-1/2 bg-linear-to-b sm:top-11",
+                      `from-${step.color}-300`,
+                      `to-${nextColor}-300`,
+                    ]}
+                    aria-hidden="true"
+                  />
+                )}
                 <div class="relative flex justify-center">
                   <span
                     class:list={[
-                      "relative z-10 grid size-10 place-items-center border bg-ink-950 font-mono text-[0.68rem] shadow-[0_0_24px_rgba(96,165,250,0.14)]",
-                      styles.border,
-                      styles.text,
+                      "relative z-10 grid size-10 place-items-center rounded-md border bg-ink-950 font-mono text-[0.68rem] shadow-[0_0_24px_rgba(96,165,250,0.14)]",
+                      `border-${step.color}-300/60`,
+                      `text-${step.color}-200`,
                     ]}
                   >
                     {stepNumber}

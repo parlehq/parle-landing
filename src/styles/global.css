@@ -19,6 +19,16 @@
 @import "tailwindcss";
 @import "performative-ui/styles.css";
 
+/*
+ * LearnByExample step accents are data-driven: each step sets a bare Tailwind
+ * color name and the component builds `border-<c>-300/60` and `text-<c>-200` at
+ * runtime, so Tailwind can't see them by scanning source. Safelist the full
+ * palette so any valid color name works.
+ */
+@source inline("border-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone}-300/60");
+@source inline("text-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone}-200");
+@source inline("{from,to}-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone}-300");
+
 @theme {
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;

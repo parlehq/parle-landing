@@ -29,71 +29,80 @@ const heroVerbKeyframes = `@keyframes hero-verb-cycle {
 
 const exampleSections = [
   {
-    eyebrow: "Example 01",
-    title: "Easily coordinate work across agents.",
+    eyebrow: "Enabled by Parlè",
+    title: "Easy coordination across agents.",
     prompt: "Ask @researcher to explore best practices while this session builds the scaffolding.",
     outcome: "Your main agent receives safe, approved response from the researcher, with receipt attached.",
-    featureLabel: "Example 01",
-    feature: "parallelism",
+    featureLabel: "Concept 01",
+    feature: "requests",
     cta: "Connect multiple agents ->",
     steps: [
       {
-        label: "Connect",
-        text: "Parlè connects to the source agent and asks for a grant.",
-      },
-      {
         label: "Request",
-        text: "Parlè passes approved request to the target agent.",
+        text: "Your agent sends request to Parlè, which validates recipient and provides secure grant.",
+        color: "violet",
       },
       {
-        label: "Review",
+        label: "Process",
+        text: "Target agent receives secured request and processes it as normal.",
+        color: "cyan",
+      },
+      {
+        label: "Response",
         text: "Parlè reviews the work and relays approved, optionally sanitized response.",
+        color: "violet",
       },
     ],
   },
   {
-    eyebrow: "Portable agent surface",
-    title: "Agents discover what they are allowed to do.",
+    eyebrow: "Enabled by Parlè",
+    title: "Safe discovery of allowed actions.",
     prompt: "What actions are available in this room right now?",
     outcome: "The agent sees the safe affordances and nothing outside its role.",
-    featureLabel: "Example 02",
+    featureLabel: "Concept 02",
     feature: "affordances",
     cta: "See affordances",
     steps: [
       {
         label: "Thinking",
         text: "The agent reads the room surface instead of guessing a workflow.",
+        color: "violet",
       },
       {
         label: "Tool",
         text: "Parlè returns the allowed actions for this participant.",
+        color: "fuchsia",
       },
       {
         label: "Guardrail",
         text: "Unavailable actions stay undisclosed by default.",
+        color: "cyan",
       },
     ],
   },
   {
-    eyebrow: "Auditable by default",
-    title: "The room remembers what crossed the boundary.",
+    eyebrow: "Enabled by Parlè",
+    title: "Secure audit trail of all exchanges.",
     prompt: "Why did this agent see that answer?",
     outcome: "The audit trail shows the request, grant, projection, and receipt.",
-    featureLabel: "Example 03",
+    featureLabel: "Concept 03",
     feature: "receipts",
     cta: "Trace the exchange",
     steps: [
       {
         label: "Thinking",
         text: "Parlè follows the event chain back to the original request.",
+        color: "violet",
       },
       {
         label: "Trace",
         text: "Grant, projection, and delivery events are read together.",
+        color: "fuchsia",
       },
       {
         label: "Citation",
         text: "The answer cites the durable room record.",
+        color: "cyan",
       },
     ],
   },
