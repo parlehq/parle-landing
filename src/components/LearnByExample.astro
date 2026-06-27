@@ -37,6 +37,23 @@ const toneStyles: Record<StepTone, { border: string; text: string }> = {
   output: { border: "border-emerald-300/60", text: "text-emerald-200" },
 };
 
+// Connector segments fade from one node's tone to the next. Full class
+// literals so Tailwind can detect them.
+const lineFrom: Record<StepTone, string> = {
+  input: "from-orange-300",
+  thinking: "from-violet-400",
+  tool: "from-fuchsia-300",
+  citation: "from-cyan-300",
+  output: "from-emerald-300",
+};
+const lineTo: Record<StepTone, string> = {
+  input: "to-orange-300",
+  thinking: "to-violet-400",
+  tool: "to-fuchsia-300",
+  citation: "to-cyan-300",
+  output: "to-emerald-300",
+};
+
 function toneFromLabel(label: string): StepTone {
   const normalized = label.toLowerCase();
   if (normalized.includes("tool") || normalized.includes("trace")) {
@@ -65,7 +82,7 @@ const timeline = [
 ---
 
 <section
-  class="relative isolate overflow-hidden rounded-[2rem] border border-white/10 bg-black/35 shadow-[0_32px_120px_rgba(2,6,23,0.32)] backdrop-blur-md"
+  class="relative isolate overflow-hidden rounded-4xl border border-white/10 bg-black/35 shadow-[0_32px_120px_rgba(2,6,23,0.32)] backdrop-blur-md"
 >
   <div
     class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(191,219,254,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(191,219,254,0.07)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-35"
@@ -92,22 +109,30 @@ const timeline = [
       </div>
 
       <ol class="relative border-y border-white/10">
-        <span
-          class="learn-example-line pointer-events-none absolute top-6 bottom-6 left-5 w-px bg-linear-to-b from-orange-300 via-violet-400 to-cyan-300"
-          aria-hidden="true"
-        >
-        </span>
         {
           timeline.map((step, index) => {
             const tone = step.tone;
             const styles = toneStyles[tone];
             const stepNumber = String(index + 1).padStart(2, "0");
+            const nextTone =
+              index < timeline.length - 1 ? timeline[index + 1].tone : null;
             return (
               <li
                 class="learn-example-step grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-white/10 py-5 last:border-b-0 sm:py-6"
                 style={`animation-delay: ${step.delay}ms`}
               >
                 <div class="relative flex justify-center">
+                  {nextTone && (
+                    <span
+                      class:list={[
+                        "learn-example-line pointer-events-none absolute top-5 left-5 h-[calc(100%+2.5rem)] w-px bg-linear-to-b sm:h-[calc(100%+3rem)]",
+                        lineFrom[tone],
+                        lineTo[nextTone],
+                      ]}
+                      style={`animation-delay: ${step.delay}ms`}
+                      aria-hidden="true"
+                    />
+                  )}
                   <span
                     class:list={[
                       "relative z-10 grid size-10 place-items-center border bg-ink-950 font-mono text-[0.68rem] shadow-[0_0_24px_rgba(96,165,250,0.14)]",
