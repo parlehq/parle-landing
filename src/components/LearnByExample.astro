@@ -1,0 +1,194 @@
+---
+type StepTone = "input" | "thinking" | "tool" | "citation" | "output";
+
+type ExampleStep = {
+  label: string;
+  text: string;
+  tone?: StepTone;
+};
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  prompt: string;
+  outcome: string;
+  steps: ExampleStep[];
+  feature: string;
+  featureLabel: string;
+  cta?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  prompt,
+  outcome,
+  steps,
+  feature,
+  featureLabel,
+  cta = "Learn the pattern",
+} = Astro.props;
+
+const toneStyles: Record<StepTone, { border: string; text: string }> = {
+  input: { border: "border-orange-300/60", text: "text-orange-200" },
+  thinking: { border: "border-violet-300/60", text: "text-violet-200" },
+  tool: { border: "border-fuchsia-300/60", text: "text-fuchsia-200" },
+  citation: { border: "border-cyan-300/60", text: "text-cyan-200" },
+  output: { border: "border-emerald-300/60", text: "text-emerald-200" },
+};
+
+function toneFromLabel(label: string): StepTone {
+  const normalized = label.toLowerCase();
+  if (normalized.includes("tool") || normalized.includes("trace")) {
+    return "tool";
+  }
+  if (normalized.includes("citation") || normalized.includes("guardrail")) {
+    return "citation";
+  }
+  return "thinking";
+}
+
+const timeline = [
+  { label: "Input", text: prompt, tone: "input" as StepTone, delay: 0 },
+  ...steps.map((step, index) => ({
+    ...step,
+    tone: step.tone ?? toneFromLabel(step.label),
+    delay: (index + 1) * 140,
+  })),
+  {
+    label: "Output",
+    text: outcome,
+    tone: "output" as StepTone,
+    delay: (steps.length + 1) * 140,
+  },
+];
+---
+
+<section
+  class="relative isolate overflow-hidden rounded-[2rem] border border-white/10 bg-black/35 shadow-[0_32px_120px_rgba(2,6,23,0.32)] backdrop-blur-md"
+>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(191,219,254,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(191,219,254,0.07)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-35"
+  >
+  </div>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_74%_36%,rgba(96,165,250,0.16),transparent_34%)]"
+  >
+  </div>
+
+  <div class="relative grid lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.95fr)]">
+    <div
+      class="relative border-b border-white/10 p-5 sm:p-8 lg:border-r lg:border-b-0 lg:p-10 xl:p-12"
+    >
+      <div class="mb-8 max-w-2xl sm:mb-10">
+        <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
+          {eyebrow}
+        </p>
+        <h2
+          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl xl:text-5xl"
+        >
+          {title}
+        </h2>
+      </div>
+
+      <ol class="relative border-y border-white/10">
+        <span
+          class="learn-example-line pointer-events-none absolute top-6 bottom-6 left-5 w-px bg-linear-to-b from-orange-300 via-violet-400 to-cyan-300"
+          aria-hidden="true"
+        >
+        </span>
+        {
+          timeline.map((step, index) => {
+            const tone = step.tone;
+            const styles = toneStyles[tone];
+            const stepNumber = String(index + 1).padStart(2, "0");
+            return (
+              <li
+                class="learn-example-step grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-white/10 py-5 last:border-b-0 sm:py-6"
+                style={`animation-delay: ${step.delay}ms`}
+              >
+                <div class="relative flex justify-center">
+                  <span
+                    class:list={[
+                      "relative z-10 grid size-10 place-items-center border bg-ink-950 font-mono text-[0.68rem] shadow-[0_0_24px_rgba(96,165,250,0.14)]",
+                      styles.border,
+                      styles.text,
+                    ]}
+                  >
+                    {stepNumber}
+                  </span>
+                </div>
+
+                <div class="min-w-0 pt-0.5">
+                  <p class="font-mono text-xs tracking-widest text-ink-300/58 uppercase">
+                    {step.label}
+                  </p>
+                  <p class="mt-2 max-w-xl text-base leading-6 text-balance text-ink-100/78 sm:text-lg sm:leading-7">
+                    {step.text}
+                  </p>
+                </div>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+
+    <div class="relative grid min-h-96 place-items-center p-8 sm:p-10 xl:p-12">
+      <div class="learn-example-feature w-full max-w-md">
+        <div
+          class="mx-auto mb-10 h-px w-24 bg-linear-to-r from-transparent via-ink-300/50 to-transparent"
+        >
+        </div>
+        <div class="text-center">
+          <p class="font-mono text-sm tracking-widest text-ink-300 uppercase">
+            {featureLabel}
+          </p>
+          <p
+            class="mt-7 max-w-full overflow-hidden font-mono text-[clamp(2.6rem,5vw,4.8rem)] leading-none tracking-[-0.08em] text-white"
+          >
+            {feature}
+          </p>
+        </div>
+
+        <div class="mt-8 rounded-2xl border border-white/10 bg-ink-950/75 p-4 text-left shadow-[0_20px_70px_rgba(2,6,23,0.36)]">
+          <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
+            <p class="font-mono text-[0.68rem] tracking-widest text-ink-300 uppercase">
+              Approved artifact
+            </p>
+            <span class="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-2 py-1 font-mono text-[0.62rem] tracking-widest text-emerald-200 uppercase">
+              sealed
+            </span>
+          </div>
+          <dl class="mt-4 space-y-3 font-mono text-xs leading-5">
+            <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
+              <dt class="text-ink-300/55">room</dt>
+              <dd class="truncate text-ink-100/78">agent-exchange</dd>
+            </div>
+            <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
+              <dt class="text-ink-300/55">feature</dt>
+              <dd class="truncate text-ink-100/78">{feature}</dd>
+            </div>
+            <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
+              <dt class="text-ink-300/55">result</dt>
+              <dd class="text-ink-100/78">{outcome}</dd>
+            </div>
+            <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
+              <dt class="text-ink-300/55">receipt</dt>
+              <dd class="text-cyan-200">evt_4f2a...sealed</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="text-center">
+          <a
+            class="mt-8 inline-flex items-center rounded-full border border-white/15 bg-white px-6 py-3 text-sm font-semibold text-ink-950 transition hover:-translate-y-px hover:bg-ink-100"
+            href="/install"
+          >
+            {cta}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

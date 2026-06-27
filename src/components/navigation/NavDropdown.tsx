@@ -1,0 +1,78 @@
+import type { Dropdown } from "./navData";
+
+export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
+  return (
+    <div className="w-full border-b border-white/10 bg-ink-950/95 shadow-2xl backdrop-blur-xl">
+      <div className="mx-auto grid max-w-6xl gap-8 px-8 py-10 lg:grid-cols-4">
+        <div className="grid gap-5 lg:col-span-3 lg:grid-cols-3">
+          {dropdown.columns.map((column) => (
+            <a
+              key={column.title}
+              href={column.href}
+              className="group relative block overflow-hidden rounded-md border border-white/10 bg-white/4 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/8"
+            >
+              <span
+                className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
+                style={{
+                  background: `linear-gradient(135deg, ${column.accent}18, transparent 58%)`,
+                }}
+              />
+              <span className="relative flex items-center gap-3">
+                <span
+                  className="flex h-11 w-11 items-center justify-center rounded-md border text-sm font-semibold"
+                  style={{
+                    borderColor: `${column.accent}35`,
+                    color: column.accent,
+                    background: `${column.accent}14`,
+                  }}
+                >
+                  {column.title.slice(0, 1)}
+                </span>
+                <span>
+                  <span
+                    className="block font-mono text-xs tracking-widest uppercase"
+                    style={{ color: column.accent }}
+                  >
+                    {column.eyebrow}
+                  </span>
+                  <span className="mt-1 block text-lg font-semibold text-white">
+                    {column.title}
+                  </span>
+                </span>
+              </span>
+              <span className="relative mt-5 block text-sm leading-6 text-ink-100/72">
+                {column.description}
+              </span>
+              <span className="relative mt-6 flex items-center justify-between rounded-md bg-white/8 px-4 py-3 text-sm font-medium text-white transition group-hover:bg-white/12">
+                Learn more
+                <span
+                  className="transition group-hover:translate-x-1"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </span>
+            </a>
+          ))}
+        </div>
+        <div className="rounded-md border border-white/10 bg-white/4 p-6">
+          <p className="font-mono text-xs tracking-widest text-ink-300 uppercase">
+            {dropdown.aside.title}
+          </p>
+          <div className="mt-5 space-y-5">
+            {dropdown.aside.links.map((link) => (
+              <a key={link.label} href={link.href} className="group block">
+                <span className="block text-sm font-semibold text-white transition group-hover:text-ink-300">
+                  {link.label}
+                </span>
+                <span className="mt-1 block text-xs leading-5 text-ink-100/60">
+                  {link.description}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -5,6 +5,7 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import AgentExchangeDemo from "../components/AgentExchangeDemo";
 import HeroAurora from "../components/HeroAurora";
+import LearnByExample from "../components/LearnByExample.astro";
 
 const heroVerbs = [
   "can safely talk to",
@@ -25,11 +26,83 @@ const heroVerbKeyframes = `@keyframes hero-verb-cycle {
   0%, ${verbHoldPct}% { opacity: 1; transform: translateY(0); }
   ${verbFadePct}%, 100% { opacity: 0; transform: translateY(-0.55em); }
 }`;
+
+const exampleSections = [
+  {
+    eyebrow: "Example 01",
+    title: "Async workstreams.",
+    prompt: "Ask @researcher to explore best practices while this session builds the scaffolding.",
+    outcome: "Your main agent receives safe, approved response from the researcher, with receipt attached.",
+    featureLabel: "Example 01",
+    feature: "parallelism",
+    cta: "Connect multiple agents ->",
+    steps: [
+      {
+        label: "Connect",
+        text: "Parlè connects to the source agent and asks for a grant.",
+      },
+      {
+        label: "Request",
+        text: "Parlè passes approved request to the target agent.",
+      },
+      {
+        label: "Review",
+        text: "Parlè reviews the work and relays approved, optionally sanitized response.",
+      },
+    ],
+  },
+  {
+    eyebrow: "Portable agent surface",
+    title: "Agents discover what they are allowed to do.",
+    prompt: "What actions are available in this room right now?",
+    outcome: "The agent sees the safe affordances and nothing outside its role.",
+    featureLabel: "Example 02",
+    feature: "affordances",
+    cta: "See affordances",
+    steps: [
+      {
+        label: "Thinking",
+        text: "The agent reads the room surface instead of guessing a workflow.",
+      },
+      {
+        label: "Tool",
+        text: "Parlè returns the allowed actions for this participant.",
+      },
+      {
+        label: "Guardrail",
+        text: "Unavailable actions stay undisclosed by default.",
+      },
+    ],
+  },
+  {
+    eyebrow: "Auditable by default",
+    title: "The room remembers what crossed the boundary.",
+    prompt: "Why did this agent see that answer?",
+    outcome: "The audit trail shows the request, grant, projection, and receipt.",
+    featureLabel: "Example 03",
+    feature: "receipts",
+    cta: "Trace the exchange",
+    steps: [
+      {
+        label: "Thinking",
+        text: "Parlè follows the event chain back to the original request.",
+      },
+      {
+        label: "Trace",
+        text: "Grant, projection, and delivery events are read together.",
+      },
+      {
+        label: "Citation",
+        text: "The answer cites the durable room record.",
+      },
+    ],
+  },
+];
 ---
 
 <Layout
-  title="Parlè | AI mediator layer for agents"
-  description="Parlè is the AI mediator layer where agents can ask, negotiate, and exchange scoped context safely."
+  title="Parlè | Agent-to-agent mediation service."
+  description="Parlè is the agent-to-agent mediation layer where agents can ask, negotiate, and exchange scoped context safely."
 >
   <div class="flex min-h-screen flex-col">
     <SiteHeader path={Astro.url.pathname} />
@@ -55,7 +128,7 @@ const heroVerbKeyframes = `@keyframes hero-verb-cycle {
                 My AI
               </span>
               <span
-                class="relative my-0 h-[1.45em] w-full max-w-136 justify-self-center overflow-hidden font-mono text-[clamp(0.66rem,2.6vw,1.15rem)] tracking-widest text-ink-300 uppercase md:col-span-2 md:row-start-2 md:my-2 md:translate-y-1.5"
+                class="relative my-0 pt-12 translate-y-2 pb-0 md:pt-0 h-[1.45em] w-full max-w-136 justify-self-center overflow-hidden font-mono text-[clamp(0.66rem,2.6vw,1.15rem)] tracking-widest text-ink-300 uppercase md:col-span-2 md:row-start-2 md:my-2 md:translate-y-1.5"
                 style={`--hero-verb-cycle: ${verbCycleSeconds}s`}
               >
                 {
@@ -87,6 +160,14 @@ const heroVerbKeyframes = `@keyframes hero-verb-cycle {
 
         <div class="mt-12 lg:mt-16">
           <AgentExchangeDemo client:load />
+        </div>
+
+        <div class="mt-20 space-y-8 lg:mt-28">
+          {
+            exampleSections.map((section) => (
+              <LearnByExample {...section} />
+            ))
+          }
         </div>
       </section>
     </main>

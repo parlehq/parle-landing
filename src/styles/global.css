@@ -176,6 +176,49 @@ body {
   }
 }
 
+.learn-example-line {
+  transform-origin: top;
+  animation: learn-example-line-draw 900ms ease-out both;
+}
+
+.learn-example-step {
+  opacity: 0;
+  transform: translateY(0.8rem);
+  animation: learn-example-step-in 520ms ease-out both;
+}
+
+.learn-example-feature {
+  opacity: 0;
+  transform: scale(0.96) translateY(0.5rem);
+  animation: learn-example-feature-in 720ms 320ms ease-out both;
+}
+
+@keyframes learn-example-line-draw {
+  from {
+    transform: scaleY(0);
+    opacity: 0.2;
+  }
+
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes learn-example-step-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes learn-example-feature-in {
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 .parle-hover-wordmark {
   --parle-hover-x: 50%;
   --parle-hover-y: 50%;
