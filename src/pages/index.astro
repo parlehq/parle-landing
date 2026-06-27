@@ -30,7 +30,7 @@ const heroVerbKeyframes = `@keyframes hero-verb-cycle {
 const exampleSections = [
   {
     eyebrow: "Example 01",
-    title: "Async workstreams.",
+    title: "Easily coordinate work across agents.",
     prompt: "Ask @researcher to explore best practices while this session builds the scaffolding.",
     outcome: "Your main agent receives safe, approved response from the researcher, with receipt attached.",
     featureLabel: "Example 01",
@@ -162,10 +162,10 @@ const exampleSections = [
           <AgentExchangeDemo client:load />
         </div>
 
-        <div class="mt-20 space-y-8 lg:mt-28">
+        <div class="mt-20 lg:mt-28">
           {
-            exampleSections.map((section) => (
-              <LearnByExample {...section} />
+            exampleSections.map((section, index) => (
+              <LearnByExample {...section} mirrored={index === 1} />
             ))
           }
         </div>

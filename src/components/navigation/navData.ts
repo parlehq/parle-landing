@@ -66,5 +66,6 @@ const useCases: Dropdown = {
 
 export const primaryNav: NavItem[] = [
   { label: "Use Cases", dropdown: useCases },
+  { label: "Docs", href: "docs.parle.sh" },
   { label: "Pricing", href: "#" },
 ];

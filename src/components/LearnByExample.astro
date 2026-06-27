@@ -16,6 +16,7 @@ interface Props {
   feature: string;
   featureLabel: string;
   cta?: string;
+  mirrored?: boolean;
 }
 
 const {
@@ -27,6 +28,7 @@ const {
   feature,
   featureLabel,
   cta = "Learn the pattern",
+  mirrored = false,
 } = Astro.props;
 
 const toneStyles: Record<StepTone, { border: string; text: string }> = {
@@ -35,23 +37,6 @@ const toneStyles: Record<StepTone, { border: string; text: string }> = {
   tool: { border: "border-fuchsia-300/60", text: "text-fuchsia-200" },
   citation: { border: "border-cyan-300/60", text: "text-cyan-200" },
   output: { border: "border-emerald-300/60", text: "text-emerald-200" },
-};
-
-// Connector segments fade from one node's tone to the next. Full class
-// literals so Tailwind can detect them.
-const lineFrom: Record<StepTone, string> = {
-  input: "from-orange-300",
-  thinking: "from-violet-400",
-  tool: "from-fuchsia-300",
-  citation: "from-cyan-300",
-  output: "from-emerald-300",
-};
-const lineTo: Record<StepTone, string> = {
-  input: "to-orange-300",
-  thinking: "to-violet-400",
-  tool: "to-fuchsia-300",
-  citation: "to-cyan-300",
-  output: "to-emerald-300",
 };
 
 function toneFromLabel(label: string): StepTone {
@@ -82,20 +67,44 @@ const timeline = [
 ---
 
 <section
-  class="relative isolate overflow-hidden rounded-4xl border border-white/10 bg-black/35 shadow-[0_32px_120px_rgba(2,6,23,0.32)] backdrop-blur-md"
+  class="learn-example-band relative left-1/2 isolate w-dvw max-w-dvw -translate-x-1/2 overflow-hidden border-y border-white/12 px-6 lg:px-8"
 >
   <div
-    class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(191,219,254,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(191,219,254,0.07)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-35"
+    class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(191,219,254,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(191,219,254,0.055)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-45"
   >
   </div>
   <div
-    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_74%_36%,rgba(96,165,250,0.16),transparent_34%)]"
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_36%,rgba(96,165,250,0.13),transparent_32%)]"
   >
   </div>
+  <div class="pointer-events-none absolute inset-0 hidden lg:block" aria-hidden="true">
+    <span class="learn-example-vertical absolute inset-y-0 left-[calc(50%-36rem+3.25rem)] w-px bg-white/6"></span>
+    <span
+      class:list={[
+        "learn-example-vertical absolute inset-y-0 w-px bg-white/10",
+        mirrored ? "left-[47%]" : "left-[53%]",
+      ]}
+    >
+    </span>
+    <span class="learn-example-vertical absolute inset-y-0 right-[7rem] w-px bg-white/6"></span>
+  </div>
+  <span class="absolute top-0 left-1/2 h-px w-screen -translate-x-1/2 bg-white/12" aria-hidden="true"></span>
+  <span class="absolute bottom-0 left-1/2 h-px w-screen -translate-x-1/2 bg-white/12" aria-hidden="true"></span>
 
-  <div class="relative grid lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.95fr)]">
+  <div
+    class:list={[
+      "relative mx-auto grid max-w-6xl",
+      mirrored ? "lg:grid-cols-[47%_53%]" : "lg:grid-cols-[53%_47%]",
+    ]}
+  >
+    <span class="absolute top-8 -left-6 size-3 border-t border-l border-white/25" aria-hidden="true"></span>
+    <span class="absolute -right-6 bottom-8 size-3 border-r border-b border-white/25" aria-hidden="true"></span>
+
     <div
-      class="relative border-b border-white/10 p-5 sm:p-8 lg:border-r lg:border-b-0 lg:p-10 xl:p-12"
+      class:list={[
+        "relative p-5 sm:p-8 lg:py-14 xl:py-16",
+        mirrored ? "lg:order-2 lg:pr-0 lg:pl-12" : "lg:order-1 lg:pr-12 lg:pl-0",
+      ]}
     >
       <div class="mb-8 max-w-2xl sm:mb-10">
         <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
@@ -109,30 +118,22 @@ const timeline = [
       </div>
 
       <ol class="relative border-y border-white/10">
+        <span
+          class="learn-example-line pointer-events-none absolute top-6 bottom-[5.5rem] left-5 w-px bg-linear-to-b from-orange-300 via-violet-400 to-cyan-300"
+          aria-hidden="true"
+        >
+        </span>
         {
           timeline.map((step, index) => {
             const tone = step.tone;
             const styles = toneStyles[tone];
             const stepNumber = String(index + 1).padStart(2, "0");
-            const nextTone =
-              index < timeline.length - 1 ? timeline[index + 1].tone : null;
             return (
               <li
                 class="learn-example-step grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-white/10 py-5 last:border-b-0 sm:py-6"
                 style={`animation-delay: ${step.delay}ms`}
               >
                 <div class="relative flex justify-center">
-                  {nextTone && (
-                    <span
-                      class:list={[
-                        "learn-example-line pointer-events-none absolute top-5 left-5 h-[calc(100%+2.5rem)] w-px bg-linear-to-b sm:h-[calc(100%+3rem)]",
-                        lineFrom[tone],
-                        lineTo[nextTone],
-                      ]}
-                      style={`animation-delay: ${step.delay}ms`}
-                      aria-hidden="true"
-                    />
-                  )}
                   <span
                     class:list={[
                       "relative z-10 grid size-10 place-items-center border bg-ink-950 font-mono text-[0.68rem] shadow-[0_0_24px_rgba(96,165,250,0.14)]",
@@ -159,18 +160,23 @@ const timeline = [
       </ol>
     </div>
 
-    <div class="relative grid min-h-96 place-items-center p-8 sm:p-10 xl:p-12">
-      <div class="learn-example-feature w-full max-w-md">
+    <div
+      class:list={[
+        "relative grid min-h-96 place-items-center p-8 sm:p-10 lg:py-14 xl:py-16",
+        mirrored ? "lg:order-1 lg:pr-14 lg:pl-0" : "lg:order-2 lg:pr-0 lg:pl-14",
+      ]}
+    >
+      <div class="learn-example-feature w-full max-w-md lg:max-w-lg">
         <div
-          class="mx-auto mb-10 h-px w-24 bg-linear-to-r from-transparent via-ink-300/50 to-transparent"
+          class="mb-10 h-px w-24 bg-linear-to-r from-ink-300/50 to-transparent"
         >
         </div>
-        <div class="text-center">
+        <div class="text-left">
           <p class="font-mono text-sm tracking-widest text-ink-300 uppercase">
             {featureLabel}
           </p>
           <p
-            class="mt-7 max-w-full overflow-hidden font-mono text-[clamp(2.6rem,5vw,4.8rem)] leading-none tracking-[-0.08em] text-white"
+            class="mt-7 max-w-[115%] overflow-visible font-mono text-[clamp(2.8rem,5.2vw,5rem)] leading-none tracking-[-0.08em] text-white"
           >
             {feature}
           </p>
@@ -205,14 +211,12 @@ const timeline = [
           </dl>
         </div>
 
-        <div class="text-center">
-          <a
-            class="mt-8 inline-flex items-center rounded-full border border-white/15 bg-white px-6 py-3 text-sm font-semibold text-ink-950 transition hover:-translate-y-px hover:bg-ink-100"
-            href="/install"
-          >
-            {cta}
-          </a>
-        </div>
+        <a
+          class="mt-8 inline-flex items-center rounded-full border border-white/15 bg-white px-6 py-3 text-sm font-semibold text-ink-950 transition hover:-translate-y-px hover:bg-ink-100"
+          href="/install"
+        >
+          {cta}
+        </a>
       </div>
     </div>
   </div>

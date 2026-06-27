@@ -128,10 +128,16 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
         </div>
         <div className="hidden items-center gap-3 lg:flex">
           <a
+            href="/login"
+            className="rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-ink-400 hover:bg-white/5"
+          >
+            <i class="fa-solid fa-lock"></i>
+          </a>
+          <a
             href="/install"
             className="rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-ink-400 hover:bg-white/5"
           >
-            Install
+            <i class="fa-solid fa-terminal"></i> Install
           </a>
         </div>
         <button
