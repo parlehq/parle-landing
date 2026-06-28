@@ -19,14 +19,10 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
               />
               <span className="relative flex items-center gap-3">
                 <span
-                  className="flex h-11 w-11 items-center justify-center rounded-md border text-sm font-semibold"
-                  style={{
-                    borderColor: `${column.accent}35`,
-                    color: column.accent,
-                    background: `${column.accent}14`,
-                  }}
+                  className="flex h-11 w-11 items-center justify-center text-sm font-semibold"
+                  style={{ color: column.accent }}
                 >
-                  {column.title.slice(0, 1)}
+                  <i className={`${column.icon} text-lg`} aria-hidden="true" />
                 </span>
                 <span>
                   <span
@@ -44,7 +40,7 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
                 {column.description}
               </span>
               <span className="relative mt-6 flex items-center justify-between rounded-md bg-white/8 px-4 py-3 text-sm font-medium text-white transition group-hover:bg-white/12">
-                Learn more
+                {column.cta ?? column.eyebrow}
                 <span
                   className="transition group-hover:translate-x-1"
                   aria-hidden="true"

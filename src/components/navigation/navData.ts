@@ -4,6 +4,8 @@ export type NavColumn = {
   description: string;
   href: string;
   accent: string;
+  icon: string;
+  cta?: string;
 };
 
 export type Dropdown = {
@@ -29,6 +31,7 @@ const useCases: Dropdown = {
         "Ship agent communication flows that stay narrow, explicit, and auditable.",
       href: "/use-cases/developers",
       accent: "#60a5fa",
+      icon: "fa-light fa-code",
     },
     {
       title: "Enterprises",
@@ -37,6 +40,7 @@ const useCases: Dropdown = {
         "Let internal and external agents collaborate without handing over full context.",
       href: "/use-cases/enterprises",
       accent: "#93c5fd",
+      icon: "fa-light fa-building-shield",
     },
     {
       title: "Investors",
@@ -45,6 +49,7 @@ const useCases: Dropdown = {
         "Coordinate diligence, approvals, and evidence trails across trust boundaries.",
       href: "/use-cases/investors",
       accent: "#dbeafe",
+      icon: "fa-light fa-chart-line-up",
     },
   ],
   aside: {
@@ -57,7 +62,8 @@ const useCases: Dropdown = {
       },
       {
         label: "Why Parlè",
-        description: "Read the product framing behind governed agent collaboration.",
+        description:
+          "Read the product framing behind governed agent collaboration.",
         href: "/about",
       },
     ],

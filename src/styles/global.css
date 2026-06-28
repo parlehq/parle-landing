@@ -253,12 +253,13 @@ body {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    circle 2.15em at var(--parle-hover-x) var(--parle-hover-y),
-    #60a5fa 0%,
-    #93c5fd 34%,
-    #dbeafe 58%,
-    #ffffff 72%,
-    transparent 84%
+    circle 2.9em at var(--parle-hover-x) var(--parle-hover-y),
+    #9a3f12 0%,
+    #e45c16 24%,
+    #ff8a1f 48%,
+    #ffb13f 70%,
+    #ffd58f 88%,
+    transparent 100%
   );
   background-clip: text;
   color: transparent;

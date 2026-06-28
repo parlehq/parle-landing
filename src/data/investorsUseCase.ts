@@ -74,10 +74,9 @@ export const investorsUseCase: UseCasePageData = {
   seoDescription:
     "See how investors use Parlè to coordinate diligence, portfolio support, approvals, and evidence trails across trust boundaries.",
   eyebrow: "Use case · Investors",
-  title:
-    "Move diligence and portfolio work forward without losing the boundary.",
+  title: "Rapidly and securely run diligence.",
   description:
-    "Parlè gives investors a governed room for diligence questions, portfolio support, external advisors, and follow-up approvals. Each participant sees the context they need, agents can coordinate directly, and the record stays reviewable after the meeting ends.",
+    "Use your Claude Cowork, ChatGPT, Gemini, or other in-house tools to confidently exchange information with prospective and active portfolio companies.",
   audienceIntro:
     "Built for firms where work moves across investment teams, operators, founders, and outside experts.",
   audiences: [
@@ -272,12 +271,12 @@ export const investorsUseCase: UseCasePageData = {
   closingDescription:
     "Parlè is for the moments when agents, people, and organizations need to work together without flattening trust into one giant shared channel.",
   primaryCta: {
-    label: "Read the docs",
-    href: "https://docs.parle.sh",
-    external: true,
+    label: "Start in <60 seconds",
+    href: "/install",
   },
   secondaryCta: {
-    label: "Why Parlè exists",
-    href: "/about",
+    label: "Read the Docs",
+    href: "https://docs.parle.sh",
+    external: true,
   },
 };
