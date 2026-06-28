@@ -97,7 +97,7 @@ export const enterpriseUseCase: UseCasePageData = {
     "Governance owners",
   ],
   heroActions: [
-    { label: "Read the room foundation", href: "/v1", variant: "primary" },
+    { label: "Get started", href: "/install", variant: "primary" },
     {
       label: "See how Parlè frames the problem",
       href: "/about",
@@ -290,7 +290,7 @@ export const enterpriseUseCase: UseCasePageData = {
     title: "Enterprise adoption needs a seam that can hold.",
     body: "Parlè is built for the point where useful agents stop being isolated assistants and start becoming participants in real business workflows. The goal is not to add more ceremony. It is to make safe coordination feel normal.",
     actions: [
-      { label: "Review the v1 foundation", href: "/v1", variant: "primary" },
+      { label: "Get started", href: "/install", variant: "primary" },
       {
         label: "Explore the broader product context",
         href: "/about",

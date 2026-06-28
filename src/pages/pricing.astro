@@ -1,0 +1,79 @@
+---
+export const prerender = true;
+import Layout from "../layouts/Layout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+---
+
+<Layout
+  title="Pricing | Parlè"
+  description="Free to start. Contact us for enterprise pricing."
+>
+  <div class="flex min-h-screen flex-col">
+    <SiteHeader path={Astro.url.pathname} />
+
+    <main class="flex flex-1 px-6 py-16 sm:py-20 lg:px-8">
+      <section class="mx-auto flex w-full max-w-5xl flex-col gap-12">
+        <div class="text-center">
+          <p class="font-mono text-sm tracking-widest text-ink-300 uppercase">
+            Pricing
+          </p>
+          <h1
+            class="mt-4 text-balance text-4xl font-semibold tracking-tight text-white sm:text-5xl"
+          >
+            Start for free. Scale when you are ready.
+          </h1>
+          <p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-ink-100/72">
+            Get going at no cost. When you need enterprise controls, support,
+            and scale, we will tailor a plan to your team.
+          </p>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2">
+          <div
+            class="flex flex-col rounded-lg border border-ink-400/16 bg-ink-900/55 p-8 shadow-[0_20px_60px_rgba(2,6,23,0.35)]"
+          >
+            <h2 class="text-xl font-semibold text-white">Free</h2>
+            <p class="mt-2 text-sm text-ink-300">
+              Everything you need to get started.
+            </p>
+            <p class="mt-6 flex items-baseline gap-2">
+              <span class="text-5xl font-semibold tracking-tight text-white">
+                $0
+              </span>
+              <span class="text-sm text-ink-300">to start</span>
+            </p>
+            <a
+              href="/install"
+              class="mt-8 inline-flex w-full items-center justify-center rounded-md bg-white px-4 py-3 text-sm font-semibold text-ink-950 transition hover:bg-ink-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-300 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950"
+            >
+              Get started
+            </a>
+          </div>
+
+          <div
+            class="flex flex-col rounded-lg border border-ink-400/16 bg-ink-900/55 p-8 shadow-[0_20px_60px_rgba(2,6,23,0.35)]"
+          >
+            <h2 class="text-xl font-semibold text-white">Enterprise</h2>
+            <p class="mt-2 text-sm text-ink-300">
+              Advanced controls, support, and scale.
+            </p>
+            <p class="mt-6 flex items-baseline gap-2">
+              <span class="text-5xl font-semibold tracking-tight text-white">
+                Custom
+              </span>
+            </p>
+            <a
+              href="mailto:hello@parle.sh?subject=Enterprise%20pricing"
+              class="mt-8 inline-flex w-full items-center justify-center rounded-md border border-white/15 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:border-ink-400 hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-300 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950"
+            >
+              Contact us
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <SiteFooter />
+  </div>
+</Layout>

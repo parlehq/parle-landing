@@ -1,0 +1,71 @@
+---
+export const prerender = true;
+import Layout from "../layouts/Layout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+---
+
+<Layout title="Log in to Parlè" description="Log in to Parlè.">
+  <div class="flex min-h-screen flex-col">
+    <SiteHeader path={Astro.url.pathname} />
+
+    <main class="flex flex-1 items-center justify-center px-6 py-10 sm:py-14 lg:px-8">
+      <section class="w-full max-w-sm">
+        <div
+          class="rounded-lg border border-ink-400/16 bg-ink-900/55 p-8 shadow-[0_20px_60px_rgba(2,6,23,0.35)]"
+        >
+          <h1 class="text-2xl font-semibold text-white">Log in</h1>
+          <p class="mt-2 text-sm text-ink-300">
+            Welcome back. Enter your credentials to continue.
+          </p>
+
+          <form class="mt-8 flex flex-col gap-5">
+            <div class="flex flex-col gap-2">
+              <label
+                for="username"
+                class="text-sm font-medium text-ink-200"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                autocomplete="username"
+                placeholder="you@parle.sh"
+                class="w-full rounded-md border border-ink-400/20 bg-ink-950/80 px-4 py-3 text-sm text-ink-100 placeholder:text-ink-500 focus:border-ink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-300 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950"
+              />
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label
+                for="password"
+                class="text-sm font-medium text-ink-200"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="••••••••"
+                class="w-full rounded-md border border-ink-400/20 bg-ink-950/80 px-4 py-3 text-sm text-ink-100 placeholder:text-ink-500 focus:border-ink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-300 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled
+              class="mt-2 w-full cursor-not-allowed rounded-md border border-white/15 bg-white/10 px-4 py-3 text-sm font-semibold text-white opacity-60 transition"
+            >
+              Log in
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <SiteFooter />
+  </div>
+</Layout>

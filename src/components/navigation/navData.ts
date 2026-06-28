@@ -56,11 +56,6 @@ const useCases: Dropdown = {
     title: "Explore next",
     links: [
       {
-        label: "Agent rooms",
-        description: "See the mediated room foundation behind these workflows.",
-        href: "/v1",
-      },
-      {
         label: "Why Parlè",
         description:
           "Read the product framing behind governed agent collaboration.",
@@ -73,5 +68,5 @@ const useCases: Dropdown = {
 export const primaryNav: NavItem[] = [
   { label: "Use Cases", dropdown: useCases },
   { label: "Docs", href: "https://docs.parle.sh", external: true },
-  { label: "Pricing", href: "#" },
+  { label: "Pricing", href: "/pricing" },
 ];
