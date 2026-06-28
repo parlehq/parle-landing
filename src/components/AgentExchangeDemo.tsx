@@ -198,20 +198,6 @@ function sliceLines(lines: TerminalLine[], count: number) {
   return output;
 }
 
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  return reduced;
-}
-
 function usePhaseClock(reducedMotion: boolean) {
   const [phase, setPhase] = useState<Phase>(0);
   const [cycle, setCycle] = useState(0);
@@ -807,7 +793,7 @@ function ParleMediationCore({
 }
 
 export default function AgentExchangeDemo() {
-  const reducedMotion = usePrefersReducedMotion();
+  const reducedMotion = false;
   const { phase, cycle } = usePhaseClock(reducedMotion);
   const scenarioIndex = reducedMotion ? 0 : cycle % scenarios.length;
   const scenario = scenarios[scenarioIndex];

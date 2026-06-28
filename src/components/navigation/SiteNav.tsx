@@ -24,6 +24,8 @@ function DesktopNavItem({ item, path }: { item: NavItem; path: string }) {
     >
       <a
         href={item.href ?? "#"}
+        target={item.external ? "_blank" : undefined}
+        rel={item.external ? "noopener noreferrer" : undefined}
         className={cx(
           "flex h-full items-center px-3 text-sm font-medium text-ink-200 transition hover:text-white",
           active && "text-white",
@@ -88,6 +90,8 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
             ) : (
               <a
                 href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
                 className={cx(
                   "block rounded-md border border-white/10 bg-white/4 px-4 py-3 text-sm font-semibold text-white",
                   isActivePath(path, item.href) && "border-ink-400",
@@ -110,8 +114,8 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
     <header className="sticky top-0 z-40 border-b border-white/10 bg-ink-950/70 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
         <div className="flex h-full items-center gap-8">
-          <a href="/" className="inline-flex items-center gap-3" aria-label="Parlè home">
-            <img src="/parle-icon-white.png" alt="" className="h-8 w-auto" />
+          <a href="/" className="inline-flex items-center gap-2" aria-label="Parlè home">
+            <img src="/parle-icon-v4.png" alt="" className="h-8 w-auto" />
             <span
               className="text-2xl tracking-wide text-ink-100"
               style={{ fontFamily: "'Momo Trust Display', sans-serif" }}

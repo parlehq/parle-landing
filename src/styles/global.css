@@ -277,26 +277,4 @@ body {
   html {
     scroll-behavior: auto;
   }
-
-  .parle-core-circle,
-  .parle-core-circle--inner {
-    animation: none !important;
-    transform: none !important;
-  }
-
-  .hero-connector-rule {
-    animation: none !important;
-    opacity: 1;
-    transform: scaleX(1);
-  }
-
-  .hero-verb {
-    animation: none !important;
-    opacity: 0;
-    transform: none;
-  }
-
-  .hero-verb:first-child {
-    opacity: 1;
-  }
 }
