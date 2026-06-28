@@ -110,12 +110,14 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
     <header className="sticky top-0 z-40 border-b border-white/10 bg-ink-950/70 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
         <div className="flex h-full items-center gap-8">
-          <a
-            href="/"
-            className="text-2xl tracking-wide text-ink-100"
-            style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
-          >
-            Parlè
+          <a href="/" className="inline-flex items-center gap-3" aria-label="Parlè home">
+            <img src="/parle-icon-white.png" alt="" className="h-8 w-auto" />
+            <span
+              className="text-2xl tracking-wide text-ink-100"
+              style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
+            >
+              Parlè
+            </span>
           </a>
           <nav
             className="hidden h-full items-stretch lg:flex"
