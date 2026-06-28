@@ -117,8 +117,8 @@ jobs:
               "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/parle-landing/domains" >/tmp/pages-domain-create.json
             echo "Created Cloudflare Pages domain $domain."
           }
-          ensure_domain parlehq.com
-          ensure_domain www.parlehq.com
+          ensure_domain parle.sh
+          ensure_domain www.parle.sh
 
       - name: Build
         run: pnpm build
@@ -136,7 +136,7 @@ jobs:
           deployment_url=$(grep -oE 'Take a peek over at https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | sed 's/^Take a peek over at //' | tail -1 || true)
           alias_url=$(grep -oE 'Deployment alias URL: https://[^ ]+\.pages\.dev' /tmp/deploy-output.txt | sed 's/^Deployment alias URL: //' | tail -1 || true)
           if [ "$GITHUB_REF_NAME" = "main" ]; then
-            alias_url="https://parlehq.com"
+            alias_url="https://parle.sh"
           fi
           echo "deployment_url=$deployment_url" >> "$GITHUB_OUTPUT"
           echo "alias_url=$alias_url" >> "$GITHUB_OUTPUT"
