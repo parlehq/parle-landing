@@ -1,0 +1,8 @@
+---
+export const prerender = true;
+
+import InvestorsUseCasePage from "../../components/use-cases/InvestorsUseCasePage.astro";
+import { investorsUseCase } from "../../data/investorsUseCase";
+---
+
+<InvestorsUseCasePage page={investorsUseCase} path={Astro.url.pathname} />

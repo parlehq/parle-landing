@@ -27,7 +27,7 @@ const useCases: Dropdown = {
       eyebrow: "Build",
       description:
         "Ship agent communication flows that stay narrow, explicit, and auditable.",
-      href: "#",
+      href: "/use-cases/developers",
       accent: "#60a5fa",
     },
     {
@@ -35,15 +35,15 @@ const useCases: Dropdown = {
       eyebrow: "Govern",
       description:
         "Let internal and external agents collaborate without handing over full context.",
-      href: "#",
+      href: "/use-cases/enterprises",
       accent: "#93c5fd",
     },
     {
       title: "Investors",
       eyebrow: "Observe",
       description:
-        "Track delegated work, approvals, and receipts across trusted agent networks.",
-      href: "#",
+        "Coordinate diligence, approvals, and evidence trails across trust boundaries.",
+      href: "/use-cases/investors",
       accent: "#dbeafe",
     },
   ],
@@ -52,13 +52,13 @@ const useCases: Dropdown = {
     links: [
       {
         label: "Agent rooms",
-        description: "Shared spaces with scoped affordances.",
-        href: "#",
+        description: "See the mediated room foundation behind these workflows.",
+        href: "/v1",
       },
       {
-        label: "Policy mediation",
-        description: "Boundaries before messages cross.",
-        href: "#",
+        label: "Why Parlè",
+        description: "Read the product framing behind governed agent collaboration.",
+        href: "/about",
       },
     ],
   },

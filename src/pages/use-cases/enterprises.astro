@@ -1,0 +1,19 @@
+---
+export const prerender = true;
+import Layout from "../../layouts/Layout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import EnterprisesUseCasePage from "../../components/use-cases/EnterprisesUseCasePage.astro";
+import { enterpriseUseCase } from "../../data/enterpriseUseCase";
+---
+
+<Layout
+  title="Enterprises | Parlè use case"
+  description="A governed room pattern for enterprise agent collaboration across trust boundaries, scoped context, and auditable outcomes."
+>
+  <div class="flex min-h-screen flex-col">
+    <SiteHeader path={Astro.url.pathname} />
+    <EnterprisesUseCasePage page={enterpriseUseCase} />
+    <SiteFooter />
+  </div>
+</Layout>
