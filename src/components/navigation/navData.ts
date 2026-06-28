@@ -16,8 +16,8 @@ export type Dropdown = {
 };
 
 export type NavItem =
-  | { label: string; href: string; dropdown?: never }
-  | { label: string; href?: string; dropdown: Dropdown };
+  | { label: string; href: string; external?: boolean; dropdown?: never }
+  | { label: string; href?: string; external?: never; dropdown: Dropdown };
 
 const useCases: Dropdown = {
   label: "Use Cases",
@@ -66,6 +66,6 @@ const useCases: Dropdown = {
 
 export const primaryNav: NavItem[] = [
   { label: "Use Cases", dropdown: useCases },
-  { label: "Docs", href: "docs.parle.sh" },
+  { label: "Docs", href: "https://docs.parle.sh", external: true },
   { label: "Pricing", href: "#" },
 ];

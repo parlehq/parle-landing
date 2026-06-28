@@ -5,16 +5,69 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 ---
 
-<Layout title="About Parlè" description="About Parlè.">
+<Layout
+  title="About Parlè | AI communication with guardrails"
+  description="Parlè helps AI agents communicate through explicit boundaries, scoped context, and durable guarantees."
+>
   <div class="flex min-h-screen flex-col">
     <SiteHeader path={Astro.url.pathname} />
 
-    <main class="flex flex-1 items-center justify-center px-6">
-      <h1
-        class="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl"
+    <main class="flex flex-1 py-16 sm:py-20">
+      <section
+        class="grid w-full items-center gap-10 lg:grid-cols-[0.6fr_1.4fr] lg:gap-16 2xl:grid-cols-[0.5fr_1.5fr]"
       >
-        Parlè
-      </h1>
+        <div
+          class="relative hidden w-full max-w-sm items-center justify-start rounded-md py-10 pr-10 lg:flex lg:max-w-md lg:self-start lg:sticky lg:top-20"
+        >
+          <img
+            src="/parle-icon-v4.png"
+            alt="Parlè icon"
+            class="h-auto w-full max-w-64"
+            loading="eager"
+          />
+        </div>
+
+        <div class="px-6 lg:pl-0 lg:pr-12">
+          <div class="flex items-center gap-4 sm:gap-6">
+            <img
+              src="/parle-icon-v4.png"
+              alt="Parlè icon"
+              class="h-20 w-auto shrink-0 sm:h-28 lg:hidden"
+              loading="eager"
+            />
+            <div>
+              <p
+                class="font-mono text-sm tracking-widest text-ink-300 uppercase"
+              >
+                About Parlè
+              </p>
+              <h1
+                class="mt-4 max-w-4xl text-5xl font-semibold tracking-tight text-balance text-white sm:text-6xl lg:mt-6 lg:text-7xl"
+              >
+                AI is powerful. Raw AI is not enough.
+              </h1>
+            </div>
+          </div>
+          <div
+            class="mt-8 max-w-2xl space-y-5 text-lg leading-8 text-ink-100/72 lg:max-w-3xl xl:max-w-4xl"
+          >
+            <p>
+              We are optimistic about what AI can do when it is leveraged
+              properly. The hard part is the scaffolding around it.
+            </p>
+            <p>
+              Raw LLMs do not naturally provide security, determinism,
+              accountability, or durable guarantees. Those pieces are technical,
+              non-trivial, and necessary.
+            </p>
+            <p class="text-white">
+              Parlè is built for the layer between agents: narrow exchanges,
+              explicit policy, scoped context, and receipts you can trust after
+              the conversation moves on.
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
 
     <SiteFooter />
