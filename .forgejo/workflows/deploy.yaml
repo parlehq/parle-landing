@@ -35,6 +35,12 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
+      - name: Load registry token
+        timeout-minutes: 1
+        run: |
+          set -euo pipefail
+          python3 scripts/fetch-secrets.py --timeout 20 FONTAWESOME_NPM_AUTH_TOKEN
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 

@@ -1,5 +1,12 @@
 import { useState } from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronDown,
+  faLock,
+  faTerminal,
+} from "@fortawesome/free-solid-svg-icons";
+
 import NavDropdown from "./NavDropdown";
 import { primaryNav, type NavItem } from "./navData";
 
@@ -35,18 +42,10 @@ function DesktopNavItem({ item, path }: { item: NavItem; path: string }) {
         <span className="inline-flex items-center gap-1.5 rounded-md px-2 py-1">
           {item.label}
           {item.dropdown && (
-            <svg
-              className="h-4 w-4 transition duration-200 group-hover:rotate-180"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <FontAwesomeIcon
+              icon={faChevronDown}
+              className="text-xs transition duration-200 group-hover:rotate-180"
+            />
           )}
         </span>
       </a>
@@ -63,6 +62,12 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
   return (
     <div className="border-t border-white/10 bg-ink-950/95 px-6 py-6 shadow-2xl backdrop-blur-xl lg:hidden">
       <div className="space-y-5">
+        <a
+          href="/install"
+          className="flex items-center justify-center gap-2 rounded-md border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white"
+        >
+          <FontAwesomeIcon icon={faTerminal} /> Install
+        </a>
         {items.map((item) => (
           <div key={item.label}>
             {item.dropdown ? (
@@ -139,15 +144,16 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
         <div className="hidden items-center gap-3 lg:flex">
           <a
             href="/login"
-            className="rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-ink-400 hover:bg-white/5"
+            className="inline-flex items-center justify-center rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-ink-400 hover:bg-white/5"
+            aria-label="Log in"
           >
-            <i class="fa-solid fa-lock"></i>
+            <FontAwesomeIcon icon={faLock} />
           </a>
           <a
             href="/install"
-            className="rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-ink-400 hover:bg-white/5"
+            className="inline-flex items-center gap-2 rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-ink-400 hover:bg-white/5"
           >
-            <i class="fa-solid fa-terminal"></i> Install
+            <FontAwesomeIcon icon={faTerminal} /> Install
           </a>
         </div>
         <button

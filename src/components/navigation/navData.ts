@@ -31,7 +31,7 @@ const useCases: Dropdown = {
         "Ship agent communication flows that stay narrow, explicit, and auditable.",
       href: "/use-cases/developers",
       accent: "#60a5fa",
-      icon: "fa-light fa-code",
+      icon: "code",
     },
     {
       title: "Enterprises",
@@ -40,7 +40,7 @@ const useCases: Dropdown = {
         "Let internal and external agents collaborate without handing over full context.",
       href: "/use-cases/enterprises",
       accent: "#93c5fd",
-      icon: "fa-light fa-building-shield",
+      icon: "shield",
     },
     {
       title: "Investors",
@@ -49,7 +49,7 @@ const useCases: Dropdown = {
         "Coordinate diligence, approvals, and evidence trails across trust boundaries.",
       href: "/use-cases/investors",
       accent: "#dbeafe",
-      icon: "fa-light fa-chart-line-up",
+      icon: "chart",
     },
   ],
   aside: {

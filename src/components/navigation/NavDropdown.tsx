@@ -1,4 +1,7 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import type { Dropdown } from "./navData";
+import { navIcons } from "./icons";
 
 export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
   return (
@@ -22,7 +25,12 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
                   className="flex h-11 w-11 items-center justify-center text-sm font-semibold"
                   style={{ color: column.accent }}
                 >
-                  <i className={`${column.icon} text-lg`} aria-hidden="true" />
+                  {navIcons[column.icon] && (
+                    <FontAwesomeIcon
+                      icon={navIcons[column.icon]}
+                      className="text-lg"
+                    />
+                  )}
                 </span>
                 <span>
                   <span
