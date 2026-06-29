@@ -74,7 +74,7 @@ export const investorsUseCase: UseCasePageData = {
   seoDescription:
     "See how investors use Parlè to coordinate diligence, portfolio support, approvals, and evidence trails across trust boundaries.",
   eyebrow: "Use case · Investors",
-  title: "Rapidly and securely run diligence.",
+  title: "A new way to run diligence.",
   description:
     "Use your Claude Cowork, ChatGPT, Gemini, or other in-house tools to confidently exchange information with prospective and active portfolio companies.",
   audienceIntro:

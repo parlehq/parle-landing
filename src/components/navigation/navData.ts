@@ -43,10 +43,10 @@ const useCases: Dropdown = {
       icon: "shield",
     },
     {
-      title: "Investors",
-      eyebrow: "Observe",
+      title: "Diligence",
+      eyebrow: "Advance",
       description:
-        "Coordinate diligence, approvals, and evidence trails across trust boundaries.",
+        "Confidently use tools like Claude Cowork and ChatGPT to accelerate diligence.",
       href: "/use-cases/investors",
       accent: "#dbeafe",
       icon: "chart",
