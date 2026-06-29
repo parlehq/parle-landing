@@ -44,6 +44,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Load analytics secrets
+        timeout-minutes: 1
+        run: |
+          set -euo pipefail
+          analytics_secret_path="/forgejo/parle-landing-ci-staging"
+          if [ "$GITHUB_REF_NAME" = "main" ]; then
+            analytics_secret_path="/forgejo/parle-landing-ci"
+          fi
+          INFISICAL_SECRET_PATH="$analytics_secret_path" python3 scripts/fetch-secrets.py --timeout 20 POSTHOG_KEY
+
       - name: Load deploy secrets
         timeout-minutes: 1
         run: |
