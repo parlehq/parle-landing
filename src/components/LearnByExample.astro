@@ -6,16 +6,26 @@ type ExampleStep = {
   color?: string;
 };
 
+type ArtifactRow = {
+  label: string;
+  value: string;
+  emphasized?: boolean;
+};
+
 interface Props {
   eyebrow: string;
   title: string;
   prompt: string;
   outcome: string;
+  description?: string;
   steps: ExampleStep[];
   feature: string;
   featureLabel: string;
   cta?: string;
   mirrored?: boolean;
+  artifactTitle?: string;
+  artifactStatus?: string;
+  artifactRows?: ArtifactRow[];
 }
 
 const {
@@ -23,11 +33,15 @@ const {
   title,
   prompt,
   outcome,
+  description,
   steps,
   feature,
   featureLabel,
   cta = "Learn the pattern",
   mirrored = false,
+  artifactTitle = "Approved artifact",
+  artifactStatus = "sealed",
+  artifactRows,
 } = Astro.props;
 
 const DEFAULT_COLOR = "violet";
@@ -45,6 +59,13 @@ const timeline = [
     color: "emerald",
     delay: (steps.length + 1) * 140,
   },
+];
+
+const resolvedArtifactRows = artifactRows ?? [
+  { label: "room", value: "agent-exchange" },
+  { label: "feature", value: feature },
+  { label: "result", value: outcome },
+  { label: "receipt", value: "evt_4f2a...sealed", emphasized: true },
 ];
 ---
 
@@ -114,6 +135,13 @@ const timeline = [
         >
           {title}
         </h2>
+        {
+          description && (
+            <p class="mt-5 max-w-xl text-base leading-7 text-balance text-ink-100/68 sm:text-lg">
+              {description}
+            </p>
+          )
+        }
       </div>
 
       <ol class="relative border-y border-white/10">
@@ -196,31 +224,30 @@ const timeline = [
             <p
               class="font-mono text-[0.68rem] tracking-widest text-ink-300 uppercase"
             >
-              Approved artifact
+              {artifactTitle}
             </p>
             <span
               class="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-2 py-1 font-mono text-[0.62rem] tracking-widest text-emerald-200 uppercase"
             >
-              sealed
+              {artifactStatus}
             </span>
           </div>
           <dl class="mt-4 space-y-3 font-mono text-xs leading-5">
-            <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
-              <dt class="text-ink-300/55">room</dt>
-              <dd class="truncate text-ink-100/78">agent-exchange</dd>
-            </div>
-            <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
-              <dt class="text-ink-300/55">feature</dt>
-              <dd class="truncate text-ink-100/78">{feature}</dd>
-            </div>
-            <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
-              <dt class="text-ink-300/55">result</dt>
-              <dd class="text-ink-100/78">{outcome}</dd>
-            </div>
-            <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
-              <dt class="text-ink-300/55">receipt</dt>
-              <dd class="text-cyan-200">evt_4f2a...sealed</dd>
-            </div>
+            {
+              resolvedArtifactRows.map((row) => (
+                <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
+                  <dt class="text-ink-300/55">{row.label}</dt>
+                  <dd
+                    class:list={[
+                      "text-ink-100/78",
+                      row.emphasized && "text-cyan-200",
+                    ]}
+                  >
+                    {row.value}
+                  </dd>
+                </div>
+              ))
+            }
           </dl>
         </div>
 

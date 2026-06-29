@@ -30,82 +30,114 @@ const heroVerbKeyframes = `@keyframes hero-verb-cycle {
 const exampleSections = [
   {
     eyebrow: "Enabled by Parlè",
-    title: "Easily coordinate across agents.",
+    title: "Hand off research without opening a side channel.",
+    description:
+      "The useful part is the room in the middle: Parlè checks who can ask, gives the helper only the slice it needs, and keeps a receipt of the handoff.",
     prompt:
-      "Ask @researcher to explore best practices while this session builds the scaffolding.",
+      "Ask @researcher to compare OSS license options while I scaffold the package.",
     outcome:
-      "Your main agent receives safe, approved response from the researcher, with receipt attached.",
+      "Your agent gets the license summary, not the researcher's whole workspace, with a receipt for the exchange.",
     featureLabel: "Concept 01",
     feature: "requests",
-    cta: "Connect multiple agents ->",
+    cta: "See how requests work",
+    artifactTitle: "Request result",
+    artifactStatus: "received",
+    artifactRows: [
+      { label: "route", value: "through Parlè, not agent-to-agent" },
+      { label: "read", value: "task-sized view, not the whole session" },
+      { label: "write", value: "safe retry with one recorded submission" },
+      { label: "receipt", value: "evt_4f2a...sealed", emphasized: true },
+    ],
     steps: [
       {
-        label: "Request",
-        text: "Your agent sends request to Parlè, which validates recipient and provides secure grant.",
+        label: "Route",
+        text: "Your agent asks through Parlè, creating a room-owned request instead of a private side chat.",
         color: "violet",
       },
       {
-        label: "Process",
-        text: "Target agent receives secured request and processes it as normal.",
+        label: "Work",
+        text: "The researcher sees the task and approved context, not your whole session. That narrow view is the projection.",
         color: "cyan",
       },
       {
-        label: "Response",
-        text: "Parlè reviews the work and relays approved, optionally sanitized response.",
+        label: "Deliver",
+        text: "The answer is recorded in the room, so your agent can retry safely and cite the receipt later.",
         color: "violet",
       },
     ],
   },
   {
     eyebrow: "Enabled by Parlè",
-    title: "Safely discover allowed actions.",
-    prompt: "What actions are available in this room right now?",
+    title: "Let a helper agent discover the safe next move.",
+    description:
+      "Instead of guessing from a stale prompt, the agent can ask the room what it is allowed to do right now. Those available actions are affordances.",
+    prompt:
+      "I added @deployer to this repo. Have it figure out the staging actions it can use.",
     outcome:
-      "The agent sees the safe affordances and nothing outside its role.",
+      "The deployer learns the allowed staging actions from the room surface, while production controls never appear.",
     featureLabel: "Concept 02",
     feature: "affordances",
-    cta: "See affordances",
+    cta: "See how affordances work",
+    artifactTitle: "Available actions",
+    artifactStatus: "scoped",
+    artifactRows: [
+      { label: "source", value: "same registry as the live API" },
+      { label: "format", value: "OpenAPI, llms.txt, room actions" },
+      { label: "allowed", value: "Staging deploys, log reads" },
+      { label: "hidden", value: "Production config" },
+    ],
     steps: [
       {
-        label: "Thinking",
-        text: "The agent reads the room surface instead of guessing a workflow.",
+        label: "Ask",
+        text: "The deployer asks the room what actions are available before choosing a tool path.",
         color: "violet",
       },
       {
-        label: "Tool",
-        text: "Parlè returns the allowed actions for this participant.",
+        label: "Scope",
+        text: "Parlè returns the actions this agent can actually use, generated from the live API registry.",
         color: "fuchsia",
       },
       {
-        label: "Guardrail",
-        text: "Unavailable actions stay undisclosed by default.",
+        label: "Act",
+        text: "The agent acts from the room contract instead of guessing from stale docs or a brittle system prompt.",
         color: "cyan",
       },
     ],
   },
   {
     eyebrow: "Enabled by Parlè",
-    title: "Securely audit all exchanges.",
-    prompt: "Why did this agent see that answer?",
+    title: "Trace an answer back to what happened.",
+    description:
+      "A direct agent call leaves you trusting a transcript. Parlè records the important steps as room facts, then lets each agent read only its own view of them.",
+    prompt:
+      "Staging broke after @fixer and @deployer both touched the release. Show me what changed.",
     outcome:
-      "The audit trail shows the request, grant, projection, and receipt.",
+      "You see the submitted events, the narrow view each agent read, and the receipt behind the final answer.",
     featureLabel: "Concept 03",
     feature: "receipts",
-    cta: "Trace the exchange",
+    cta: "See how receipts work",
+    artifactTitle: "Exchange trail",
+    artifactStatus: "traced",
+    artifactRows: [
+      { label: "events", value: "message submitted, room completed" },
+      { label: "reads", value: "each agent's narrow room view" },
+      { label: "record", value: "append-only history" },
+      { label: "receipt", value: "evt_91bd...sealed", emphasized: true },
+    ],
     steps: [
       {
-        label: "Thinking",
-        text: "Parlè follows the event chain back to the original request.",
+        label: "Question",
+        text: "You ask Parlè to explain which recorded steps led to the final response.",
         color: "violet",
       },
       {
         label: "Trace",
-        text: "Grant, projection, and delivery events are read together.",
+        text: "Parlè follows the submitted events and the room view each participant was allowed to read.",
         color: "fuchsia",
       },
       {
-        label: "Citation",
-        text: "The answer cites the durable room record.",
+        label: "Fix",
+        text: "Your agent gets an evidence-backed path to the bad handoff instead of a loose chat summary.",
         color: "cyan",
       },
     ],
