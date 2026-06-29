@@ -33,20 +33,20 @@
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --color-ink-950: #070b16;
-  --color-ink-900: #0f172a;
-  --color-ink-800: #172554;
-  --color-ink-700: #1e3a8a;
-  --color-ink-500: #60a5fa;
-  --color-ink-400: #93c5fd;
-  --color-ink-300: #bfdbfe;
-  --color-ink-200: #dbeafe;
-  --color-ink-100: #eff6ff;
-  --color-line: rgba(147, 197, 253, 0.18);
+  --color-ink-950: #f8fafc;
+  --color-ink-900: #f1f5f9;
+  --color-ink-800: #e0f2fe;
+  --color-ink-700: #bae6fd;
+  --color-ink-500: #2563eb;
+  --color-ink-400: #1d4ed8;
+  --color-ink-300: #1e40af;
+  --color-ink-200: #334155;
+  --color-ink-100: #0f172a;
+  --color-line: rgba(30, 64, 175, 0.14);
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html {
@@ -60,14 +60,14 @@ body {
   min-height: 100vh;
   overflow-x: clip;
   background:
-    radial-gradient(circle at top, rgba(59, 130, 246, 0.22), transparent 36%),
+    radial-gradient(circle at top, rgba(37, 99, 235, 0.1), transparent 34%),
     radial-gradient(
       circle at 80% 20%,
-      rgba(147, 197, 253, 0.1),
+      rgba(14, 165, 233, 0.08),
       transparent 24%
     ),
-    linear-gradient(180deg, #070b16 0%, #0f172a 55%, #070b16 100%);
-  color: #eff6ff;
+    linear-gradient(180deg, #f8fafc 0%, #eef6ff 52%, #f8fafc 100%);
+  color: #0f172a;
 }
 
 /* Third-party (performative-ui) overrides: need to win on specificity. */
@@ -83,7 +83,7 @@ body {
   white-space: pre-wrap;
   font-size: 0.75rem;
   line-height: 1.5rem;
-  color: var(--color-ink-200);
+  color: #dbeafe;
 }
 
 @media (min-width: 640px) {
@@ -187,7 +187,26 @@ body {
 }
 
 .learn-example-band {
-  background: rgba(7, 11, 22, 0.16);
+  background: rgba(255, 255, 255, 0.48);
+}
+
+.pui-bigback {
+  background: rgba(248, 250, 252, 0.72);
+  border-top-color: rgba(15, 23, 42, 0.1);
+  color: var(--color-ink-100);
+}
+
+.pui-bigback__heading,
+.pui-bigback__base {
+  color: rgba(51, 65, 85, 0.72);
+}
+
+.pui-bigback__link {
+  color: rgba(51, 65, 85, 0.78);
+}
+
+.pui-bigback__link:hover {
+  color: var(--color-ink-100);
 }
 
 .learn-example-line,

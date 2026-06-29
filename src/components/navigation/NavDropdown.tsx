@@ -5,14 +5,14 @@ import { navIcons } from "./icons";
 
 export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
   return (
-    <div className="w-full border-b border-white/10 bg-ink-950/95 shadow-2xl backdrop-blur-xl">
+    <div className="w-full border-b border-ink-100/10 bg-ink-950/95 shadow-2xl backdrop-blur-xl">
       <div className="mx-auto grid max-w-6xl gap-8 px-8 py-10 lg:grid-cols-4">
         <div className="grid gap-5 lg:col-span-3 lg:grid-cols-3">
           {dropdown.columns.map((column) => (
             <a
               key={column.title}
               href={column.href}
-              className="group relative block overflow-hidden rounded-md border border-white/10 bg-white/4 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/8"
+              className="group relative block overflow-hidden rounded-md border border-ink-100/10 bg-white/4 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-ink-100/20 hover:bg-ink-100/8"
             >
               <span
                 className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
@@ -39,7 +39,7 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
                   >
                     {column.eyebrow}
                   </span>
-                  <span className="mt-1 block text-lg font-semibold text-white">
+                  <span className="mt-1 block text-lg font-semibold text-ink-100">
                     {column.title}
                   </span>
                 </span>
@@ -47,7 +47,7 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
               <span className="relative mt-5 block text-sm leading-6 text-ink-100/72">
                 {column.description}
               </span>
-              <span className="relative mt-6 flex items-center justify-between rounded-md bg-white/8 px-4 py-3 text-sm font-medium text-white transition group-hover:bg-white/12">
+              <span className="relative mt-6 flex items-center justify-between rounded-md bg-white/8 px-4 py-3 text-sm font-medium text-ink-100 transition group-hover:bg-ink-100/12">
                 {column.cta ?? column.eyebrow}
                 <span
                   className="transition group-hover:translate-x-1"
@@ -59,14 +59,14 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
             </a>
           ))}
         </div>
-        <div className="rounded-md border border-white/10 bg-white/4 p-6">
+        <div className="rounded-md border border-ink-100/10 bg-white/4 p-6">
           <p className="font-mono text-xs tracking-widest text-ink-300 uppercase">
             {dropdown.aside.title}
           </p>
           <div className="mt-5 space-y-5">
             {dropdown.aside.links.map((link) => (
               <a key={link.label} href={link.href} className="group block">
-                <span className="block text-sm font-semibold text-white transition group-hover:text-ink-300">
+                <span className="block text-sm font-semibold text-ink-100 transition group-hover:text-ink-300">
                   {link.label}
                 </span>
                 <span className="mt-1 block text-xs leading-5 text-ink-100/60">

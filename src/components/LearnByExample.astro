@@ -70,14 +70,14 @@ const resolvedArtifactRows = artifactRows ?? [
 ---
 
 <section
-  class="learn-example-band relative left-1/2 isolate w-dvw max-w-dvw -translate-x-1/2 overflow-hidden border-y border-white/12 px-6 lg:px-8"
+  class="learn-example-band relative left-1/2 isolate w-dvw max-w-dvw -translate-x-1/2 overflow-hidden border-y border-ink-100/12 px-6 lg:px-8"
 >
   <div
     class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(191,219,254,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(191,219,254,0.055)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-45"
   >
   </div>
   <div
-    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_36%,rgba(96,165,250,0.13),transparent_32%)]"
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_36%,rgba(37,99,235,0.06),transparent_32%)]"
   >
   </div>
   <div
@@ -112,10 +112,10 @@ const resolvedArtifactRows = artifactRows ?? [
     ]}
   >
     <span
-      class="absolute top-8 -left-6 size-3 border-t border-l border-white/25"
+      class="absolute top-8 -left-6 size-3 border-t border-l border-ink-100/25"
       aria-hidden="true"></span>
     <span
-      class="absolute -right-6 bottom-8 size-3 border-r border-b border-white/25"
+      class="absolute -right-6 bottom-8 size-3 border-r border-b border-ink-100/25"
       aria-hidden="true"></span>
 
     <div
@@ -131,7 +131,7 @@ const resolvedArtifactRows = artifactRows ?? [
           {eyebrow}
         </p>
         <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl xl:text-5xl"
+          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-ink-100 sm:text-4xl xl:text-5xl"
         >
           {title}
         </h2>
@@ -144,14 +144,14 @@ const resolvedArtifactRows = artifactRows ?? [
         }
       </div>
 
-      <ol class="relative border-y border-white/10">
+      <ol class="relative border-y border-ink-100/10">
         {
           timeline.map((step, index) => {
             const stepNumber = String(index + 1).padStart(2, "0");
             const nextColor = timeline[index + 1]?.color;
             return (
               <li
-                class="learn-example-step relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-white/10 py-5 last:border-b-0 sm:py-6"
+                class="learn-example-step relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-ink-100/10 py-5 last:border-b-0 sm:py-6"
                 style={`animation-delay: ${step.delay}ms`}
               >
                 {nextColor && (
@@ -209,17 +209,17 @@ const resolvedArtifactRows = artifactRows ?? [
             {featureLabel}
           </p>
           <p
-            class="mt-7 max-w-[115%] overflow-visible font-mono text-[clamp(2.8rem,5.2vw,5rem)] leading-none tracking-[-0.08em] text-white"
+            class="mt-7 max-w-[115%] overflow-visible font-mono text-[clamp(2.8rem,5.2vw,5rem)] leading-none tracking-[-0.08em] text-ink-100"
           >
             {feature}
           </p>
         </div>
 
         <div
-          class="mt-8 rounded-2xl border border-white/10 bg-ink-950/75 p-4 text-left shadow-[0_20px_70px_rgba(2,6,23,0.36)]"
+          class="mt-8 rounded-2xl border border-ink-100/10 bg-ink-950/75 p-4 text-left shadow-[0_20px_70px_rgba(15,23,42,0.10)]"
         >
           <div
-            class="flex items-center justify-between gap-3 border-b border-white/10 pb-3"
+            class="flex items-center justify-between gap-3 border-b border-ink-100/10 pb-3"
           >
             <p
               class="font-mono text-[0.68rem] tracking-widest text-ink-300 uppercase"
@@ -252,7 +252,7 @@ const resolvedArtifactRows = artifactRows ?? [
         </div>
 
         <a
-          class="mt-8 inline-flex items-center rounded-full border border-white/15 bg-white px-6 py-3 text-sm font-semibold text-ink-950 transition hover:-translate-y-px hover:bg-ink-100"
+          class="mt-8 inline-flex items-center rounded-full border border-ink-100/15 bg-ink-100 px-6 py-3 text-sm font-semibold text-ink-950 transition hover:-translate-y-px hover:bg-ink-100"
           href="/install"
         >
           {cta}

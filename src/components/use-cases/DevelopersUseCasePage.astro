@@ -11,10 +11,10 @@ const { page } = Astro.props as Props;
 <main class="px-6 py-14 lg:px-8 lg:py-20">
   <div class="mx-auto flex w-full max-w-6xl flex-col gap-16 lg:gap-24">
     <section
-      class="relative isolate overflow-hidden rounded-[2rem] border border-white/10 bg-white/4 px-6 py-8 shadow-[0_40px_120px_rgba(2,6,23,0.42)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
+      class="relative isolate overflow-hidden rounded-[2rem] border border-ink-100/10 bg-white/4 px-6 py-8 shadow-[0_40px_120px_rgba(15,23,42,0.10)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
     >
       <div
-        class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(96,165,250,0.2),transparent_32%),radial-gradient(circle_at_80%_24%,rgba(191,219,254,0.12),transparent_24%)]"
+        class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_32%),radial-gradient(circle_at_80%_24%,rgba(191,219,254,0.12),transparent_24%)]"
       >
       </div>
       <div
@@ -31,7 +31,7 @@ const { page } = Astro.props as Props;
             {page.hero.eyebrow}
           </p>
           <h1
-            class="mt-5 max-w-4xl text-5xl font-semibold tracking-tight text-balance text-white sm:text-6xl lg:text-7xl"
+            class="mt-5 max-w-4xl text-5xl font-semibold tracking-tight text-balance text-ink-100 sm:text-6xl lg:text-7xl"
           >
             {page.hero.title}
           </h1>
@@ -49,7 +49,7 @@ const { page } = Astro.props as Props;
           <div class="mt-8 flex flex-wrap gap-3">
             {
               page.hero.pills.map((pill) => (
-                <span class="inline-flex items-center rounded-full border border-white/12 bg-white/8 px-4 py-2 font-mono text-xs tracking-widest text-ink-200 uppercase sm:text-sm">
+                <span class="inline-flex items-center rounded-full border border-ink-100/12 bg-white/8 px-4 py-2 font-mono text-xs tracking-widest text-ink-200 uppercase sm:text-sm">
                   {pill}
                 </span>
               ))
@@ -58,15 +58,15 @@ const { page } = Astro.props as Props;
         </div>
 
         <div
-          class="relative overflow-hidden rounded-[1.75rem] border border-white/12 bg-ink-950/78 p-5 sm:p-6"
+          class="relative overflow-hidden rounded-[1.75rem] border border-ink-100/12 bg-ink-950/78 p-5 sm:p-6"
         >
           <div
-            class="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(96,165,250,0.12),transparent_60%)]"
+            class="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(37,99,235,0.06),transparent_60%)]"
           >
           </div>
           <div class="relative">
             <div
-              class="flex items-center justify-between gap-4 border-b border-white/10 pb-4"
+              class="flex items-center justify-between gap-4 border-b border-ink-100/10 pb-4"
             >
               <div>
                 <p
@@ -74,7 +74,7 @@ const { page } = Astro.props as Props;
                 >
                   Developer room surface
                 </p>
-                <p class="mt-2 text-lg font-semibold text-white sm:text-xl">
+                <p class="mt-2 text-lg font-semibold text-ink-100 sm:text-xl">
                   A workflow boundary that does not demand constant babysitting.
                 </p>
               </div>
@@ -88,17 +88,17 @@ const { page } = Astro.props as Props;
             <div class="mt-5 space-y-4">
               {
                 page.hero.checkpoints.map((checkpoint) => (
-                  <div class="rounded-2xl border border-white/10 bg-white/4 p-4">
+                  <div class="rounded-2xl border border-ink-100/10 bg-white/4 p-4">
                     <div class="flex items-start justify-between gap-4">
                       <div>
                         <p class="font-mono text-xs tracking-widest text-ink-300/84 uppercase">
                           {checkpoint.label}
                         </p>
-                        <p class="mt-2 text-base font-semibold text-white sm:text-lg">
+                        <p class="mt-2 text-base font-semibold text-ink-100 sm:text-lg">
                           {checkpoint.value}
                         </p>
                       </div>
-                      <span class="mt-1 inline-flex size-8 items-center justify-center rounded-full border border-white/10 bg-white/8 text-sm text-ink-200">
+                      <span class="mt-1 inline-flex size-8 items-center justify-center rounded-full border border-ink-100/10 bg-white/8 text-sm text-ink-200">
                         ↗
                       </span>
                     </div>
@@ -116,8 +116,8 @@ const { page } = Astro.props as Props;
       <div class="relative mt-10 grid gap-4 md:grid-cols-3">
         {
           page.hero.outcomes.map((outcome) => (
-            <div class="rounded-[1.5rem] border border-white/10 bg-ink-950/48 p-5">
-              <p class="text-lg font-semibold text-white">{outcome.title}</p>
+            <div class="rounded-[1.5rem] border border-ink-100/10 bg-ink-950/48 p-5">
+              <p class="text-lg font-semibold text-ink-100">{outcome.title}</p>
               <p class="mt-3 text-sm leading-6 text-ink-100/68 sm:text-base">
                 {outcome.description}
               </p>
@@ -137,7 +137,7 @@ const { page } = Astro.props as Props;
           {page.workflow.eyebrow}
         </p>
         <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl"
+          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-ink-100 sm:text-4xl lg:text-5xl"
         >
           {page.workflow.title}
         </h2>
@@ -151,15 +151,15 @@ const { page } = Astro.props as Props;
       <div class="grid gap-4">
         {
           page.workflow.steps.map((step) => (
-            <article class="group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/4 p-5 transition duration-300 hover:border-white/18 hover:bg-white/6 sm:p-6">
+            <article class="group relative overflow-hidden rounded-[1.75rem] border border-ink-100/10 bg-white/4 p-5 transition duration-300 hover:border-ink-100/18 hover:bg-ink-100/6 sm:p-6">
               <div class="pointer-events-none absolute inset-y-0 left-0 w-1 rounded-full bg-linear-to-b from-ink-300 via-ink-500 to-cyan-300 opacity-70" />
               <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div class="flex items-center gap-4">
-                  <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-ink-950/82 font-mono text-sm text-ink-200">
+                  <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-ink-100/12 bg-ink-950/82 font-mono text-sm text-ink-200">
                     {step.label}
                   </span>
                   <div>
-                    <h3 class="text-xl font-semibold text-white">
+                    <h3 class="text-xl font-semibold text-ink-100">
                       {step.title}
                     </h3>
                     <p class="mt-2 max-w-2xl text-sm leading-6 text-ink-100/70 sm:text-base sm:leading-7">
@@ -167,7 +167,7 @@ const { page } = Astro.props as Props;
                     </p>
                   </div>
                 </div>
-                <p class="max-w-sm rounded-full border border-white/10 bg-ink-950/62 px-4 py-2 text-xs leading-5 text-ink-300 sm:text-right sm:text-sm">
+                <p class="max-w-sm rounded-full border border-ink-100/10 bg-ink-950/62 px-4 py-2 text-xs leading-5 text-ink-300 sm:text-right sm:text-sm">
                   {step.note}
                 </p>
               </div>
@@ -178,7 +178,7 @@ const { page } = Astro.props as Props;
     </section>
 
     <section
-      class="rounded-[2rem] border border-white/10 bg-ink-950/36 px-6 py-8 sm:px-8 sm:py-10 lg:px-10"
+      class="rounded-[2rem] border border-ink-100/10 bg-ink-950/36 px-6 py-8 sm:px-8 sm:py-10 lg:px-10"
     >
       <div class="max-w-3xl">
         <p
@@ -187,7 +187,7 @@ const { page } = Astro.props as Props;
           {page.capabilities.eyebrow}
         </p>
         <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl"
+          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-ink-100 sm:text-4xl lg:text-5xl"
         >
           {page.capabilities.title}
         </h2>
@@ -201,17 +201,17 @@ const { page } = Astro.props as Props;
       <div class="mt-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {
           page.capabilities.items.map((item) => (
-            <article class="rounded-[1.5rem] border border-white/10 bg-white/4 p-5 sm:p-6">
+            <article class="rounded-[1.5rem] border border-ink-100/10 bg-white/4 p-5 sm:p-6">
               <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
                 {item.eyebrow}
               </p>
-              <h3 class="mt-3 text-xl font-semibold text-white">
+              <h3 class="mt-3 text-xl font-semibold text-ink-100">
                 {item.title}
               </h3>
               <p class="mt-3 text-sm leading-6 text-ink-100/70 sm:text-base sm:leading-7">
                 {item.description}
               </p>
-              <p class="mt-5 rounded-2xl border border-white/10 bg-ink-950/62 px-4 py-3 text-xs leading-5 text-ink-300 sm:text-sm">
+              <p class="mt-5 rounded-2xl border border-ink-100/10 bg-ink-950/62 px-4 py-3 text-xs leading-5 text-ink-300 sm:text-sm">
                 {item.evidence}
               </p>
             </article>
@@ -228,7 +228,7 @@ const { page } = Astro.props as Props;
           {page.scenarios.eyebrow}
         </p>
         <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl"
+          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-ink-100 sm:text-4xl lg:text-5xl"
         >
           {page.scenarios.title}
         </h2>
@@ -242,17 +242,17 @@ const { page } = Astro.props as Props;
       <div class="mt-8 grid gap-4 xl:grid-cols-3">
         {
           page.scenarios.items.map((scenario) => (
-            <article class="rounded-[1.75rem] border border-white/10 bg-white/4 p-5 sm:p-6">
-              <h3 class="text-2xl font-semibold text-white">
+            <article class="rounded-[1.75rem] border border-ink-100/10 bg-white/4 p-5 sm:p-6">
+              <h3 class="text-2xl font-semibold text-ink-100">
                 {scenario.title}
               </h3>
               <p class="mt-3 text-sm leading-6 text-ink-100/70 sm:text-base sm:leading-7">
                 {scenario.summary}
               </p>
-              <ol class="mt-5 space-y-3 border-t border-white/10 pt-5">
+              <ol class="mt-5 space-y-3 border-t border-ink-100/10 pt-5">
                 {scenario.flow.map((line, index) => (
                   <li class="flex items-start gap-3 text-sm leading-6 text-ink-100/72 sm:text-base sm:leading-7">
-                    <span class="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 bg-ink-950/74 font-mono text-xs text-ink-200">
+                    <span class="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-ink-100/10 bg-ink-950/74 font-mono text-xs text-ink-200">
                       {index + 1}
                     </span>
                     <span>{line}</span>
@@ -272,7 +272,7 @@ const { page } = Astro.props as Props;
       class="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]"
     >
       <div
-        class="rounded-[2rem] border border-white/10 bg-white/4 p-6 sm:p-8 lg:p-10"
+        class="rounded-[2rem] border border-ink-100/10 bg-white/4 p-6 sm:p-8 lg:p-10"
       >
         <p
           class="font-mono text-xs tracking-widest text-ink-300 uppercase sm:text-sm"
@@ -280,7 +280,7 @@ const { page } = Astro.props as Props;
           {page.proof.eyebrow}
         </p>
         <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl"
+          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-ink-100 sm:text-4xl"
         >
           {page.proof.title}
         </h2>
@@ -292,8 +292,8 @@ const { page } = Astro.props as Props;
         <div class="mt-8 grid gap-4 sm:grid-cols-2">
           {
             page.proof.items.map((item) => (
-              <div class="rounded-[1.5rem] border border-white/10 bg-ink-950/54 p-5">
-                <p class="text-lg font-semibold text-white">{item.title}</p>
+              <div class="rounded-[1.5rem] border border-ink-100/10 bg-ink-950/54 p-5">
+                <p class="text-lg font-semibold text-ink-100">{item.title}</p>
                 <p class="mt-3 text-sm leading-6 text-ink-100/70 sm:text-base sm:leading-7">
                   {item.detail}
                 </p>
@@ -309,7 +309,7 @@ const { page } = Astro.props as Props;
       </div>
 
       <aside
-        class="rounded-[2rem] border border-white/10 bg-ink-950/70 p-6 sm:p-8"
+        class="rounded-[2rem] border border-ink-100/10 bg-ink-950/70 p-6 sm:p-8"
       >
         <p
           class="font-mono text-xs tracking-widest text-ink-300 uppercase sm:text-sm"
@@ -317,7 +317,7 @@ const { page } = Astro.props as Props;
           Next step
         </p>
         <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl"
+          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-ink-100 sm:text-4xl"
         >
           {page.cta.title}
         </h2>
@@ -329,7 +329,7 @@ const { page } = Astro.props as Props;
 
         <div class="mt-8 flex flex-col gap-3">
           <a
-            class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white px-6 py-3 text-sm font-semibold text-ink-950 transition hover:-translate-y-px hover:bg-ink-100"
+            class="inline-flex items-center justify-center rounded-full border border-ink-100/15 bg-ink-100 px-6 py-3 text-sm font-semibold text-ink-950 transition hover:-translate-y-px hover:bg-ink-100"
             href={page.cta.primaryHref}
           >
             {page.cta.primaryLabel}
@@ -337,7 +337,7 @@ const { page } = Astro.props as Props;
           {
             page.cta.secondaryLabel && page.cta.secondaryHref && (
               <a
-                class="inline-flex items-center justify-center rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-px hover:border-ink-400 hover:bg-white/5"
+                class="inline-flex items-center justify-center rounded-full border border-ink-100/15 px-6 py-3 text-sm font-semibold text-ink-100 transition hover:-translate-y-px hover:border-ink-400 hover:bg-ink-100/5"
                 href={page.cta.secondaryHref}
                 target="_blank"
                 rel="noopener noreferrer"

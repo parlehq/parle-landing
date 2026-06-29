@@ -34,8 +34,8 @@ function DesktopNavItem({ item, path }: { item: NavItem; path: string }) {
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noopener noreferrer" : undefined}
         className={cx(
-          "flex h-full items-center px-3 text-sm font-medium text-ink-200 transition hover:text-white",
-          active && "text-white",
+          "flex h-full items-center px-3 text-sm font-medium text-ink-200 transition hover:text-ink-100",
+          active && "text-ink-100",
         )}
         aria-current={active ? "page" : undefined}
       >
@@ -60,11 +60,11 @@ function DesktopNavItem({ item, path }: { item: NavItem; path: string }) {
 
 function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
   return (
-    <div className="border-t border-white/10 bg-ink-950/95 px-6 py-6 shadow-2xl backdrop-blur-xl lg:hidden">
+    <div className="border-t border-ink-100/10 bg-ink-950/95 px-6 py-6 shadow-2xl backdrop-blur-xl lg:hidden">
       <div className="space-y-5">
         <a
           href="/install"
-          className="flex items-center justify-center gap-2 rounded-md border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white"
+          className="flex items-center justify-center gap-2 rounded-md border border-ink-100/15 bg-white/5 px-4 py-3 text-sm font-semibold text-ink-100"
         >
           <FontAwesomeIcon icon={faTerminal} /> Install
         </a>
@@ -80,9 +80,9 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
                     <a
                       key={column.title}
                       href={column.href}
-                      className="rounded-md border border-white/10 bg-white/4 p-4"
+                      className="rounded-md border border-ink-100/10 bg-white/4 p-4"
                     >
-                      <span className="text-sm font-semibold text-white">
+                      <span className="text-sm font-semibold text-ink-100">
                         {column.title}
                       </span>
                       <span className="mt-1 block text-sm leading-6 text-ink-100/68">
@@ -98,7 +98,7 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
                 className={cx(
-                  "block rounded-md border border-white/10 bg-white/4 px-4 py-3 text-sm font-semibold text-white",
+                  "block rounded-md border border-ink-100/10 bg-white/4 px-4 py-3 text-sm font-semibold text-ink-100",
                   isActivePath(path, item.href) && "border-ink-400",
                 )}
               >
@@ -116,7 +116,7 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-ink-950/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-ink-100/10 bg-ink-950/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
         <div className="flex h-full items-center gap-8">
           <a
@@ -144,21 +144,21 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
         <div className="hidden items-center gap-3 lg:flex">
           <a
             href="/login"
-            className="inline-flex items-center justify-center rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-ink-400 hover:bg-white/5"
+            className="inline-flex items-center justify-center rounded-md border border-ink-100/15 px-4 py-2 text-sm font-medium text-ink-100 transition hover:border-ink-400 hover:bg-ink-100/5"
             aria-label="Log in"
           >
             <FontAwesomeIcon icon={faLock} />
           </a>
           <a
             href="/install"
-            className="inline-flex items-center gap-2 rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-ink-400 hover:bg-white/5"
+            className="inline-flex items-center gap-2 rounded-md border border-ink-100/15 px-4 py-2 text-sm font-medium text-ink-100 transition hover:border-ink-400 hover:bg-ink-100/5"
           >
             <FontAwesomeIcon icon={faTerminal} /> Install
           </a>
         </div>
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/10 bg-white/5 text-ink-100 lg:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-ink-100/10 bg-white/5 text-ink-100 lg:hidden"
           onClick={() => setMobileOpen((open) => !open)}
           aria-expanded={mobileOpen}
           aria-label="Toggle navigation"
