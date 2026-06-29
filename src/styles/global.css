@@ -324,6 +324,7 @@ body {
 
   position: relative;
   isolation: isolate;
+  overflow: visible;
 }
 
 .parle-hover-wordmark::after {
@@ -349,6 +350,8 @@ body {
 .parle-hover-wordmark__base,
 .parle-hover-wordmark__glow {
   display: block;
+  padding-bottom: 0.08em;
+  overflow: visible;
   background: linear-gradient(
     100deg,
     var(--color-ink-100) 0%,
@@ -357,6 +360,7 @@ body {
   );
   background-clip: text;
   color: transparent;
+  line-height: 1.12;
   -webkit-background-clip: text;
 }
 
