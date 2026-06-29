@@ -3,12 +3,12 @@ import { Aurora } from "performative-ui";
 export default function HeroAurora() {
   return (
     <Aurora
-      className="opacity-60"
-      blur={56}
+      className="opacity-35"
+      blur={64}
       blobs={[
-        { color: "rgba(96, 165, 250, 0.34)", x: 28, y: 24, size: 42 },
-        { color: "rgba(147, 197, 253, 0.22)", x: 72, y: 34, size: 36 },
-        { color: "rgba(30, 58, 138, 0.38)", x: 52, y: 72, size: 50 },
+        { color: "rgba(154, 107, 63, 0.16)", x: 30, y: 22, size: 44 },
+        { color: "rgba(37, 99, 235, 0.11)", x: 72, y: 38, size: 38 },
+        { color: "rgba(51, 65, 85, 0.08)", x: 52, y: 70, size: 52 },
       ]}
     />
   );
