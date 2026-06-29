@@ -73,7 +73,7 @@ const resolvedArtifactRows = artifactRows ?? [
   class="learn-example-band relative left-1/2 isolate w-dvw max-w-dvw -translate-x-1/2 overflow-hidden border-y border-ink-100/12 px-6 lg:px-8"
 >
   <div
-    class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(191,219,254,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(191,219,254,0.055)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-45"
+    class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(116,83,49,0.075)_1px,transparent_1px),linear-gradient(90deg,rgba(116,83,49,0.075)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-45"
   >
   </div>
   <div
@@ -85,24 +85,24 @@ const resolvedArtifactRows = artifactRows ?? [
     aria-hidden="true"
   >
     <span
-      class="learn-example-vertical absolute inset-y-0 left-[calc(50%-36rem+3.25rem)] w-px bg-white/6"
+      class="learn-example-vertical absolute inset-y-0 left-[calc(50%-36rem+3.25rem)] w-px bg-ink-300/16"
     ></span>
     <span
       class:list={[
-        "learn-example-vertical absolute inset-y-0 w-px bg-white/10",
+        "learn-example-vertical absolute inset-y-0 w-px bg-sand-100/70",
         mirrored ? "left-[47%]" : "left-[53%]",
       ]}
     >
     </span>
     <span
-      class="learn-example-vertical absolute inset-y-0 right-[7rem] w-px bg-white/6"
+      class="learn-example-vertical absolute inset-y-0 right-[7rem] w-px bg-ink-300/16"
     ></span>
   </div>
   <span
-    class="absolute top-0 left-1/2 h-px w-screen -translate-x-1/2 bg-white/12"
+    class="absolute top-0 left-1/2 h-px w-screen -translate-x-1/2 bg-ink-300/20"
     aria-hidden="true"></span>
   <span
-    class="absolute bottom-0 left-1/2 h-px w-screen -translate-x-1/2 bg-white/12"
+    class="absolute bottom-0 left-1/2 h-px w-screen -translate-x-1/2 bg-ink-300/20"
     aria-hidden="true"></span>
 
   <div
@@ -158,8 +158,8 @@ const resolvedArtifactRows = artifactRows ?? [
                   <span
                     class:list={[
                       "learn-example-line pointer-events-none absolute top-10 left-5 h-full w-px -translate-x-1/2 bg-linear-to-b sm:top-11",
-                      `from-${step.color}-300`,
-                      `to-${nextColor}-300`,
+                      `from-${step.color}-400`,
+                      `to-${nextColor}-400`,
                     ]}
                     aria-hidden="true"
                   />
@@ -168,8 +168,8 @@ const resolvedArtifactRows = artifactRows ?? [
                   <span
                     class:list={[
                       "relative z-10 grid size-10 place-items-center rounded-md border bg-ink-950 font-mono text-[0.68rem] shadow-[0_0_24px_rgba(96,165,250,0.14)]",
-                      `border-${step.color}-300/60`,
-                      `text-${step.color}-200`,
+                      `border-${step.color}-400/50`,
+                      `text-${step.color}-700`,
                     ]}
                   >
                     {stepNumber}
@@ -180,7 +180,7 @@ const resolvedArtifactRows = artifactRows ?? [
                   <p class="font-mono text-xs tracking-widest text-ink-300/58 uppercase">
                     {step.label}
                   </p>
-                  <p class="mt-2 max-w-xl text-base leading-6 text-balance text-ink-100/78 sm:text-lg sm:leading-7">
+                  <p class="mt-2 max-w-xl text-base leading-6 text-balance text-ink-200 sm:text-lg sm:leading-7">
                     {step.text}
                   </p>
                 </div>
@@ -209,7 +209,7 @@ const resolvedArtifactRows = artifactRows ?? [
             {featureLabel}
           </p>
           <p
-            class="mt-7 max-w-[115%] overflow-visible font-mono text-[clamp(2.8rem,5.2vw,5rem)] leading-none tracking-[-0.08em] text-ink-100"
+            class="mt-7 max-w-[115%] overflow-visible font-mono text-[clamp(2.8rem,5.2vw,5rem)] leading-none tracking-[-0.08em] text-ink-200"
           >
             {feature}
           </p>
@@ -227,7 +227,7 @@ const resolvedArtifactRows = artifactRows ?? [
               {artifactTitle}
             </p>
             <span
-              class="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-2 py-1 font-mono text-[0.62rem] tracking-widest text-emerald-200 uppercase"
+              class="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-2 py-1 font-mono text-[0.62rem] tracking-widest text-emerald-700 uppercase"
             >
               {artifactStatus}
             </span>
@@ -239,8 +239,8 @@ const resolvedArtifactRows = artifactRows ?? [
                   <dt class="text-ink-300/55">{row.label}</dt>
                   <dd
                     class:list={[
-                      "text-ink-100/78",
-                      row.emphasized && "text-cyan-200",
+                      "text-ink-200",
+                      row.emphasized && "text-cyan-700",
                     ]}
                   >
                     {row.value}

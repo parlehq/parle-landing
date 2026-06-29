@@ -64,7 +64,7 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
       <div className="space-y-5">
         <a
           href="/install"
-          className="flex items-center justify-center gap-2 rounded-md border border-ink-100/15 bg-white/5 px-4 py-3 text-sm font-semibold text-ink-100"
+          className="flex items-center justify-center gap-2 rounded-md border border-ink-100/15 bg-sand-100/55 px-4 py-3 text-sm font-semibold text-ink-100"
         >
           <FontAwesomeIcon icon={faTerminal} /> Install
         </a>
@@ -80,12 +80,12 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
                     <a
                       key={column.title}
                       href={column.href}
-                      className="rounded-md border border-ink-100/10 bg-white/4 p-4"
+                      className="rounded-md border border-ink-100/10 bg-sand-100/45 p-4"
                     >
                       <span className="text-sm font-semibold text-ink-100">
                         {column.title}
                       </span>
-                      <span className="mt-1 block text-sm leading-6 text-ink-100/68">
+                      <span className="mt-1 block text-sm leading-6 text-ink-200">
                         {column.description}
                       </span>
                     </a>
@@ -98,7 +98,7 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
                 className={cx(
-                  "block rounded-md border border-ink-100/10 bg-white/4 px-4 py-3 text-sm font-semibold text-ink-100",
+                  "block rounded-md border border-ink-100/10 bg-sand-100/45 px-4 py-3 text-sm font-semibold text-ink-100",
                   isActivePath(path, item.href) && "border-ink-400",
                 )}
               >
@@ -158,7 +158,7 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
         </div>
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-ink-100/10 bg-white/5 text-ink-100 lg:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-ink-100/10 bg-sand-100/55 text-ink-100 lg:hidden"
           onClick={() => setMobileOpen((open) => !open)}
           aria-expanded={mobileOpen}
           aria-label="Toggle navigation"

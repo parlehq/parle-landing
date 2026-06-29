@@ -556,7 +556,7 @@ function OrbitField({
           <circle
             cx={cx}
             cy={cy}
-            fill="rgba(191,219,254,0.42)"
+            fill="rgba(30,64,175,0.36)"
             key={index}
             r={r}
           />
@@ -569,7 +569,7 @@ function OrbitField({
     <g>
       {particles.map((_, index) => (
         <circle
-          fill="rgba(191,219,254,0.86)"
+          fill="rgba(30,64,175,0.46)"
           key={index}
           ref={(node) => {
             if (node) refs.current[index] = node;
@@ -578,9 +578,7 @@ function OrbitField({
       ))}
       {[0, 1, 2].map((_, index) => (
         <circle
-          fill={
-            index === 0 ? "rgba(239,246,255,0.98)" : "rgba(147,197,253,0.56)"
-          }
+          fill={index === 0 ? "rgba(30,64,175,0.82)" : "rgba(154,107,63,0.48)"}
           filter={index === 0 ? "url(#parle-channel-glow)" : undefined}
           key={`burst-${index}`}
           ref={(node) => {
@@ -628,7 +626,7 @@ function ConnectiveLayer({
             </feMerge>
           </filter>
           <radialGradient id="parle-flow-core-mobile" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(191,219,254,0.2)" />
+            <stop offset="0%" stopColor="rgba(30,64,175,0.16)" />
             <stop offset="100%" stopColor="rgba(96,165,250,0)" />
           </radialGradient>
         </defs>
@@ -675,7 +673,7 @@ function ConnectiveLayer({
             </feMerge>
           </filter>
           <radialGradient id="parle-flow-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(191,219,254,0.24)" />
+            <stop offset="0%" stopColor="rgba(30,64,175,0.18)" />
             <stop offset="58%" stopColor="rgba(96,165,250,0.08)" />
             <stop offset="100%" stopColor="rgba(96,165,250,0)" />
           </radialGradient>
@@ -717,7 +715,7 @@ function ConnectiveLayer({
           <path
             d="M 488 81 L 497 90 L 515 68"
             fill="none"
-            stroke="rgba(239,246,255,0.9)"
+            stroke="rgba(30,64,175,0.82)"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="3.4"

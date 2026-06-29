@@ -12,7 +12,7 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
             <a
               key={column.title}
               href={column.href}
-              className="group relative block overflow-hidden rounded-md border border-ink-100/10 bg-white/4 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-ink-100/20 hover:bg-ink-100/8"
+              className="group relative block overflow-hidden rounded-md border border-ink-100/10 bg-sand-100/45 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-ink-100/20 hover:bg-ink-100/8"
             >
               <span
                 className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
@@ -44,10 +44,10 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
                   </span>
                 </span>
               </span>
-              <span className="relative mt-5 block text-sm leading-6 text-ink-100/72">
+              <span className="relative mt-5 block text-sm leading-6 text-ink-200">
                 {column.description}
               </span>
-              <span className="relative mt-6 flex items-center justify-between rounded-md bg-white/8 px-4 py-3 text-sm font-medium text-ink-100 transition group-hover:bg-ink-100/12">
+              <span className="relative mt-6 flex items-center justify-between rounded-md bg-sand-100/65 px-4 py-3 text-sm font-medium text-ink-100 transition group-hover:bg-ink-100/12">
                 {column.cta ?? column.eyebrow}
                 <span
                   className="transition group-hover:translate-x-1"
@@ -59,7 +59,7 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
             </a>
           ))}
         </div>
-        <div className="rounded-md border border-ink-100/10 bg-white/4 p-6">
+        <div className="rounded-md border border-ink-100/10 bg-sand-100/45 p-6">
           <p className="font-mono text-xs tracking-widest text-ink-300 uppercase">
             {dropdown.aside.title}
           </p>
@@ -69,7 +69,7 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
                 <span className="block text-sm font-semibold text-ink-100 transition group-hover:text-ink-300">
                   {link.label}
                 </span>
-                <span className="mt-1 block text-xs leading-5 text-ink-100/60">
+                <span className="mt-1 block text-xs leading-5 text-ink-200">
                   {link.description}
                 </span>
               </a>
