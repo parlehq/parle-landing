@@ -34,7 +34,7 @@ function DesktopNavItem({ item, path }: { item: NavItem; path: string }) {
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noopener noreferrer" : undefined}
         className={cx(
-          "flex h-full items-center px-3 text-sm font-medium text-ink-200 transition hover:text-ink-100",
+          "flex h-full items-center px-3 text-sm font-semibold text-ink-100/82 transition hover:text-ink-100",
           active && "text-ink-100",
         )}
         aria-current={active ? "page" : undefined}
@@ -116,7 +116,7 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-100/10 bg-ink-950/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-sand-600/16 bg-sand-50/96 shadow-[0_1px_0_rgba(255,255,255,0.55),0_12px_40px_rgba(24,32,51,0.06)] backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
         <div className="flex h-full items-center gap-8">
           <a
@@ -144,14 +144,14 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
         <div className="hidden items-center gap-3 lg:flex">
           <a
             href="/login"
-            className="inline-flex items-center justify-center rounded-md border border-ink-100/15 px-4 py-2 text-sm font-medium text-ink-100 transition hover:border-sand-600 hover:bg-ink-100/5"
+            className="inline-flex items-center justify-center rounded-md border border-ink-100/18 bg-white/40 px-4 py-2 text-sm font-semibold text-ink-100 transition hover:border-sand-600/50 hover:bg-white/70"
             aria-label="Log in"
           >
             <FontAwesomeIcon icon={faLock} />
           </a>
           <a
             href="/install"
-            className="inline-flex items-center gap-2 rounded-md border border-ink-100/15 px-4 py-2 text-sm font-medium text-ink-100 transition hover:border-sand-600 hover:bg-ink-100/5"
+            className="inline-flex items-center gap-2 rounded-md border border-ink-100/18 bg-white/40 px-4 py-2 text-sm font-semibold text-ink-100 transition hover:border-sand-600/50 hover:bg-white/70"
           >
             <FontAwesomeIcon icon={faTerminal} /> Install
           </a>

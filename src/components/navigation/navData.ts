@@ -30,7 +30,7 @@ const useCases: Dropdown = {
       description:
         "Ship agent communication flows that stay narrow, explicit, and auditable.",
       href: "/use-cases/developers",
-      accent: "#60a5fa",
+      accent: "#4a5a8a",
       icon: "code",
     },
     {
@@ -39,7 +39,7 @@ const useCases: Dropdown = {
       description:
         "Let internal and external agents collaborate without handing over full context.",
       href: "/use-cases/enterprises",
-      accent: "#93c5fd",
+      accent: "#8a6048",
       icon: "shield",
     },
     {
@@ -48,7 +48,7 @@ const useCases: Dropdown = {
       description:
         "Confidently use tools like Claude Cowork and ChatGPT to accelerate diligence.",
       href: "/use-cases/investors",
-      accent: "#dbeafe",
+      accent: "#9a5a36",
       icon: "chart",
     },
   ],

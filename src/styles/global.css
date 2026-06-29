@@ -35,19 +35,20 @@
 
   --color-ink-950: #f8fafc;
   --color-ink-900: #f1f5f9;
-  --color-ink-800: #e0f2fe;
-  --color-ink-700: #bae6fd;
-  --color-ink-500: #2563eb;
-  --color-ink-400: #1d4ed8;
-  --color-ink-300: #1e40af;
-  --color-ink-200: #334155;
+  --color-ink-800: #dfe7f1;
+  --color-ink-700: #b9c4d8;
+  --color-ink-500: #283255;
+  --color-ink-400: #364571;
+  --color-ink-300: #4a5a8a;
+  --color-ink-200: #3d4a63;
   --color-ink-100: #182033;
+  --color-accent: #3b5bdb;
   --color-sand-50: #fbf6ee;
   --color-sand-100: #f3eadb;
   --color-sand-200: #e2cfb3;
-  --color-sand-500: #a46436;
-  --color-sand-600: #7f4b2c;
-  --color-line: rgba(127, 75, 44, 0.22);
+  --color-sand-500: #b46f45;
+  --color-sand-600: #9a5a36;
+  --color-line: rgba(154, 90, 54, 0.22);
 }
 
 :root {
@@ -72,10 +73,10 @@ body {
     ),
     radial-gradient(
       circle at 72% 28%,
-      rgba(37, 99, 235, 0.055),
+      rgba(74, 90, 138, 0.05),
       transparent 24%
     ),
-    linear-gradient(180deg, #fbf6ee 0%, #f5efe5 46%, #eef3f5 100%);
+    linear-gradient(180deg, #fbf6ee 0%, #f5efe5 48%, #f1e7d8 100%);
   color: #182033;
 }
 
@@ -200,22 +201,69 @@ body {
 }
 
 .pui-bigback {
-  background: rgba(251, 246, 238, 0.82);
-  border-top-color: rgba(116, 83, 49, 0.16);
+  background: linear-gradient(
+    180deg,
+    rgba(251, 246, 238, 0.72),
+    rgba(241, 231, 216, 0.94)
+  );
+  border-top-color: rgba(154, 90, 54, 0.16);
   color: var(--color-ink-100);
+}
+
+.pui-bigback__cols {
+  row-gap: 2rem;
 }
 
 .pui-bigback__heading,
 .pui-bigback__base {
-  color: rgba(87, 69, 48, 0.72);
+  color: color-mix(in srgb, var(--color-ink-300) 72%, transparent);
+}
+
+.pui-bigback__heading {
+  letter-spacing: 0.14em;
 }
 
 .pui-bigback__link {
-  color: rgba(71, 85, 105, 0.82);
+  color: color-mix(in srgb, var(--color-ink-300) 78%, transparent);
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
 }
 
 .pui-bigback__link:hover {
   color: var(--color-ink-100);
+}
+
+.pui-bigback__wordmark {
+  margin-top: clamp(1.25rem, 3.2vw, 2.75rem);
+  padding-top: clamp(0.9rem, 1.8vw, 1.45rem);
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-ink-200) 22%, transparent);
+}
+
+.pui-bigback__svg {
+  margin-bottom: clamp(-1rem, -1.6vw, -0.375rem);
+}
+
+.pui-bigback__svg text {
+  font-size: clamp(4rem, 18vw, 12rem);
+  line-height: 0.85;
+  letter-spacing: -0.035em;
+}
+
+#parle-wordmark-grad stop:nth-child(1) {
+  stop-color: #313a52;
+}
+
+#parle-wordmark-grad stop:nth-child(2) {
+  stop-color: #3a4a72;
+}
+
+#parle-wordmark-grad stop:nth-child(3) {
+  stop-color: #8a6048;
+}
+
+#parle-wordmark-grad stop:nth-child(4) {
+  stop-color: #9a5a36;
 }
 
 .learn-example-line,
@@ -275,26 +323,68 @@ body {
   --parle-hover-y: 50%;
 
   position: relative;
+  isolation: isolate;
+}
+
+.parle-hover-wordmark::after {
+  position: absolute;
+  right: 0.12em;
+  bottom: 0;
+  left: 0.12em;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-sand-600) 50%, transparent),
+    transparent
+  );
+  content: "";
+  opacity: 0.48;
+  transform: scaleX(0.72);
+  transition:
+    opacity 180ms ease,
+    transform 220ms ease;
+}
+
+.parle-hover-wordmark__base,
+.parle-hover-wordmark__glow {
+  display: block;
+  background: linear-gradient(
+    100deg,
+    var(--color-ink-100) 0%,
+    var(--color-ink-400) 46%,
+    var(--color-sand-600) 100%
+  );
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
 }
 
 .parle-hover-wordmark__glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle 2.9em at var(--parle-hover-x) var(--parle-hover-y),
-    #9a3f12 0%,
-    #e45c16 24%,
-    #ff8a1f 48%,
-    #ffb13f 70%,
-    #ffd58f 88%,
-    transparent 100%
-  );
+  z-index: 1;
+  background:
+    radial-gradient(
+      circle 2.35em at var(--parle-hover-x) var(--parle-hover-y),
+      rgba(250, 238, 219, 0.88) 0%,
+      rgba(180, 111, 69, 0.82) 24%,
+      rgba(74, 90, 138, 0.72) 48%,
+      rgba(24, 32, 51, 0.2) 74%,
+      transparent 100%
+    ),
+    linear-gradient(100deg, #182033 0%, #4a5a8a 45%, #9a5a36 100%);
   background-clip: text;
-  color: transparent;
   opacity: 0;
   pointer-events: none;
   transition: opacity 180ms ease;
   -webkit-background-clip: text;
+}
+
+.parle-hover-wordmark:hover::after,
+.parle-hover-wordmark:focus-visible::after {
+  opacity: 0.8;
+  transform: scaleX(0.92);
 }
 
 .parle-hover-wordmark:hover .parle-hover-wordmark__glow,
