@@ -22,7 +22,7 @@ const audienceCount = page.audiences.length;
         <section
           class="mx-auto flex max-w-3xl flex-col items-center py-10 text-center sm:py-16 lg:py-20"
         >
-          <p class="font-mono text-sm tracking-widest text-ink-300 uppercase">
+          <p class="font-mono text-sm tracking-widest text-sand-600 uppercase">
             {page.eyebrow}
           </p>
           <h1
@@ -69,13 +69,13 @@ const audienceCount = page.audiences.length;
           class="relative mx-auto w-full max-w-2xl overflow-hidden rounded-md border border-ink-100/10 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.06),transparent_42%),rgba(255,255,255,0.78)] p-6 shadow-[0_30px_80px_rgba(15,23,42,0.10)] backdrop-blur sm:p-7"
         >
           <div
-            class="absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-ink-300/60 to-transparent"
+            class="absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-sand-600/45 to-transparent"
           >
           </div>
           <div class="flex items-center justify-between gap-4">
             <div>
               <p
-                class="font-mono text-xs tracking-widest text-ink-300 uppercase"
+                class="font-mono text-xs tracking-widest text-sand-600 uppercase"
               >
                 {page.heroBoardTitle}
               </p>
@@ -88,9 +88,9 @@ const audienceCount = page.audiences.length;
           <div class="mt-8 space-y-4">
             {
               page.heroBoardItems.map((item, index) => (
-                <div class="rounded-md border border-ink-100/10 bg-sand-100/55 p-4">
+                <div class="rounded-md border border-sand-600/14 bg-sand-100/55 p-4">
                   <div class="flex items-start gap-4">
-                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ink-400/25 bg-ink-400/10 font-mono text-xs text-ink-200">
+                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-sand-600/25 bg-sand-500/12 font-mono text-xs text-ink-200">
                       0{index + 1}
                     </div>
                     <div>
@@ -112,7 +112,9 @@ const audienceCount = page.audiences.length;
           class="grid gap-8 lg:grid-cols-[minmax(16rem,0.62fr)_minmax(0,1.38fr)] lg:gap-10"
         >
           <div class="lg:sticky lg:top-24 lg:self-start">
-            <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
+            <p
+              class="font-mono text-xs tracking-widest text-sand-600 uppercase"
+            >
               Who it serves
             </p>
             <h2 class="mt-4 text-3xl font-semibold text-ink-100 sm:text-4xl">
@@ -123,13 +125,13 @@ const audienceCount = page.audiences.length;
           <div class="space-y-4">
             {
               page.audiences.map((audience, index) => (
-                <article class="relative overflow-hidden rounded-md border border-ink-100/10 bg-sand-100/45 p-6 sm:p-7">
+                <article class="relative overflow-hidden rounded-md border border-sand-600/14 bg-sand-100/45 p-6 sm:p-7">
                   <div class="grid gap-5 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start lg:gap-6">
                     <div class="flex items-center gap-4 lg:flex-col lg:items-start lg:gap-3">
-                      <span class="inline-flex h-12 w-12 items-center justify-center rounded-md border border-ink-400/25 bg-ink-400/10 font-mono text-sm text-ink-100">
+                      <span class="inline-flex h-12 w-12 items-center justify-center rounded-md border border-sand-600/25 bg-sand-500/12 font-mono text-sm text-ink-100">
                         0{index + 1}
                       </span>
-                      <div class="h-px flex-1 bg-linear-to-r from-ink-400/40 to-transparent lg:h-20 lg:w-px lg:bg-linear-to-b" />
+                      <div class="h-px flex-1 bg-linear-to-r from-sand-600/40 to-transparent lg:h-20 lg:w-px lg:bg-linear-to-b" />
                     </div>
                     <div>
                       <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
@@ -152,7 +154,7 @@ const audienceCount = page.audiences.length;
         </section>
 
         <section>
-          <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
+          <p class="font-mono text-xs tracking-widest text-sand-600 uppercase">
             {page.scenarioEyebrow}
           </p>
           <div
@@ -173,8 +175,8 @@ const audienceCount = page.audiences.length;
           <div class="mt-8 grid gap-5 xl:grid-cols-3">
             {
               page.scenarios.map((scenario) => (
-                <article class="flex h-full flex-col rounded-md border border-ink-100/10 bg-sand-100/45 p-6 sm:p-7">
-                  <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
+                <article class="flex h-full flex-col rounded-md border border-sand-600/14 bg-sand-100/45 p-6 sm:p-7">
+                  <p class="font-mono text-xs tracking-widest text-sand-600 uppercase">
                     {scenario.eyebrow}
                   </p>
                   <h3 class="mt-4 text-2xl font-semibold text-ink-100">
@@ -201,9 +203,11 @@ const audienceCount = page.audiences.length;
           class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-8"
         >
           <div
-            class="rounded-md border border-ink-100/10 bg-sand-100/45 p-6 sm:p-7 lg:p-8"
+            class="rounded-md border border-sand-600/14 bg-sand-100/45 p-6 sm:p-7 lg:p-8"
           >
-            <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
+            <p
+              class="font-mono text-xs tracking-widest text-sand-600 uppercase"
+            >
               {page.principlesEyebrow}
             </p>
             <h2
@@ -230,7 +234,9 @@ const audienceCount = page.audiences.length;
           <div
             class="rounded-md border border-ink-100/10 bg-ink-950/65 p-6 sm:p-7 lg:p-8"
           >
-            <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
+            <p
+              class="font-mono text-xs tracking-widest text-sand-600 uppercase"
+            >
               {page.proofTitle}
             </p>
             <p
@@ -241,7 +247,7 @@ const audienceCount = page.audiences.length;
             <div class="mt-8 space-y-4">
               {
                 page.proofPoints.map((point) => (
-                  <article class="rounded-md border border-ink-400/16 bg-sand-100/45 p-5">
+                  <article class="rounded-md border border-sand-600/16 bg-sand-100/45 p-5">
                     <h3 class="text-base font-semibold text-ink-100">
                       {point.title}
                     </h3>
@@ -263,7 +269,7 @@ const audienceCount = page.audiences.length;
           >
             <div class="max-w-3xl">
               <p
-                class="font-mono text-xs tracking-widest text-ink-300 uppercase"
+                class="font-mono text-xs tracking-widest text-sand-600 uppercase"
               >
                 Next step
               </p>
@@ -295,7 +301,7 @@ const audienceCount = page.audiences.length;
                 rel={page.secondaryCta.external
                   ? "noopener noreferrer"
                   : undefined}
-                class="inline-flex items-center justify-center rounded-md border border-ink-100/14 bg-sand-100/45 px-6 py-3 text-sm font-semibold text-ink-100 transition hover:border-ink-400 hover:bg-ink-100/8"
+                class="inline-flex items-center justify-center rounded-md border border-sand-600/18 bg-sand-100/45 px-6 py-3 text-sm font-semibold text-ink-100 transition hover:border-sand-600 hover:bg-ink-100/8"
               >
                 {page.secondaryCta.label}
               </a>

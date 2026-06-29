@@ -11,7 +11,7 @@ const { page } = Astro.props as Props;
 <main class="px-6 py-14 lg:px-8 lg:py-20">
   <div class="mx-auto flex w-full max-w-6xl flex-col gap-16 lg:gap-24">
     <section
-      class="relative isolate overflow-hidden rounded-[2rem] border border-ink-100/10 bg-sand-100/45 px-6 py-8 shadow-[0_40px_120px_rgba(15,23,42,0.10)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
+      class="relative isolate overflow-hidden rounded-[2rem] border border-sand-600/14 bg-sand-100/45 px-6 py-8 shadow-[0_40px_120px_rgba(15,23,42,0.10)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
     >
       <div
         class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_32%),radial-gradient(circle_at_80%_24%,rgba(154,107,63,0.08),transparent_24%)]"
@@ -26,7 +26,7 @@ const { page } = Astro.props as Props;
       >
         <div class="max-w-3xl">
           <p
-            class="font-mono text-xs tracking-widest text-ink-300 uppercase sm:text-sm"
+            class="font-mono text-xs tracking-widest text-sand-600 uppercase sm:text-sm"
           >
             {page.hero.eyebrow}
           </p>
@@ -47,7 +47,7 @@ const { page } = Astro.props as Props;
           <div class="mt-8 flex flex-wrap gap-3">
             {
               page.hero.pills.map((pill) => (
-                <span class="inline-flex items-center rounded-full border border-ink-100/12 bg-sand-100/65 px-4 py-2 font-mono text-xs tracking-widest text-ink-200 uppercase sm:text-sm">
+                <span class="inline-flex items-center rounded-full border border-sand-600/16 bg-sand-100/65 px-4 py-2 font-mono text-xs tracking-widest text-ink-200 uppercase sm:text-sm">
                   {pill}
                 </span>
               ))
@@ -68,7 +68,7 @@ const { page } = Astro.props as Props;
             >
               <div>
                 <p
-                  class="font-mono text-xs tracking-widest text-ink-300 uppercase"
+                  class="font-mono text-xs tracking-widest text-sand-600 uppercase"
                 >
                   Developer room surface
                 </p>
@@ -86,17 +86,17 @@ const { page } = Astro.props as Props;
             <div class="mt-5 space-y-4">
               {
                 page.hero.checkpoints.map((checkpoint) => (
-                  <div class="rounded-2xl border border-ink-100/10 bg-sand-100/45 p-4">
+                  <div class="rounded-2xl border border-sand-600/14 bg-sand-100/45 p-4">
                     <div class="flex items-start justify-between gap-4">
                       <div>
-                        <p class="font-mono text-xs tracking-widest text-ink-300/84 uppercase">
+                        <p class="font-mono text-xs tracking-widest text-sand-600/84 uppercase">
                           {checkpoint.label}
                         </p>
                         <p class="mt-2 text-base font-semibold text-ink-100 sm:text-lg">
                           {checkpoint.value}
                         </p>
                       </div>
-                      <span class="mt-1 inline-flex size-8 items-center justify-center rounded-full border border-ink-100/10 bg-sand-100/65 text-sm text-ink-200">
+                      <span class="mt-1 inline-flex size-8 items-center justify-center rounded-full border border-sand-600/14 bg-sand-100/65 text-sm text-ink-200">
                         ↗
                       </span>
                     </div>
@@ -130,7 +130,7 @@ const { page } = Astro.props as Props;
     >
       <div class="lg:sticky lg:top-24 lg:self-start">
         <p
-          class="font-mono text-xs tracking-widest text-ink-300 uppercase sm:text-sm"
+          class="font-mono text-xs tracking-widest text-sand-600 uppercase sm:text-sm"
         >
           {page.workflow.eyebrow}
         </p>
@@ -149,8 +149,8 @@ const { page } = Astro.props as Props;
       <div class="grid gap-4">
         {
           page.workflow.steps.map((step) => (
-            <article class="group relative overflow-hidden rounded-[1.75rem] border border-ink-100/10 bg-sand-100/45 p-5 transition duration-300 hover:border-ink-100/18 hover:bg-ink-100/6 sm:p-6">
-              <div class="pointer-events-none absolute inset-y-0 left-0 w-1 rounded-full bg-linear-to-b from-ink-300 via-ink-500 to-cyan-300 opacity-70" />
+            <article class="group relative overflow-hidden rounded-[1.75rem] border border-sand-600/14 bg-sand-100/45 p-5 transition duration-300 hover:border-ink-100/18 hover:bg-ink-100/6 sm:p-6">
+              <div class="pointer-events-none absolute inset-y-0 left-0 w-1 rounded-full bg-linear-to-b from-sand-600 via-sand-500 to-cyan-300 opacity-70" />
               <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div class="flex items-center gap-4">
                   <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-ink-100/12 bg-ink-950/82 font-mono text-sm text-ink-200">
@@ -165,7 +165,7 @@ const { page } = Astro.props as Props;
                     </p>
                   </div>
                 </div>
-                <p class="max-w-sm rounded-full border border-ink-100/10 bg-ink-950/62 px-4 py-2 text-xs leading-5 text-ink-300 sm:text-right sm:text-sm">
+                <p class="max-w-sm rounded-full border border-ink-100/10 bg-ink-950/62 px-4 py-2 text-xs leading-5 text-sand-600 sm:text-right sm:text-sm">
                   {step.note}
                 </p>
               </div>
@@ -180,7 +180,7 @@ const { page } = Astro.props as Props;
     >
       <div class="max-w-3xl">
         <p
-          class="font-mono text-xs tracking-widest text-ink-300 uppercase sm:text-sm"
+          class="font-mono text-xs tracking-widest text-sand-600 uppercase sm:text-sm"
         >
           {page.capabilities.eyebrow}
         </p>
@@ -199,8 +199,8 @@ const { page } = Astro.props as Props;
       <div class="mt-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {
           page.capabilities.items.map((item) => (
-            <article class="rounded-[1.5rem] border border-ink-100/10 bg-sand-100/45 p-5 sm:p-6">
-              <p class="font-mono text-xs tracking-widest text-ink-300 uppercase">
+            <article class="rounded-[1.5rem] border border-sand-600/14 bg-sand-100/45 p-5 sm:p-6">
+              <p class="font-mono text-xs tracking-widest text-sand-600 uppercase">
                 {item.eyebrow}
               </p>
               <h3 class="mt-3 text-xl font-semibold text-ink-100">
@@ -209,7 +209,7 @@ const { page } = Astro.props as Props;
               <p class="mt-3 text-sm leading-6 text-ink-200 sm:text-base sm:leading-7">
                 {item.description}
               </p>
-              <p class="mt-5 rounded-2xl border border-ink-100/10 bg-ink-950/62 px-4 py-3 text-xs leading-5 text-ink-300 sm:text-sm">
+              <p class="mt-5 rounded-2xl border border-ink-100/10 bg-ink-950/62 px-4 py-3 text-xs leading-5 text-sand-600 sm:text-sm">
                 {item.evidence}
               </p>
             </article>
@@ -221,7 +221,7 @@ const { page } = Astro.props as Props;
     <section>
       <div class="max-w-3xl">
         <p
-          class="font-mono text-xs tracking-widest text-ink-300 uppercase sm:text-sm"
+          class="font-mono text-xs tracking-widest text-sand-600 uppercase sm:text-sm"
         >
           {page.scenarios.eyebrow}
         </p>
@@ -240,7 +240,7 @@ const { page } = Astro.props as Props;
       <div class="mt-8 grid gap-4 xl:grid-cols-3">
         {
           page.scenarios.items.map((scenario) => (
-            <article class="rounded-[1.75rem] border border-ink-100/10 bg-sand-100/45 p-5 sm:p-6">
+            <article class="rounded-[1.75rem] border border-sand-600/14 bg-sand-100/45 p-5 sm:p-6">
               <h3 class="text-2xl font-semibold text-ink-100">
                 {scenario.title}
               </h3>
@@ -270,10 +270,10 @@ const { page } = Astro.props as Props;
       class="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]"
     >
       <div
-        class="rounded-[2rem] border border-ink-100/10 bg-sand-100/45 p-6 sm:p-8 lg:p-10"
+        class="rounded-[2rem] border border-sand-600/14 bg-sand-100/45 p-6 sm:p-8 lg:p-10"
       >
         <p
-          class="font-mono text-xs tracking-widest text-ink-300 uppercase sm:text-sm"
+          class="font-mono text-xs tracking-widest text-sand-600 uppercase sm:text-sm"
         >
           {page.proof.eyebrow}
         </p>
@@ -310,7 +310,7 @@ const { page } = Astro.props as Props;
         class="rounded-[2rem] border border-ink-100/10 bg-ink-950/70 p-6 sm:p-8"
       >
         <p
-          class="font-mono text-xs tracking-widest text-ink-300 uppercase sm:text-sm"
+          class="font-mono text-xs tracking-widest text-sand-600 uppercase sm:text-sm"
         >
           Next step
         </p>
@@ -335,7 +335,7 @@ const { page } = Astro.props as Props;
           {
             page.cta.secondaryLabel && page.cta.secondaryHref && (
               <a
-                class="inline-flex items-center justify-center rounded-full border border-ink-100/15 px-6 py-3 text-sm font-semibold text-ink-100 transition hover:-translate-y-px hover:border-ink-400 hover:bg-ink-100/5"
+                class="inline-flex items-center justify-center rounded-full border border-ink-100/15 px-6 py-3 text-sm font-semibold text-ink-100 transition hover:-translate-y-px hover:border-sand-600 hover:bg-ink-100/5"
                 href={page.cta.secondaryHref}
                 target="_blank"
                 rel="noopener noreferrer"

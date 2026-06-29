@@ -45,8 +45,9 @@
   --color-sand-50: #fbf6ee;
   --color-sand-100: #f3eadb;
   --color-sand-200: #e2cfb3;
-  --color-sand-500: #9a6b3f;
-  --color-line: rgba(116, 83, 49, 0.18);
+  --color-sand-500: #a46436;
+  --color-sand-600: #7f4b2c;
+  --color-line: rgba(127, 75, 44, 0.22);
 }
 
 :root {

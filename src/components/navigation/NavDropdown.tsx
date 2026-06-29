@@ -12,7 +12,7 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
             <a
               key={column.title}
               href={column.href}
-              className="group relative block overflow-hidden rounded-md border border-ink-100/10 bg-sand-100/45 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-ink-100/20 hover:bg-ink-100/8"
+              className="group relative block overflow-hidden rounded-md border border-sand-600/14 bg-sand-100/45 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-ink-100/20 hover:bg-ink-100/8"
             >
               <span
                 className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
@@ -59,14 +59,14 @@ export default function NavDropdown({ dropdown }: { dropdown: Dropdown }) {
             </a>
           ))}
         </div>
-        <div className="rounded-md border border-ink-100/10 bg-sand-100/45 p-6">
-          <p className="font-mono text-xs tracking-widest text-ink-300 uppercase">
+        <div className="rounded-md border border-sand-600/14 bg-sand-100/45 p-6">
+          <p className="font-mono text-xs tracking-widest text-sand-600 uppercase">
             {dropdown.aside.title}
           </p>
           <div className="mt-5 space-y-5">
             {dropdown.aside.links.map((link) => (
               <a key={link.label} href={link.href} className="group block">
-                <span className="block text-sm font-semibold text-ink-100 transition group-hover:text-ink-300">
+                <span className="block text-sm font-semibold text-ink-100 transition group-hover:text-sand-600">
                   {link.label}
                 </span>
                 <span className="mt-1 block text-xs leading-5 text-ink-200">

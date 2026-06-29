@@ -64,7 +64,7 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
       <div className="space-y-5">
         <a
           href="/install"
-          className="flex items-center justify-center gap-2 rounded-md border border-ink-100/15 bg-sand-100/55 px-4 py-3 text-sm font-semibold text-ink-100"
+          className="flex items-center justify-center gap-2 rounded-md border border-sand-600/18 bg-sand-100/55 px-4 py-3 text-sm font-semibold text-ink-100"
         >
           <FontAwesomeIcon icon={faTerminal} /> Install
         </a>
@@ -72,7 +72,7 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
           <div key={item.label}>
             {item.dropdown ? (
               <>
-                <p className="font-mono text-xs tracking-widest text-ink-300 uppercase">
+                <p className="font-mono text-xs tracking-widest text-sand-600 uppercase">
                   {item.label}
                 </p>
                 <div className="mt-3 grid gap-3">
@@ -80,7 +80,7 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
                     <a
                       key={column.title}
                       href={column.href}
-                      className="rounded-md border border-ink-100/10 bg-sand-100/45 p-4"
+                      className="rounded-md border border-sand-600/14 bg-sand-100/45 p-4"
                     >
                       <span className="text-sm font-semibold text-ink-100">
                         {column.title}
@@ -98,8 +98,8 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
                 className={cx(
-                  "block rounded-md border border-ink-100/10 bg-sand-100/45 px-4 py-3 text-sm font-semibold text-ink-100",
-                  isActivePath(path, item.href) && "border-ink-400",
+                  "block rounded-md border border-sand-600/14 bg-sand-100/45 px-4 py-3 text-sm font-semibold text-ink-100",
+                  isActivePath(path, item.href) && "border-sand-600",
                 )}
               >
                 {item.label}
@@ -144,21 +144,21 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
         <div className="hidden items-center gap-3 lg:flex">
           <a
             href="/login"
-            className="inline-flex items-center justify-center rounded-md border border-ink-100/15 px-4 py-2 text-sm font-medium text-ink-100 transition hover:border-ink-400 hover:bg-ink-100/5"
+            className="inline-flex items-center justify-center rounded-md border border-ink-100/15 px-4 py-2 text-sm font-medium text-ink-100 transition hover:border-sand-600 hover:bg-ink-100/5"
             aria-label="Log in"
           >
             <FontAwesomeIcon icon={faLock} />
           </a>
           <a
             href="/install"
-            className="inline-flex items-center gap-2 rounded-md border border-ink-100/15 px-4 py-2 text-sm font-medium text-ink-100 transition hover:border-ink-400 hover:bg-ink-100/5"
+            className="inline-flex items-center gap-2 rounded-md border border-ink-100/15 px-4 py-2 text-sm font-medium text-ink-100 transition hover:border-sand-600 hover:bg-ink-100/5"
           >
             <FontAwesomeIcon icon={faTerminal} /> Install
           </a>
         </div>
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-ink-100/10 bg-sand-100/55 text-ink-100 lg:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-sand-600/14 bg-sand-100/55 text-ink-100 lg:hidden"
           onClick={() => setMobileOpen((open) => !open)}
           aria-expanded={mobileOpen}
           aria-label="Toggle navigation"
