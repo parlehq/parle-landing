@@ -1,15 +1,15 @@
 import { config, type IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import {
-  faBuildingShield,
-  faChartLineUp,
+  faBuilding,
+  faChartLine,
   faCode,
-} from "@fortawesome/pro-light-svg-icons";
+} from "@fortawesome/free-solid-svg-icons";
 
 config.autoAddCss = false;
 
 export const navIcons: Record<string, IconDefinition> = {
   code: faCode,
-  shield: faBuildingShield,
-  chart: faChartLineUp,
+  shield: faBuilding,
+  chart: faChartLine,
 };

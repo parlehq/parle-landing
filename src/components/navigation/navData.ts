@@ -32,6 +32,27 @@ const useCases: Dropdown = {
       href: "/use-cases/developers",
       accent: "#4a5a8a",
       icon: "code",
+      cta: "See the workflow",
+    },
+    {
+      title: "Enterprises",
+      eyebrow: "Govern",
+      description:
+        "Coordinate internal and external agents without flattening the trust boundary.",
+      href: "/use-cases/enterprises",
+      accent: "#9a5a36",
+      icon: "shield",
+      cta: "Explore the posture",
+    },
+    {
+      title: "Investors",
+      eyebrow: "Decide",
+      description:
+        "Run diligence, portfolio support, and approvals with scoped rooms and evidence trails.",
+      href: "/use-cases/investors",
+      accent: "#3b5bdb",
+      icon: "chart",
+      cta: "See the motions",
     },
   ],
   aside: {
@@ -43,16 +64,14 @@ const useCases: Dropdown = {
         href: "/about",
       },
       {
-        label: "Enterprise direction",
-        description:
-          "See where moderated rooms can go after the developer wedge.",
-        href: "/use-cases/enterprises",
+        label: "Install guide",
+        description: "Start locally and inspect the room surface yourself.",
+        href: "/install",
       },
       {
-        label: "Diligence direction",
-        description:
-          "Explore a later workflow for investment and partner review.",
-        href: "/use-cases/investors",
+        label: "Pricing",
+        description: "See how hosted access and future plans are positioned.",
+        href: "/pricing",
       },
     ],
   },
