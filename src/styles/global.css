@@ -405,7 +405,7 @@ body {
 }
 
 .pui-bigback__svg text {
-  font-size: clamp(4rem, 18vw, 12rem);
+  font-size: clamp(8rem, 19vw, 12rem);
   line-height: 0.85;
   letter-spacing: -0.035em;
 }

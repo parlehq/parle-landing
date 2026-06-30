@@ -853,7 +853,10 @@ export default function AgentExchangeDemo() {
   const activeSide = reducedMotion ? null : activeSideForPhase(phase);
 
   return (
-    <section className="mx-auto" aria-label="Parle mediator demo">
+    <section
+      className="mx-auto w-full max-w-6xl"
+      aria-label="Parle mediator demo"
+    >
       <p className="sr-only">
         Agents meet through Parle, where moderators work to catch prompt
         injection and private-info asks before delivery. No direct
