@@ -316,20 +316,6 @@ body {
     var(--hero-connector-dot-delay, 660ms) both;
 }
 
-/*
- * Timing is data-driven: --hero-verb-cycle (total loop) and per-verb
- * --hero-verb-delay are set inline from the page, and the matching
- * @keyframes is generated there from the verb count. See index.astro.
- */
-.hero-verb {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: translateY(0.65em);
-  animation: hero-verb-cycle var(--hero-verb-cycle, 10.5s) ease-in-out infinite;
-  animation-delay: var(--hero-verb-delay, 0s);
-}
-
 @keyframes hero-rule-draw {
   from {
     transform: scaleX(0);
@@ -610,7 +596,6 @@ body {
   .hero-connector-rule,
   .hero-connector path,
   .hero-connector circle,
-  .hero-verb,
   .learn-example-line,
   .learn-example-vertical,
   .learn-example-step,
@@ -644,14 +629,5 @@ body {
 
   .hero-connector circle {
     opacity: 1;
-  }
-
-  .hero-verb {
-    opacity: 1;
-    transform: none;
-  }
-
-  .hero-verb:not(:first-child) {
-    display: none;
   }
 }

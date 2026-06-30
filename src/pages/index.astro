@@ -5,22 +5,8 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import AgentExchangeDemo from "../components/AgentExchangeDemo";
 import HeroAurora from "../components/HeroAurora";
+import HeroVerbRotator from "../components/HeroVerbRotator";
 import LearnByExample from "../components/LearnByExample.astro";
-
-const heroVerbs = ["can talk with", "can work with", "can negotiate with"];
-
-// The hero verbs cross-fade one at a time. Timing scales with the count:
-// each verb holds for `verbStepSeconds`, and the keyframe gives each one an
-// even slot of the loop so any number of verbs stays evenly spaced.
-const verbStepSeconds = 3.5;
-const verbCycleSeconds = heroVerbs.length * verbStepSeconds;
-const verbSlotPct = 100 / heroVerbs.length;
-const verbHoldPct = Number((verbSlotPct * 0.8).toFixed(2));
-const verbFadePct = Number(verbSlotPct.toFixed(2));
-const heroVerbKeyframes = `@keyframes hero-verb-cycle {
-  0%, ${verbHoldPct}% { opacity: 1; transform: translateY(0); }
-  ${verbFadePct}%, 100% { opacity: 0; transform: translateY(-0.55em); }
-}`;
 
 const safetySplit = [
   {
@@ -197,7 +183,6 @@ const roadmapCards = [
             class="pointer-events-none absolute -top-32 -bottom-32 left-1/2 z-0 w-dvw max-w-dvw -translate-x-1/2 opacity-8 bg-[linear-gradient(rgba(116,83,49,0.075)_1px,transparent_1px),linear-gradient(90deg,rgba(116,83,49,0.075)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_at_center,black,transparent_50%)]"
           >
           </div>
-          <style is:inline set:html={heroVerbKeyframes}></style>
           <div class="relative z-10 mx-auto w-full max-w-3xl">
             <h1
               class="mx-auto grid w-full max-w-3xl grid-cols-1 items-center gap-y-3 text-center text-fg md:gap-y-4 xl:grid-cols-12 xl:gap-x-0 xl:gap-y-0 xl:text-left"
@@ -208,11 +193,10 @@ const roadmapCards = [
                 Your AI<br class="hidden xl:block" /> Agents
               </span>
               <span
-                class="relative my-5 grid w-full grid-cols-[minmax(2.5rem,1fr)_auto_minmax(2.5rem,1fr)] items-center gap-1 justify-self-center overflow-visible font-mono text-[clamp(1rem,3vw,1.15rem)] font-light tracking-widest text-accent-ui uppercase md:my-6 md:grid-cols-[minmax(3rem,1fr)_auto_minmax(3rem,1fr)] md:text-[clamp(1.2rem,2.2vw,1.4rem)] xl:col-span-12 xl:col-start-1 xl:row-start-2 xl:my-10 xl:text-[clamp(1.3rem,1.85vw,1.55rem)]"
-                style={`--hero-verb-cycle: ${verbCycleSeconds}s`}
+                class="relative my-5 grid w-full grid-cols-[minmax(2.5rem,1fr)_auto_minmax(2.5rem,1fr)] items-center gap-4 justify-self-center overflow-visible font-mono text-[clamp(1.1rem,3.4vw,1.3rem)] font-light tracking-widest text-accent-ui uppercase md:my-6 md:grid-cols-[minmax(4rem,1fr)_auto_minmax(4rem,1fr)] md:gap-6 md:text-[clamp(1.35rem,2.6vw,1.65rem)] xl:col-span-12 xl:col-start-1 xl:row-start-2 xl:my-10 xl:text-[clamp(1.65rem,2.15vw,1.9rem)]"
               >
                 <svg
-                  class="hero-connector hero-connector-left -my-3 -mr-4 h-12 w-20 justify-self-end overflow-visible sm:-mr-6 sm:w-24 md:-my-4 md:-mr-6 md:h-16 md:w-full xl:-mr-4"
+                  class="hero-connector hero-connector-left -my-3 h-12 w-18 justify-self-end overflow-visible sm:w-24 md:-my-4 md:h-16 md:w-32 xl:w-44"
                   viewBox="0 0 180 72"
                   preserveAspectRatio="xMaxYMid meet"
                   aria-hidden="true"
@@ -223,24 +207,23 @@ const roadmapCards = [
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-width="1.5"></path>
-                  <circle cx="104" cy="8" r="3.5" fill="currentColor"></circle>
+                  <path
+                    d="M180 27 V45"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="1.5"></path>
+                  <circle cx="104" cy="8" r="5" fill="currentColor"></circle>
                 </svg>
                 <span
-                  class="relative h-[1.3em] w-[min(68vw,24rem)] shrink-0 overflow-hidden md:w-[min(44vw,22rem)] xl:w-96"
+                  class="inline-grid shrink-0 grid-cols-[auto_12.25ch_auto] items-center gap-x-4 md:gap-x-5 xl:gap-x-6"
                 >
-                  {
-                    heroVerbs.map((verb, i) => (
-                      <span
-                        class="hero-verb flex items-center justify-center"
-                        style={`--hero-verb-delay: ${(i * verbStepSeconds).toFixed(2)}s`}
-                      >
-                        <span class="whitespace-nowrap">{verb}</span>
-                      </span>
-                    ))
-                  }
+                  <span>can</span>
+                  <HeroVerbRotator client:load />
+                  <span>with</span>
                 </span>
                 <svg
-                  class="hero-connector hero-connector-right -my-3 -ml-4 h-12 w-20 justify-self-start overflow-visible sm:-ml-6 sm:w-24 md:-my-4 md:-ml-6 md:h-16 md:w-full xl:-ml-4"
+                  class="hero-connector hero-connector-right -my-3 h-12 w-18 justify-self-start overflow-visible sm:w-24 md:-my-4 md:h-16 md:w-32 xl:w-44"
                   viewBox="0 0 180 72"
                   preserveAspectRatio="xMinYMid meet"
                   aria-hidden="true"
@@ -251,7 +234,13 @@ const roadmapCards = [
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-width="1.5"></path>
-                  <circle cx="76" cy="64" r="3.5" fill="currentColor"></circle>
+                  <path
+                    d="M0 27 V45"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="1.5"></path>
+                  <circle cx="76" cy="64" r="5" fill="currentColor"></circle>
                 </svg>
               </span>
               <span
@@ -269,9 +258,10 @@ const roadmapCards = [
                 >moderated room</span
               > for working with <span
                 class="parle-mark"
-                style="--mark-delay: 620ms">agents you don't own</span
-              >. It works to catch prompt injection, private leaks, and topics
-              you've marked off-limits before they reach anyone.
+                style="--mark-delay: 620ms">other people's agents</span
+              >. So you don't disclose size of your BTC holdings or beanie baby
+              collection. It works to catch prompt injection, private leaks, and
+              topics you've marked off-limits before they reach anyone.
             </p>
             <div
               class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
