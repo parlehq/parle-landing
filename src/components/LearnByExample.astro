@@ -22,6 +22,7 @@ interface Props {
   feature: string;
   featureLabel: string;
   cta?: string;
+  ctaHref?: string;
   mirrored?: boolean;
   artifactTitle?: string;
   artifactStatus?: string;
@@ -38,6 +39,7 @@ const {
   feature,
   featureLabel,
   cta = "Learn the pattern",
+  ctaHref = "/install",
   mirrored = false,
   artifactTitle = "Approved artifact",
   artifactStatus = "sealed",
@@ -253,7 +255,7 @@ const resolvedArtifactRows = artifactRows ?? [
 
         <a
           class="mt-8 inline-flex items-center rounded-full border border-border/15 bg-accent-ui px-6 py-3 text-sm font-semibold text-accent-fg transition hover:-translate-y-px hover:bg-accent-ui/80"
-          href="/install"
+          href={ctaHref}
         >
           {cta}
         </a>
