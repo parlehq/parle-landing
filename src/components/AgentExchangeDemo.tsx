@@ -317,7 +317,7 @@ function Terminal({
 }) {
   return (
     <MockIDE
-      className="relative z-20 h-54 text-left sm:h-64 lg:h-88"
+      className="relative z-20 h-54 w-full max-w-[400px] justify-self-center text-left sm:h-64 lg:h-88"
       data-theme="dark"
       style={{ borderRadius: "0.875rem" }}
     >
@@ -638,6 +638,28 @@ function ConnectiveLayer({
           style={{ animationDelay: replyActive ? replyDelay : "0ms" }}
         />
         <OrbitField phase={phase} reducedMotion={reducedMotion} mobile />
+        <g
+          className={
+            receiptActive || reducedMotion ? "opacity-100" : "opacity-0"
+          }
+        >
+          <circle
+            cx="30"
+            cy="60"
+            fill="none"
+            r="16"
+            stroke="rgba(96,165,250,0.46)"
+            strokeWidth="0.8"
+          />
+          <path
+            d="M 26 60.5 L 29 64 L 35 54"
+            fill="none"
+            stroke="rgba(30,64,175,0.82)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.4"
+          />
+        </g>
       </svg>
       <svg
         aria-hidden="true"
@@ -745,7 +767,7 @@ function ParleMediationCore({
             "bottom-8 left-1/2 -translate-x-1/2 lg:top-1/2 lg:right-8 lg:bottom-auto lg:left-auto lg:translate-x-0 lg:-translate-y-1/2",
         },
       ].map((node) => {
-        const active = node.side === (reducedMotion ? "left" : activeNode);
+        const active = reducedMotion || node.side === activeNode;
         return (
           <span
             className={`absolute ${node.position} size-2 rounded-full transition-all duration-300 ${
@@ -776,19 +798,34 @@ function ParleMediationCore({
   );
 }
 
+function readPrefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
 function usePrefersReducedMotion() {
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(readPrefersReducedMotion);
 
   useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(query.matches);
 
-    function handleChange(event: MediaQueryListEvent) {
+    function handleChange(event: MediaQueryListEvent | MediaQueryList) {
       setReducedMotion(event.matches);
     }
 
-    query.addEventListener("change", handleChange);
-    return () => query.removeEventListener("change", handleChange);
+    if (typeof query.addEventListener === "function") {
+      query.addEventListener("change", handleChange);
+      return () => query.removeEventListener("change", handleChange);
+    }
+
+    query.addListener(handleChange);
+    return () => query.removeListener(handleChange);
   }, []);
 
   return reducedMotion;

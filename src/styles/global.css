@@ -294,7 +294,8 @@ body {
 .hero-connector path {
   stroke-dasharray: 190;
   stroke-dashoffset: 190;
-  animation: hero-connector-draw 560ms linear var(--hero-connector-delay, 80ms) both;
+  animation: hero-connector-draw 560ms linear var(--hero-connector-delay, 80ms)
+    both;
 }
 
 .hero-connector-left {
@@ -311,7 +312,8 @@ body {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hero-connector-dot 120ms linear var(--hero-connector-dot-delay, 660ms) both;
+  animation: hero-connector-dot 120ms linear
+    var(--hero-connector-dot-delay, 660ms) both;
 }
 
 /*
@@ -609,8 +611,27 @@ body {
   .hero-connector path,
   .hero-connector circle,
   .hero-verb,
+  .learn-example-line,
+  .learn-example-vertical,
+  .learn-example-step,
+  .learn-example-feature,
   .parle-mark {
     animation: none;
+  }
+
+  .parle-inflow {
+    stroke: var(--theme-inflow-rest);
+    stroke-dashoffset: 0;
+    opacity: 0.65;
+  }
+
+  .learn-example-line,
+  .learn-example-vertical,
+  .learn-example-step,
+  .learn-example-feature,
+  .parle-mark {
+    opacity: 1;
+    transform: none;
   }
 
   .parle-mark {
