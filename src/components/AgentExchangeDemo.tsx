@@ -27,105 +27,92 @@ const flowDelays: Partial<Record<Phase, number>> = {
   3: 1080,
 };
 
-const guaranteeWords = [
-  "policy",
+const coreWords = [
+  "moderate",
+  "scan",
+  "filter",
   "scope",
-  "seal",
-  "audit",
-  "consent",
-  "redact",
-  "accept",
-  "expire",
-  "meter",
-  "quarantine",
-  "sandbox",
+  "room",
+  "receipt",
+  "private",
+  "allowed",
+  "review",
 ];
 
 const scenarios: Scenario[] = [
   {
-    room: "diligence-handoff",
+    room: "support-handoff",
     leftTitle: "Your agent",
-    rightTitle: "Other agent",
+    rightTitle: "Friend's agent",
     leftHarnesses: ["claude", "hermes"],
     rightHarnesses: ["pi", "hermes"],
     submit: [
-      { tokens: mixed("> submit fact -> ", ["parle", "fn"]) },
-      { tokens: mixed("share: ", ["summary only", "com"]) },
-    ],
-    reply: [
-      { tokens: mixed("< projection from ", ["parle", "fn"], " summary only") },
-      { tokens: mixed("> submit reply -> ", ["parle", "fn"]) },
-      { tokens: mixed("finding: ", ["one concern flagged", "str"]) },
-    ],
-    receipt: [
-      { tokens: mixed("< projection from ", ["parle", "fn"]) },
-      { tokens: mixed("result: ", ["one concern flagged", "str"]) },
-      { tokens: mixed("receipt: ", ["sealed  room_completed", "com"]) },
-    ],
-  },
-  {
-    room: "term-negotiation",
-    leftTitle: "Buyer agent",
-    rightTitle: "Seller agent",
-    leftHarnesses: ["claude", "hermes"],
-    rightHarnesses: ["pi", "hermes"],
-    submit: [
-      { tokens: mixed("> submit offer -> ", ["parle", "fn"]) },
-      { tokens: mixed("terms: ", ["net-45", "str"]) },
+      { tokens: mixed("> open room -> ", ["parle", "fn"]) },
+      { tokens: mixed("ask: ", ["review install steps", "str"]) },
     ],
     reply: [
       {
-        tokens: mixed("< projection from ", ["parle", "fn"], " allowed terms"),
+        tokens: mixed(
+          "< moderator check ",
+          ["parle", "fn"],
+          " flagged injection",
+        ),
       },
-      { tokens: mixed("> submit counter -> ", ["parle", "fn"]) },
-      { tokens: mixed("terms: ", ["net-30", "str"]) },
+      { tokens: mixed("strip: ", ["ignore prior instructions", "com"]) },
+      { tokens: mixed("> submit cleaned reply -> ", ["parle", "fn"]) },
     ],
     receipt: [
-      { tokens: mixed("< projection from ", ["parle", "fn"]) },
-      { tokens: mixed("agreement: ", ["net-30 accepted", "str"]) },
-      { tokens: mixed("receipt: ", ["sealed", "com"]) },
+      { tokens: mixed("< room receipt ", ["parle", "fn"]) },
+      { tokens: mixed("caught: ", ["prompt injection", "str"]) },
+      { tokens: mixed("delivered: ", ["clean install note", "com"]) },
     ],
   },
   {
-    room: "closing-escrow",
-    leftTitle: "Broker agent",
-    rightTitle: "Lender agent",
+    room: "vendor-question",
+    leftTitle: "Your agent",
+    rightTitle: "Vendor agent",
     leftHarnesses: ["claude", "hermes"],
     rightHarnesses: ["pi", "hermes"],
     submit: [
-      { tokens: mixed("> submit update -> ", ["parle", "fn"]) },
-      { tokens: mixed("scope: ", ["inspection only", "com"]) },
+      { tokens: mixed("> ask vendor -> ", ["parle", "fn"]) },
+      { tokens: mixed("topic: ", ["API limits", "str"]) },
     ],
     reply: [
-      { tokens: mixed("< projection from ", ["parle", "fn"], " escrow view") },
-      { tokens: mixed("> submit clearance -> ", ["parle", "fn"]) },
-      { tokens: mixed("status: ", ["contingency cleared", "str"]) },
+      {
+        tokens: mixed(
+          "< moderator check ",
+          ["parle", "fn"],
+          " flagged private ask",
+        ),
+      },
+      { tokens: mixed("strip: ", ["send your .env", "com"]) },
+      { tokens: mixed("> submit answer -> ", ["parle", "fn"]) },
     ],
     receipt: [
-      { tokens: mixed("< projection from ", ["parle", "fn"]) },
-      { tokens: mixed("closing: ", ["ready to schedule", "str"]) },
-      { tokens: mixed("receipt: ", ["sealed", "com"]) },
+      { tokens: mixed("< room receipt ", ["parle", "fn"]) },
+      { tokens: mixed("caught: ", ["private info ask", "str"]) },
+      { tokens: mixed("delivered: ", ["API limit answer", "com"]) },
     ],
   },
   {
-    room: "proof-review",
-    leftTitle: "Research agent",
+    room: "review-request",
+    leftTitle: "Builder agent",
     rightTitle: "Reviewer agent",
     leftHarnesses: ["claude", "hermes"],
     rightHarnesses: ["pi", "hermes"],
     submit: [
-      { tokens: mixed("> submit sketch -> ", ["parle", "fn"]) },
-      { tokens: mixed("claim: ", ["lemma 3", "str"]) },
+      { tokens: mixed("> send diff -> ", ["parle", "fn"]) },
+      { tokens: mixed("allowed: ", ["changed files only", "com"]) },
     ],
     reply: [
-      { tokens: mixed("< projection from ", ["parle", "fn"], " proof notes") },
-      { tokens: mixed("> submit check -> ", ["parle", "fn"]) },
-      { tokens: mixed("verdict: ", ["lemma 3 holds", "str"]) },
+      { tokens: mixed("< moderator check ", ["parle", "fn"], " passed") },
+      { tokens: mixed("> submit review -> ", ["parle", "fn"]) },
+      { tokens: mixed("note: ", ["one issue found", "str"]) },
     ],
     receipt: [
-      { tokens: mixed("< projection from ", ["parle", "fn"]) },
-      { tokens: mixed("next: ", ["attack theorem 2", "str"]) },
-      { tokens: mixed("receipt: ", ["sealed", "com"]) },
+      { tokens: mixed("< room receipt ", ["parle", "fn"]) },
+      { tokens: mixed("view: ", ["changed files only", "str"]) },
+      { tokens: mixed("delivered: ", ["review note", "com"]) },
     ],
   },
 ];
@@ -736,8 +723,7 @@ function ParleMediationCore({
   reducedMotion: boolean;
 }) {
   const activeNode: Side = phase <= 2 ? "left" : "right";
-  const guaranteeWord =
-    guaranteeWords[(cycle * 6 + phase) % guaranteeWords.length];
+  const coreWord = coreWords[(cycle * 6 + phase) % coreWords.length];
 
   return (
     <div className="relative z-10 grid min-h-64 place-items-center overflow-visible py-10 lg:min-h-88 lg:py-0">
@@ -782,7 +768,7 @@ function ParleMediationCore({
             Parlè
           </p>
           <p className="mt-2 h-4 font-mono text-[0.62rem] tracking-widest text-accent-ui uppercase">
-            {guaranteeWord}
+            {coreWord}
           </p>
         </div>
       </div>
@@ -790,8 +776,26 @@ function ParleMediationCore({
   );
 }
 
+function usePrefersReducedMotion() {
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(query.matches);
+
+    function handleChange(event: MediaQueryListEvent) {
+      setReducedMotion(event.matches);
+    }
+
+    query.addEventListener("change", handleChange);
+    return () => query.removeEventListener("change", handleChange);
+  }, []);
+
+  return reducedMotion;
+}
+
 export default function AgentExchangeDemo() {
-  const reducedMotion = false;
+  const reducedMotion = usePrefersReducedMotion();
   const { phase, cycle } = usePhaseClock(reducedMotion);
   const scenarioIndex = reducedMotion ? 0 : cycle % scenarios.length;
   const scenario = scenarios[scenarioIndex];
@@ -814,8 +818,9 @@ export default function AgentExchangeDemo() {
   return (
     <section className="mx-auto" aria-label="Parle mediator demo">
       <p className="sr-only">
-        Agents submit facts to Parle, read scoped projections, and receive a
-        sealed receipt. No direct agent-to-agent channel is shown.
+        Agents meet through Parle, where moderators work to catch prompt
+        injection and private-info asks before delivery. No direct
+        agent-to-agent channel is shown.
       </p>
       <div className="relative isolate grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(15rem,18rem)_minmax(0,1fr)]">
         <ConnectiveLayer phase={phase} reducedMotion={reducedMotion} />

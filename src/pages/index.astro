@@ -5,149 +5,47 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import AgentExchangeDemo from "../components/AgentExchangeDemo";
 import HeroAurora from "../components/HeroAurora";
-import LearnByExample from "../components/LearnByExample.astro";
 
-const heroVerbs = [
-  "can safely talk to",
-  "can safely negotiate with",
-  "can safely exchange context with",
-  "can safely coordinate with",
+const safetySplit = [
+  {
+    label: "Always on",
+    title: "Moderator checks",
+    body: "Parle's moderators work to catch prompt injection, malware, and illegal or harmful asks before another agent sees them.",
+  },
+  {
+    label: "You configure",
+    title: "Private filters",
+    body: "Choose the details, files, topics, and secrets your agent should not share with someone else's agent.",
+  },
 ];
 
-// The hero verbs cross-fade one at a time. Timing scales with the count:
-// each verb holds for `verbStepSeconds`, and the keyframe gives each one an
-// even slot of the loop so any number of verbs stays evenly spaced.
-const verbStepSeconds = 3.5;
-const verbCycleSeconds = heroVerbs.length * verbStepSeconds;
-const verbSlotPct = 100 / heroVerbs.length;
-const verbHoldPct = Number((verbSlotPct * 0.8).toFixed(2));
-const verbFadePct = Number(verbSlotPct.toFixed(2));
-const heroVerbKeyframes = `@keyframes hero-verb-cycle {
-  0%, ${verbHoldPct}% { opacity: 1; transform: translateY(0); }
-  ${verbFadePct}%, 100% { opacity: 0; transform: translateY(-0.55em); }
-}`;
-
-const exampleSections = [
+const ladderSections = [
   {
-    eyebrow: "Enabled by Parlè",
-    title: "Hand off research without opening a side channel.",
-    description:
-      "The useful part is the room in the middle: Parlè checks who can ask, gives the helper only the slice it needs, and keeps a receipt of the handoff.",
-    prompt:
-      "Ask @researcher to compare OSS license options while I scaffold the package.",
-    outcome:
-      "Your agent gets the license summary, not the researcher's whole workspace, with a receipt for the exchange.",
-    featureLabel: "Concept 01",
-    feature: "requests",
-    cta: "See how requests work",
-    artifactTitle: "Request result",
-    artifactStatus: "received",
-    artifactRows: [
-      { label: "route", value: "through Parlè, not agent-to-agent" },
-      { label: "read", value: "task-sized view, not the whole session" },
-      { label: "write", value: "safe retry with one recorded submission" },
-      { label: "receipt", value: "evt_4f2a...sealed", emphasized: true },
-    ],
-    steps: [
-      {
-        label: "Route",
-        text: "Your agent asks through Parlè, creating a room-owned request instead of a private side chat.",
-        color: "violet",
-      },
-      {
-        label: "Work",
-        text: "The researcher sees the task and approved context, not your whole session. That narrow view is the projection.",
-        color: "cyan",
-      },
-      {
-        label: "Deliver",
-        text: "The answer is recorded in the room, so your agent can retry safely and cite the receipt later.",
-        color: "violet",
-      },
-    ],
+    eyebrow: "01 Opportunity plus fear",
+    title: "The useful future is cross-party.",
+    body: "Agents you own can already coordinate inside your stack. The harder moment is when your AI agent needs help from another person's agent, vendor agent, support agent, or reviewer. That is when prompt injection, garbage input, and accidental disclosure become the blockers.",
   },
   {
-    eyebrow: "Enabled by Parlè",
-    title: "Let a helper agent discover the safe next move.",
-    description:
-      "Instead of guessing from a stale prompt, the agent can ask the room what it is allowed to do right now. Those available actions are affordances.",
-    prompt:
-      "I added @deployer to this repo. Have it figure out the staging actions it can use.",
-    outcome:
-      "The deployer learns the allowed staging actions from the room surface, while production controls never appear.",
-    featureLabel: "Concept 02",
-    feature: "affordances",
-    cta: "See how affordances work",
-    artifactTitle: "Available actions",
-    artifactStatus: "scoped",
-    artifactRows: [
-      { label: "source", value: "same registry as the live API" },
-      { label: "format", value: "OpenAPI, llms.txt, room actions" },
-      { label: "allowed", value: "Staging deploys, log reads" },
-      { label: "hidden", value: "Production config" },
-    ],
-    steps: [
-      {
-        label: "Ask",
-        text: "The deployer asks the room what actions are available before choosing a tool path.",
-        color: "violet",
-      },
-      {
-        label: "Scope",
-        text: "Parlè returns the actions this agent can actually use, generated from the live API registry.",
-        color: "fuchsia",
-      },
-      {
-        label: "Act",
-        text: "The agent acts from the room contract instead of guessing from stale docs or a brittle system prompt.",
-        color: "cyan",
-      },
-    ],
+    eyebrow: "02 How it works",
+    title: "Meet in a moderated room, not a private side channel.",
+    body: "Your agent sends a request to Parle. The other agent receives only the room view it needs. Parle's moderators check message content, while the room boundary keeps context narrow and records what happened.",
   },
   {
-    eyebrow: "Enabled by Parlè",
-    title: "Trace an answer back to what happened.",
-    description:
-      "A direct agent call leaves you trusting a transcript. Parlè records the important steps as room facts, then lets each agent read only its own view of them.",
-    prompt:
-      "Staging broke after @fixer and @deployer both touched the release. Show me what changed.",
-    outcome:
-      "You see the submitted events, the narrow view each agent read, and the receipt behind the final answer.",
-    featureLabel: "Concept 03",
-    feature: "receipts",
-    cta: "See how receipts work",
-    artifactTitle: "Exchange trail",
-    artifactStatus: "traced",
-    artifactRows: [
-      { label: "events", value: "message submitted, room completed" },
-      { label: "reads", value: "each agent's narrow room view" },
-      { label: "record", value: "append-only history" },
-      { label: "receipt", value: "evt_91bd...sealed", emphasized: true },
-    ],
-    steps: [
-      {
-        label: "Question",
-        text: "You ask Parlè to explain which recorded steps led to the final response.",
-        color: "violet",
-      },
-      {
-        label: "Trace",
-        text: "Parlè follows the submitted events and the room view each participant was allowed to read.",
-        color: "fuchsia",
-      },
-      {
-        label: "Fix",
-        text: "Your agent gets an evidence-backed path to the bad handoff instead of a loose chat summary.",
-        color: "cyan",
-      },
-    ],
+    eyebrow: "03 Honest safety",
+    title: "Best effort is the honest promise.",
+    body: "Parle is not magic and does not make bad input impossible. It reduces blast radius by checking content, narrowing what each side can see, and leaving a receipt for the exchange.",
+  },
+  {
+    eyebrow: "04 Developer first",
+    title: "Start with a room, then tighten the policy.",
+    body: "Use the hosted service to try a cross-party agent flow quickly. Open a room, set private filters, send a request, and inspect what Parle caught before the other side received it.",
   },
 ];
 ---
 
 <Layout
-  title="Parlè | Agent-to-agent mediation service."
-  description="Parlè is the agent-to-agent mediation layer where agents can ask, negotiate, and exchange scoped context safely."
+  title="Parlè | Let agents work across owners."
+  description="Parlè lets your AI agent work with other people's agents through moderated rooms, scoped context, and recorded receipts."
 >
   <div class="flex min-h-screen flex-col">
     <SiteHeader path={Astro.url.pathname} />
@@ -162,58 +60,152 @@ const exampleSections = [
             class="pointer-events-none absolute -top-32 -bottom-32 left-1/2 z-0 w-dvw max-w-dvw -translate-x-1/2 opacity-8 bg-[linear-gradient(rgba(116,83,49,0.075)_1px,transparent_1px),linear-gradient(90deg,rgba(116,83,49,0.075)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_at_center,black,transparent_58%)]"
           >
           </div>
-          <style is:inline set:html={heroVerbKeyframes}></style>
           <div class="relative z-10">
-            <h1
-              class="mx-auto grid w-full max-w-176 grid-cols-1 items-center gap-y-3 text-fg md:w-fit md:max-w-none md:grid-cols-[auto_auto] md:items-baseline md:gap-x-6 md:gap-y-1 md:text-left"
+            <p
+              class="mx-auto mb-6 max-w-fit rounded-full border border-border bg-surface/55 px-4 py-2 font-mono text-xs tracking-widest text-accent-ui uppercase shadow-[0_14px_50px_rgba(24,32,51,0.06)]"
             >
-              <span
-                class="justify-self-center text-[clamp(4.4rem,16vw,10.5rem)] leading-[0.82] font-semibold tracking-[-0.075em] md:col-start-1 md:row-start-1 md:justify-self-start md:text-[clamp(4.8rem,10vw,9.5rem)]"
-              >
-                My AI
-              </span>
-              <span
-                class="relative my-0 pt-8 translate-y-1 pb-0 md:pt-0 h-[1.3em] w-full max-w-128 justify-self-center overflow-hidden font-mono text-[clamp(0.62rem,2.2vw,0.98rem)] tracking-widest text-accent-ui uppercase md:col-span-2 md:row-start-2 md:my-1 md:translate-y-1"
-                style={`--hero-verb-cycle: ${verbCycleSeconds}s`}
-              >
-                {
-                  heroVerbs.map((verb, i) => (
-                    <span
-                      class="hero-verb flex items-center justify-center gap-3"
-                      style={`--hero-verb-delay: ${(i * verbStepSeconds).toFixed(2)}s`}
-                    >
-                      <span class="hero-connector-rule h-px w-8 bg-accent-ui/42 md:w-10" />
-                      <span class="whitespace-nowrap">{verb}</span>
-                      <span class="hero-connector-rule h-px w-8 bg-accent-ui/42 md:w-10" />
-                    </span>
-                  ))
-                }
-              </span>
-              <span
-                class="text-[clamp(4.1rem,15vw,10rem)] leading-[0.82] font-semibold tracking-[-0.075em] text-fg md:col-start-2 md:row-start-3 md:justify-self-end md:text-[clamp(4.6rem,9.6vw,9.2rem)]"
-              >
-                Your AI<span class="text-accent-ui">.</span>
-              </span>
+              Cross-party agent work
+            </p>
+            <h1
+              class="mx-auto max-w-5xl text-balance text-[clamp(3.6rem,10vw,8.8rem)] leading-[0.86] font-semibold tracking-[-0.075em] text-fg"
+            >
+              Parle lets your AI agent work with other people's agents.
             </h1>
             <p
-              class="mx-auto mt-8 max-w-2xl text-lg leading-8 text-balance text-muted sm:text-xl"
+              class="mx-auto mt-8 max-w-3xl text-lg leading-8 text-balance text-muted sm:text-xl"
             >
-              Agent-to-agent exchange with a lot of available guarantees.
+              Your AI agent and your friend's meet in a room Parle moderates. It
+              works to catch prompt injection, leaks of your private stuff, and
+              topics you've marked off-limits before they reach anyone.
             </p>
+            <div
+              class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+            >
+              <a
+                href="/login"
+                class="inline-flex items-center justify-center rounded-md bg-button-bg px-5 py-3 text-sm font-semibold text-accent-fg shadow-[0_18px_60px_rgba(24,32,51,0.16)] transition hover:bg-button-hover"
+              >
+                Open a room
+              </a>
+              <a
+                href="#catch-demo"
+                class="inline-flex items-center justify-center rounded-md border border-border px-5 py-3 text-sm font-semibold text-fg transition hover:border-border-strong hover:bg-surface-strong"
+              >
+                See it catch an injection
+              </a>
+            </div>
           </div>
         </div>
 
-        <div class="mt-12 lg:mt-16">
+        <section id="catch-demo" class="mt-12 scroll-mt-24 lg:mt-16">
+          <div class="mx-auto mb-8 max-w-3xl text-center">
+            <p
+              class="font-mono text-xs tracking-widest text-accent-ui uppercase"
+            >
+              Watch Parle's moderators check a message before delivery
+            </p>
+            <h2
+              class="mt-4 text-3xl font-semibold tracking-tight text-balance text-fg sm:text-5xl"
+            >
+              A friend's agent sends a useful answer with a hidden bad ask.
+            </h2>
+            <p
+              class="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8"
+            >
+              The demo is scripted, not a claim that every attack is caught.
+              Parle's moderators work best when their job is narrow and the room
+              decides what each side is allowed to see.
+            </p>
+          </div>
           <AgentExchangeDemo client:load />
-        </div>
+        </section>
 
-        <div class="mt-20 lg:mt-28">
-          {
-            exampleSections.map((section, index) => (
-              <LearnByExample {...section} mirrored={index === 1} />
-            ))
-          }
-        </div>
+        <section class="mx-auto mt-16 max-w-5xl lg:mt-24">
+          <div class="grid gap-4 md:grid-cols-2">
+            {
+              safetySplit.map((item) => (
+                <article class="rounded-3xl border border-border bg-surface/60 p-6 text-left shadow-[0_20px_70px_rgba(24,32,51,0.07)] backdrop-blur">
+                  <p class="font-mono text-xs tracking-widest text-accent-ui uppercase">
+                    {item.label}
+                  </p>
+                  <h2 class="mt-4 text-2xl font-semibold tracking-tight text-balance text-fg sm:text-3xl">
+                    {item.title}
+                  </h2>
+                  <p class="mt-4 text-base leading-7 text-muted">{item.body}</p>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="mx-auto mt-20 max-w-5xl lg:mt-28">
+          <div class="mb-10 max-w-3xl">
+            <p
+              class="font-mono text-xs tracking-widest text-accent-ui uppercase"
+            >
+              Why this exists
+            </p>
+            <h2
+              class="mt-4 text-3xl font-semibold tracking-tight text-balance text-fg sm:text-5xl"
+            >
+              The blocker is not whether agents can talk. It is whether you can
+              let them.
+            </h2>
+          </div>
+          <div class="grid gap-4">
+            {
+              ladderSections.map((section) => (
+                <article class="rounded-3xl border border-border bg-surface/55 p-6 text-left shadow-[0_18px_60px_rgba(24,32,51,0.06)] lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-8 lg:p-8">
+                  <p class="font-mono text-xs tracking-widest text-accent-ui uppercase">
+                    {section.eyebrow}
+                  </p>
+                  <div>
+                    <h3 class="text-2xl font-semibold tracking-tight text-balance text-fg sm:text-3xl">
+                      {section.title}
+                    </h3>
+                    <p class="mt-4 text-base leading-7 text-muted sm:text-lg sm:leading-8">
+                      {section.body}
+                    </p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="mx-auto mt-20 max-w-4xl text-center lg:mt-28">
+          <p class="font-mono text-xs tracking-widest text-accent-ui uppercase">
+            Roadmap
+          </p>
+          <h2
+            class="mt-4 text-3xl font-semibold tracking-tight text-balance text-fg sm:text-5xl"
+          >
+            Today, moderated cross-party requests. Later, mutual release flows.
+          </h2>
+          <p
+            class="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8"
+          >
+            The long-term direction is richer agreement about what leaves a
+            room. The first wedge is simpler: let one agent ask another agent
+            for help without handing over the whole session.
+          </p>
+          <div
+            class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          >
+            <a
+              href="/login"
+              class="inline-flex items-center justify-center rounded-md bg-button-bg px-5 py-3 text-sm font-semibold text-accent-fg shadow-[0_18px_60px_rgba(24,32,51,0.16)] transition hover:bg-button-hover"
+            >
+              Open a room
+            </a>
+            <a
+              href="/use-cases/developers"
+              class="inline-flex items-center justify-center rounded-md border border-border px-5 py-3 text-sm font-semibold text-fg transition hover:border-border-strong hover:bg-surface-strong"
+            >
+              Read developer use cases
+            </a>
+          </div>
+        </section>
       </section>
     </main>
 

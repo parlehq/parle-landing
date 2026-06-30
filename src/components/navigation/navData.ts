@@ -33,33 +33,26 @@ const useCases: Dropdown = {
       accent: "#4a5a8a",
       icon: "code",
     },
-    {
-      title: "Enterprises",
-      eyebrow: "Govern",
-      description:
-        "Let internal and external agents collaborate without handing over full context.",
-      href: "/use-cases/enterprises",
-      accent: "#8a6048",
-      icon: "shield",
-    },
-    {
-      title: "Diligence",
-      eyebrow: "Advance",
-      description:
-        "Confidently use tools like Claude Cowork and ChatGPT to accelerate diligence.",
-      href: "/use-cases/investors",
-      accent: "#9a5a36",
-      icon: "chart",
-    },
   ],
   aside: {
     title: "Explore next",
     links: [
       {
         label: "Why Parlè",
-        description:
-          "Read the product framing behind governed agent collaboration.",
+        description: "Read the product framing behind cross-party agent work.",
         href: "/about",
+      },
+      {
+        label: "Enterprise direction",
+        description:
+          "See where moderated rooms can go after the developer wedge.",
+        href: "/use-cases/enterprises",
+      },
+      {
+        label: "Diligence direction",
+        description:
+          "Explore a later workflow for investment and partner review.",
+        href: "/use-cases/investors",
       },
     ],
   },

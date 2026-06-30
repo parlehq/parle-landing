@@ -508,4 +508,9 @@ body {
   html {
     scroll-behavior: auto;
   }
+
+  .parle-inflow--active,
+  .parle-core-circle {
+    animation: none;
+  }
 }

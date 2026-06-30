@@ -6,7 +6,7 @@ const tokens: IdeToken[] = [
   { c: " install ", cls: "" },
   { c: "parle", cls: "str" },
   { c: "\n\n" },
-  { c: "# Create a secure channel\n", cls: "com" },
+  { c: "# Create a moderated room\n", cls: "com" },
   { c: "parle", cls: "fn" },
   { c: " init\n" },
   { c: "parle", cls: "fn" },

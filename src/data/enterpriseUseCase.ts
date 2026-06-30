@@ -243,7 +243,7 @@ export const enterpriseUseCase: UseCasePageData = {
         note: "Grounded in the room architecture and technical talk docs.",
       },
       {
-        title: "Database-backed guarantees",
+        title: "Database-backed records",
         body: "Room state, identity, credentials, and events are built around PostgreSQL, schema invariants, and idempotent writes so the workflow is durable at rest.",
         note: "Grounded in the developer and technical docs.",
       },
@@ -265,7 +265,7 @@ export const enterpriseUseCase: UseCasePageData = {
       "The same page pattern can support many personas. For enterprises, the most credible early wedges are the workflows where context, authority, and review already matter.",
     items: [
       {
-        title: "Secure onboarding and handoff",
+        title: "Bounded onboarding and handoff",
         body: "One party packages instructions, examples, and scoped access so another party\'s agent can move work forward without inheriting private infrastructure or broad credentials.",
         outcome: "A cleaner path from setup to useful action.",
       },
