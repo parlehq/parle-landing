@@ -93,6 +93,8 @@
   --theme-accent: #9a5a36;
   --theme-accent-fg: #fbf6ee;
   --theme-accent-subtle: rgba(180, 111, 69, 0.12);
+  --theme-mark: rgba(180, 111, 69, 0.22);
+  --theme-mark-strong: rgba(154, 90, 54, 0.34);
   --theme-nav-bg: rgba(251, 246, 238, 0.96);
   --theme-nav-border: rgba(154, 90, 54, 0.16);
   --theme-button-bg: rgba(255, 255, 255, 0.4);
@@ -151,6 +153,8 @@
   --theme-accent: #fbbf24;
   --theme-accent-fg: #070b16;
   --theme-accent-subtle: rgba(251, 191, 36, 0.12);
+  --theme-mark: rgba(251, 191, 36, 0.38);
+  --theme-mark-strong: rgba(251, 191, 36, 0.68);
   --theme-nav-bg: rgba(7, 11, 22, 0.9);
   --theme-nav-border: rgba(255, 255, 255, 0.1);
   --theme-button-bg: rgba(255, 255, 255, 0.05);
@@ -550,6 +554,50 @@ body {
   opacity: 1;
 }
 
+/*
+ * Inline highlighter-marker for emphasized phrases in body copy. A warm
+ * accent band is painted across the lower portion of the text and "drawn" in
+ * from the left on load. box-decoration-break keeps the band continuous when
+ * the phrase wraps across lines. --mark-delay lets each mark stagger.
+ */
+.parle-mark {
+  position: relative;
+  padding: 0 0.12em;
+  color: var(--theme-fg);
+  font-weight: 500;
+  background-image: linear-gradient(
+    105deg,
+    var(--theme-mark) 0%,
+    var(--theme-mark-strong) 52%,
+    var(--theme-mark) 100%
+  );
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 30%;
+  border-radius: 0.16em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition:
+    background-size 220ms ease,
+    color 220ms ease;
+  animation: parle-mark-draw 760ms cubic-bezier(0.22, 1, 0.36, 1)
+    var(--mark-delay, 320ms) both;
+}
+
+.parle-mark:hover {
+  background-size: 100% 50%;
+}
+
+@keyframes parle-mark-draw {
+  from {
+    background-size: 0% 30%;
+  }
+
+  to {
+    background-size: 100% 30%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -560,8 +608,13 @@ body {
   .hero-connector-rule,
   .hero-connector path,
   .hero-connector circle,
-  .hero-verb {
+  .hero-verb,
+  .parle-mark {
     animation: none;
+  }
+
+  .parle-mark {
+    background-size: 100% 30%;
   }
 
   .hero-connector path {
