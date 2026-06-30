@@ -8,9 +8,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronDown,
+  faCloudSun,
   faLock,
   faMoon,
-  faSun,
   faTerminal,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -128,7 +128,7 @@ function ThemeToggle() {
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
       title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
     >
-      <FontAwesomeIcon icon={theme === "dark" ? faSun : faMoon} />
+      <FontAwesomeIcon icon={theme === "dark" ? faCloudSun : faMoon} />
     </button>
   );
 }
@@ -221,14 +221,14 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
           <div className="hidden items-center gap-3 lg:flex">
             <a
               href="/login"
-              className="inline-flex items-center justify-center rounded-md border border-border bg-button-bg px-4 py-2 text-sm font-semibold text-fg transition hover:border-accent-ui hover:bg-button-hover"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-button-bg text-sm font-semibold text-fg transition hover:border-accent-ui hover:bg-button-hover"
               aria-label="Log in"
             >
               <FontAwesomeIcon icon={faLock} />
             </a>
             <a
               href="/install"
-              className="inline-flex items-center gap-2 rounded-md border border-border bg-button-bg px-4 py-2 text-sm font-semibold text-fg transition hover:border-accent-ui hover:bg-button-hover"
+              className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-button-bg px-4 text-sm font-semibold text-fg transition hover:border-accent-ui hover:bg-button-hover"
             >
               <FontAwesomeIcon icon={faTerminal} /> Install
             </a>
