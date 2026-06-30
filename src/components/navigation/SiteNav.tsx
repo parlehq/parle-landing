@@ -199,7 +199,7 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
             className="inline-flex items-center gap-2"
             aria-label="Parlè home"
           >
-            <img src="/parle-icon-v4.png" alt="" className="h-8 w-auto" />
+            <img src="/parle-icon-v5.png" alt="" className="h-8 w-auto" />
             <span
               className="text-2xl tracking-wide text-fg"
               style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
