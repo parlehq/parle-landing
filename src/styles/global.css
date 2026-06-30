@@ -51,8 +51,80 @@
   --color-line: rgba(154, 90, 54, 0.22);
 }
 
-:root {
+:root,
+:root[data-theme="light"] {
   color-scheme: light;
+  --parle-body-background:
+    radial-gradient(
+      circle at 42% 8%,
+      rgba(154, 107, 63, 0.08),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 72% 28%,
+      rgba(74, 90, 138, 0.05),
+      transparent 24%
+    ),
+    linear-gradient(180deg, #fbf6ee 0%, #f5efe5 48%, #f1e7d8 100%);
+  --parle-body-color: #182033;
+  --parle-inflow-empty: rgba(30, 64, 175, 0);
+  --parle-inflow-active: rgba(30, 64, 175, 0.58);
+  --parle-inflow-rest: rgba(116, 83, 49, 0.22);
+  --parle-inflow-shadow: drop-shadow(0 0 10px rgba(30, 64, 175, 0.22));
+  --parle-learn-band: rgba(251, 246, 238, 0.66);
+  --parle-bigback-background: linear-gradient(
+    180deg,
+    rgba(251, 246, 238, 0.72),
+    rgba(241, 231, 216, 0.94)
+  );
+  --parle-bigback-border: rgba(154, 90, 54, 0.16);
+  --parle-bigback-heading: color-mix(
+    in srgb,
+    var(--color-ink-300) 72%,
+    transparent
+  );
+  --parle-bigback-link: color-mix(
+    in srgb,
+    var(--color-ink-300) 78%,
+    transparent
+  );
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ink-950: #070b16;
+  --color-ink-900: #0f172a;
+  --color-ink-800: #172554;
+  --color-ink-700: #1e3a8a;
+  --color-ink-500: #60a5fa;
+  --color-ink-400: #93c5fd;
+  --color-ink-300: #bfdbfe;
+  --color-ink-200: #dbeafe;
+  --color-ink-100: #eff6ff;
+  --color-sand-50: #070b16;
+  --color-sand-100: #172554;
+  --color-sand-200: #1e3a8a;
+  --color-sand-500: #f59e0b;
+  --color-sand-600: #fbbf24;
+  --color-line: rgba(147, 197, 253, 0.18);
+  --parle-body-background:
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.22), transparent 36%),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(147, 197, 253, 0.1),
+      transparent 24%
+    ),
+    linear-gradient(180deg, #070b16 0%, #0f172a 55%, #070b16 100%);
+  --parle-body-color: #eff6ff;
+  --parle-inflow-empty: rgba(147, 197, 253, 0);
+  --parle-inflow-active: rgba(219, 234, 254, 0.78);
+  --parle-inflow-rest: rgba(147, 197, 253, 0.16);
+  --parle-inflow-shadow: drop-shadow(0 0 12px rgba(96, 165, 250, 0.35));
+  --parle-learn-band: rgba(7, 11, 22, 0.16);
+  --parle-bigback-background: rgba(7, 11, 22, 0.8);
+  --parle-bigback-border: rgba(147, 197, 253, 0.18);
+  --parle-bigback-heading: rgba(219, 234, 254, 0.72);
+  --parle-bigback-link: rgba(191, 219, 254, 0.82);
 }
 
 html {
@@ -65,19 +137,8 @@ body {
   max-width: 100%;
   min-height: 100vh;
   overflow-x: clip;
-  background:
-    radial-gradient(
-      circle at 42% 8%,
-      rgba(154, 107, 63, 0.08),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 72% 28%,
-      rgba(74, 90, 138, 0.05),
-      transparent 24%
-    ),
-    linear-gradient(180deg, #fbf6ee 0%, #f5efe5 48%, #f1e7d8 100%);
-  color: #182033;
+  background: var(--parle-body-background);
+  color: var(--parle-body-color);
 }
 
 /* Third-party (performative-ui) overrides: need to win on specificity. */
@@ -113,11 +174,11 @@ body {
 
 /* Animation systems: keyframe-driven, cannot be expressed inline. */
 .parle-inflow {
-  stroke: rgba(30, 64, 175, 0);
+  stroke: var(--parle-inflow-empty);
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-dasharray: 18 44;
-  filter: drop-shadow(0 0 10px rgba(30, 64, 175, 0.22));
+  filter: var(--parle-inflow-shadow);
   opacity: 0;
 }
 
@@ -128,18 +189,18 @@ body {
 @keyframes parle-inflow-pulse {
   0% {
     opacity: 0;
-    stroke: rgba(30, 64, 175, 0);
+    stroke: var(--parle-inflow-empty);
     stroke-dashoffset: 70;
   }
 
   18% {
     opacity: 1;
-    stroke: rgba(30, 64, 175, 0.58);
+    stroke: var(--parle-inflow-active);
   }
 
   100% {
     opacity: 0;
-    stroke: rgba(116, 83, 49, 0.22);
+    stroke: var(--parle-inflow-rest);
     stroke-dashoffset: -70;
   }
 }
@@ -197,16 +258,12 @@ body {
 }
 
 .learn-example-band {
-  background: rgba(251, 246, 238, 0.66);
+  background: var(--parle-learn-band);
 }
 
 .pui-bigback {
-  background: linear-gradient(
-    180deg,
-    rgba(251, 246, 238, 0.72),
-    rgba(241, 231, 216, 0.94)
-  );
-  border-top-color: rgba(154, 90, 54, 0.16);
+  background: var(--parle-bigback-background);
+  border-top-color: var(--parle-bigback-border);
   color: var(--color-ink-100);
 }
 
@@ -216,7 +273,7 @@ body {
 
 .pui-bigback__heading,
 .pui-bigback__base {
-  color: color-mix(in srgb, var(--color-ink-300) 72%, transparent);
+  color: var(--parle-bigback-heading);
 }
 
 .pui-bigback__heading {
@@ -224,7 +281,7 @@ body {
 }
 
 .pui-bigback__link {
-  color: color-mix(in srgb, var(--color-ink-300) 78%, transparent);
+  color: var(--parle-bigback-link);
   font-size: 0.875rem;
   letter-spacing: 0.01em;
 }

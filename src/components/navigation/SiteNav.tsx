@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronDown,
   faLock,
+  faMoon,
+  faSun,
   faTerminal,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -55,6 +57,35 @@ function DesktopNavItem({ item, path }: { item: NavItem; path: string }) {
         </div>
       )}
     </div>
+  );
+}
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const currentTheme =
+      document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+    setTheme(currentTheme);
+  }, []);
+
+  function toggleTheme() {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = nextTheme;
+    localStorage.setItem("parle-theme", nextTheme);
+    setTheme(nextTheme);
+  }
+
+  return (
+    <button
+      type="button"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-ink-100/15 text-ink-100 transition hover:border-sand-600 hover:bg-ink-100/5"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+      title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+    >
+      <FontAwesomeIcon icon={theme === "dark" ? faSun : faMoon} />
+    </button>
   );
 }
 
@@ -141,33 +172,36 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
             ))}
           </nav>
         </div>
-        <div className="hidden items-center gap-3 lg:flex">
-          <a
-            href="/login"
-            className="inline-flex items-center justify-center rounded-md border border-ink-100/18 bg-white/40 px-4 py-2 text-sm font-semibold text-ink-100 transition hover:border-sand-600/50 hover:bg-white/70"
-            aria-label="Log in"
+        <div className="flex items-center gap-2 lg:gap-3">
+          <ThemeToggle />
+          <div className="hidden items-center gap-3 lg:flex">
+            <a
+              href="/login"
+              className="inline-flex items-center justify-center rounded-md border border-ink-100/18 bg-white/40 px-4 py-2 text-sm font-semibold text-ink-100 transition hover:border-sand-600/50 hover:bg-white/70"
+              aria-label="Log in"
+            >
+              <FontAwesomeIcon icon={faLock} />
+            </a>
+            <a
+              href="/install"
+              className="inline-flex items-center gap-2 rounded-md border border-ink-100/18 bg-white/40 px-4 py-2 text-sm font-semibold text-ink-100 transition hover:border-sand-600/50 hover:bg-white/70"
+            >
+              <FontAwesomeIcon icon={faTerminal} /> Install
+            </a>
+          </div>
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-sand-600/14 bg-sand-100/55 text-ink-100 lg:hidden"
+            onClick={() => setMobileOpen((open) => !open)}
+            aria-expanded={mobileOpen}
+            aria-label="Toggle navigation"
           >
-            <FontAwesomeIcon icon={faLock} />
-          </a>
-          <a
-            href="/install"
-            className="inline-flex items-center gap-2 rounded-md border border-ink-100/18 bg-white/40 px-4 py-2 text-sm font-semibold text-ink-100 transition hover:border-sand-600/50 hover:bg-white/70"
-          >
-            <FontAwesomeIcon icon={faTerminal} /> Install
-          </a>
+            <span className="sr-only">Toggle navigation</span>
+            <span className="text-xl" aria-hidden="true">
+              {mobileOpen ? "×" : "≡"}
+            </span>
+          </button>
         </div>
-        <button
-          type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-sand-600/14 bg-sand-100/55 text-ink-100 lg:hidden"
-          onClick={() => setMobileOpen((open) => !open)}
-          aria-expanded={mobileOpen}
-          aria-label="Toggle navigation"
-        >
-          <span className="sr-only">Toggle navigation</span>
-          <span className="text-xl" aria-hidden="true">
-            {mobileOpen ? "×" : "≡"}
-          </span>
-        </button>
       </div>
       {mobileOpen && <MobileMenu items={primaryNav} path={path} />}
     </header>

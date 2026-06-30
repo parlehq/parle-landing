@@ -38,6 +38,17 @@ const phHost = import.meta.env.POSTHOG_HOST || "https://ph.parle.sh";
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <script is:inline>
+      try {
+        const storedTheme = localStorage.getItem("parle-theme");
+        document.documentElement.dataset.theme =
+          storedTheme === "dark" || storedTheme === "light"
+            ? storedTheme
+            : "light";
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
