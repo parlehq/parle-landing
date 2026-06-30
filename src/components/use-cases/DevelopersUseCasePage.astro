@@ -1,4 +1,7 @@
 ---
+import AgentExchangeDemo from "../AgentExchangeDemo";
+import HeroAurora from "../HeroAurora";
+import LearnByExample from "../LearnByExample.astro";
 import type { UseCasePageData } from "../../data/developersUseCase";
 
 interface Props {
@@ -6,23 +9,132 @@ interface Props {
 }
 
 const { page } = Astro.props as Props;
+const [handoffScenario, onboardingScenario, escalationScenario] =
+  page.scenarios.items;
+
+const exampleSections = [
+  {
+    eyebrow: "Developer pattern 01",
+    title: handoffScenario.title,
+    description: handoffScenario.summary,
+    prompt:
+      "Open a room for a one-time collaborator handoff and package only the setup context that should cross the boundary.",
+    outcome: handoffScenario.outcome,
+    featureLabel: "Concept 01",
+    feature: "handoff",
+    cta: "Start with the install guide",
+    ctaHref: "/install",
+    artifactTitle: "Transfer contract",
+    artifactStatus: "sealed",
+    artifactRows: [
+      { label: "room", value: "collaborator-handoff" },
+      { label: "read", value: "invite-scoped projection" },
+      { label: "write", value: "room receipt returned" },
+      { label: "record", value: "evt_4f2a...sealed", emphasized: true },
+    ],
+    steps: [
+      { label: "Prepare", text: handoffScenario.flow[0], color: "violet" },
+      { label: "Claim", text: handoffScenario.flow[1], color: "cyan" },
+      { label: "Return", text: handoffScenario.flow[2], color: "emerald" },
+    ],
+  },
+  {
+    eyebrow: "Developer pattern 02",
+    title: onboardingScenario.title,
+    description: onboardingScenario.summary,
+    prompt:
+      "Create an onboarding room where the receiving agent can discover approved examples and the next allowed action from the live surface.",
+    outcome: onboardingScenario.outcome,
+    featureLabel: "Concept 02",
+    feature: "projections",
+    cta: "Read the docs",
+    ctaHref: "https://docs.parle.sh",
+    artifactTitle: "Onboarding surface",
+    artifactStatus: "scoped",
+    artifactRows: [
+      { label: "source", value: "approved onboarding materials" },
+      { label: "discover", value: "room affordances plus OpenAPI" },
+      { label: "allowed", value: "next-step actions only" },
+      { label: "trail", value: "usage recorded in-room", emphasized: true },
+    ],
+    steps: [
+      { label: "Expose", text: onboardingScenario.flow[0], color: "violet" },
+      { label: "Discover", text: onboardingScenario.flow[1], color: "fuchsia" },
+      { label: "Record", text: onboardingScenario.flow[2], color: "cyan" },
+    ],
+  },
+  {
+    eyebrow: "Developer pattern 03",
+    title: escalationScenario.title,
+    description: escalationScenario.summary,
+    prompt:
+      "Send a sensitive support escalation through a mediated room so each participant sees only the projection needed to resolve it.",
+    outcome: escalationScenario.outcome,
+    featureLabel: "Concept 03",
+    feature: "receipts",
+    cta: "See the product framing",
+    ctaHref: "/about",
+    artifactTitle: "Escalation trail",
+    artifactStatus: "traced",
+    artifactRows: [
+      { label: "entry", value: "mediated room request" },
+      { label: "views", value: "projection per participant" },
+      { label: "answer", value: "final reply cites the record" },
+      { label: "receipt", value: "evt_91bd...sealed", emphasized: true },
+    ],
+    steps: [
+      { label: "Route", text: escalationScenario.flow[0], color: "violet" },
+      { label: "Scope", text: escalationScenario.flow[1], color: "fuchsia" },
+      { label: "Cite", text: escalationScenario.flow[2], color: "cyan" },
+    ],
+  },
+];
+
+const developerSurface = [
+  {
+    label: "Surface",
+    value: "discoverable",
+    detail: page.hero.checkpoints[0]?.detail,
+  },
+  {
+    label: "Credentials",
+    value: "scoped",
+    detail: page.hero.checkpoints[1]?.detail,
+  },
+  {
+    label: "Writes",
+    value: "idempotent",
+    detail: page.hero.checkpoints[2]?.detail,
+  },
+  {
+    label: "Record",
+    value: "append-only",
+    detail: page.hero.checkpoints[3]?.detail,
+  },
+];
 ---
 
 <main class="px-6 py-14 lg:px-8 lg:py-20">
   <div class="mx-auto flex w-full max-w-6xl flex-col gap-16 lg:gap-24">
     <section
-      class="relative isolate overflow-hidden rounded-[2rem] border border-border-strong/14 bg-surface/45 px-6 py-8 shadow-[0_40px_120px_rgba(15,23,42,0.10)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
+      class="relative isolate overflow-hidden rounded-[2rem] border border-border/10 bg-surface/45 px-6 py-8 shadow-[0_40px_120px_rgba(15,23,42,0.10)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
     >
+      <HeroAurora />
       <div
-        class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_32%),radial-gradient(circle_at_80%_24%,rgba(154,107,63,0.08),transparent_24%)]"
+        class="pointer-events-none absolute inset-0 opacity-35 bg-[linear-gradient(rgba(116,83,49,0.075)_1px,transparent_1px),linear-gradient(90deg,rgba(116,83,49,0.075)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_at_center,black,transparent_58%)]"
       >
       </div>
       <div
-        class="pointer-events-none absolute inset-x-0 top-0 h-px bg-accent-subtle/20"
+        class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.10),transparent_34%),radial-gradient(circle_at_82%_22%,rgba(154,107,63,0.10),transparent_26%)]"
       >
       </div>
       <div
-        class="relative grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-start"
+        class="pointer-events-none absolute inset-x-0 top-0 h-px bg-accent-subtle/30"
+      >
+      </div>
+
+      <div
+        class="relative grid gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,0.92fr)] lg:items-center"
       >
         <div class="max-w-3xl">
           <p
@@ -44,19 +156,72 @@ const { page } = Astro.props as Props;
             {page.hero.summary}
           </p>
 
+          <div
+            class="mt-8 inline-grid grid-cols-[auto_minmax(2.5rem,4rem)_auto_minmax(2.5rem,4rem)_auto] items-center gap-y-2 text-center font-mono text-[0.68rem] tracking-widest text-accent-ui uppercase sm:text-xs"
+          >
+            <span
+              class="rounded-full border border-border/12 bg-surface-inverse/70 px-3 py-1.5 text-fg"
+            >
+              your agent
+            </span>
+            <span
+              class="h-px bg-linear-to-r from-transparent via-accent-ui/45 to-accent-ui/10"
+            ></span>
+            <span
+              class="rounded-full border border-border/12 bg-surface-inverse/70 px-3 py-1.5 text-fg"
+            >
+              Parlè room
+            </span>
+            <span
+              class="h-px bg-linear-to-r from-accent-ui/10 via-accent-ui/45 to-transparent"
+            ></span>
+            <span
+              class="rounded-full border border-border/12 bg-surface-inverse/70 px-3 py-1.5 text-fg"
+            >
+              helper agent
+            </span>
+          </div>
+
           <div class="mt-8 flex flex-wrap gap-3">
             {
               page.hero.pills.map((pill) => (
-                <span class="inline-flex items-center rounded-full border border-border-strong/16 bg-surface/65 px-4 py-2 font-mono text-xs tracking-widest text-muted uppercase sm:text-sm">
+                <span class="inline-flex items-center rounded-full border border-border/12 bg-surface-inverse/68 px-4 py-2 font-mono text-xs tracking-widest text-muted uppercase sm:text-sm">
                   {pill}
                 </span>
               ))
             }
           </div>
+
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a
+              class="inline-flex items-center justify-center rounded-md bg-fg px-5 py-3 text-sm font-semibold text-page shadow-[0_18px_60px_rgba(24,32,51,0.16)] transition hover:bg-muted"
+              href={page.cta.primaryHref}
+            >
+              {page.cta.primaryLabel}
+            </a>
+            <a
+              class="inline-flex items-center justify-center rounded-md border border-border bg-surface-inverse/60 px-5 py-3 text-sm font-semibold text-fg transition hover:border-accent-ui hover:bg-button-hover"
+              href="#developer-demo"
+            >
+              Watch the room flow
+            </a>
+            {
+              page.cta.secondaryLabel && page.cta.secondaryHref && (
+                <a
+                  class="inline-flex items-center justify-center rounded-md border border-border bg-surface/55 px-5 py-3 text-sm font-semibold text-fg transition hover:border-accent-ui hover:bg-button-hover"
+                  href={page.cta.secondaryHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {page.cta.secondaryLabel}
+                </a>
+              )
+            }
+          </div>
         </div>
 
-        <div
-          class="relative overflow-hidden rounded-[1.75rem] border border-border/12 bg-surface-inverse/78 p-5 sm:p-6"
+        <aside
+          class="relative overflow-hidden rounded-[1.75rem] border border-border/12 bg-surface-inverse/78 p-5 shadow-[0_26px_90px_rgba(15,23,42,0.10)] sm:p-6"
         >
           <div
             class="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(37,99,235,0.06),transparent_60%)]"
@@ -64,7 +229,7 @@ const { page } = Astro.props as Props;
           </div>
           <div class="relative">
             <div
-              class="flex items-center justify-between gap-4 border-b border-border/10 pb-4"
+              class="flex items-start justify-between gap-4 border-b border-border/10 pb-4"
             >
               <div>
                 <p
@@ -73,7 +238,8 @@ const { page } = Astro.props as Props;
                   Developer room surface
                 </p>
                 <p class="mt-2 text-lg font-semibold text-fg sm:text-xl">
-                  A workflow boundary that does not demand constant babysitting.
+                  A workflow boundary that stays legible when agents stop
+                  working alone.
                 </p>
               </div>
               <span
@@ -83,87 +249,133 @@ const { page } = Astro.props as Props;
               </span>
             </div>
 
-            <div class="mt-5 space-y-4">
+            <div class="mt-5 grid gap-3 sm:grid-cols-2">
               {
-                page.hero.checkpoints.map((checkpoint) => (
-                  <div class="rounded-2xl border border-border-strong/14 bg-surface/45 p-4">
-                    <div class="flex items-start justify-between gap-4">
+                developerSurface.map((item) => (
+                  <article class="rounded-2xl border border-border/10 bg-surface/55 p-4">
+                    <div class="flex items-start justify-between gap-3">
                       <div>
-                        <p class="font-mono text-xs tracking-widest text-accent-ui/84 uppercase">
-                          {checkpoint.label}
+                        <p class="font-mono text-[0.68rem] tracking-widest text-accent-ui/84 uppercase">
+                          {item.label}
                         </p>
                         <p class="mt-2 text-base font-semibold text-fg sm:text-lg">
-                          {checkpoint.value}
+                          {item.value}
                         </p>
                       </div>
-                      <span class="mt-1 inline-flex size-8 items-center justify-center rounded-full border border-border-strong/14 bg-surface/65 text-sm text-muted">
+                      <span class="mt-1 inline-flex size-8 items-center justify-center rounded-full border border-border/12 bg-surface-inverse/70 text-sm text-muted">
                         ↗
                       </span>
                     </div>
-                    <p class="mt-3 text-sm leading-6 text-muted sm:text-base">
-                      {checkpoint.detail}
+                    <p class="mt-3 text-sm leading-6 text-muted">
+                      {item.detail}
                     </p>
-                  </div>
+                  </article>
                 ))
               }
             </div>
+
+            <div
+              class="mt-5 rounded-2xl border border-border/10 bg-surface/58 p-5"
+            >
+              <p
+                class="font-mono text-[0.68rem] tracking-widest text-accent-ui uppercase"
+              >
+                Room contract ingredients
+              </p>
+              <dl
+                class="mt-4 space-y-3 font-mono text-xs leading-5 sm:text-[0.8rem]"
+              >
+                <div class="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
+                  <dt class="text-accent-ui/70">discovery</dt>
+                  <dd class="text-muted">
+                    OpenAPI, llms.txt, room affordances
+                  </dd>
+                </div>
+                <div class="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
+                  <dt class="text-accent-ui/70">authority</dt>
+                  <dd class="text-muted">
+                    room or invite scoped bearer tokens
+                  </dd>
+                </div>
+                <div class="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
+                  <dt class="text-accent-ui/70">recovery</dt>
+                  <dd class="text-muted">
+                    idempotent submission and stable retries
+                  </dd>
+                </div>
+                <div class="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
+                  <dt class="text-accent-ui/70">record</dt>
+                  <dd class="text-cyan-700">
+                    append-only room events with receipts
+                  </dd>
+                </div>
+              </dl>
+            </div>
           </div>
-        </div>
+        </aside>
       </div>
 
       <div class="relative mt-10 grid gap-4 md:grid-cols-3">
         {
-          page.hero.outcomes.map((outcome) => (
-            <div class="rounded-[1.5rem] border border-border/10 bg-surface-inverse/48 p-5">
-              <p class="text-lg font-semibold text-fg">{outcome.title}</p>
+          page.hero.outcomes.map((outcome, index) => (
+            <article class="rounded-[1.5rem] border border-border/10 bg-surface-inverse/50 p-5 shadow-[0_16px_50px_rgba(24,32,51,0.05)]">
+              <p class="font-mono text-[0.68rem] tracking-widest text-accent-ui uppercase">
+                0{index + 1}
+              </p>
+              <p class="mt-3 text-lg font-semibold text-fg">{outcome.title}</p>
               <p class="mt-3 text-sm leading-6 text-muted sm:text-base">
                 {outcome.description}
               </p>
-            </div>
+            </article>
           ))
         }
       </div>
     </section>
 
     <section
-      class="grid gap-8 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-10"
+      id="developer-demo"
+      class="scroll-mt-24 grid gap-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(18rem,0.88fr)] lg:items-center"
     >
-      <div class="lg:sticky lg:top-24 lg:self-start">
+      <div>
         <p
           class="font-mono text-xs tracking-widest text-accent-ui uppercase sm:text-sm"
         >
           {page.workflow.eyebrow}
         </p>
         <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-fg sm:text-4xl lg:text-5xl"
+          class="mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-balance text-fg sm:text-4xl lg:text-5xl"
         >
           {page.workflow.title}
         </h2>
         <p
-          class="mt-5 max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-8"
+          class="mt-5 max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-8"
         >
           {page.workflow.description}
         </p>
+        <div
+          class="mt-8 rounded-3xl border border-border/10 bg-surface/40 p-5 shadow-[0_20px_70px_rgba(24,32,51,0.07)] sm:p-6"
+        >
+          <AgentExchangeDemo client:load />
+        </div>
       </div>
 
       <div class="grid gap-4">
         {
           page.workflow.steps.map((step) => (
-            <article class="group relative overflow-hidden rounded-[1.75rem] border border-border-strong/14 bg-surface/45 p-5 transition duration-300 hover:border-border-strong/18 hover:bg-button-hover/6 sm:p-6">
-              <div class="pointer-events-none absolute inset-y-0 left-0 w-1 rounded-full bg-linear-to-b from-accent-ui via-accent-ui to-cyan-300 opacity-70" />
+            <article class="rounded-3xl border border-border/12 bg-surface/45 p-5 shadow-[0_18px_60px_rgba(24,32,51,0.06)] transition hover:border-border-strong/30 hover:bg-surface-strong sm:p-6">
               <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div class="flex items-center gap-4">
-                  <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-border/12 bg-surface-inverse/82 font-mono text-sm text-muted">
+                <div class="flex items-start gap-4">
+                  <span class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border/12 bg-surface-inverse/78 font-mono text-sm text-muted">
                     {step.label}
                   </span>
                   <div>
                     <h3 class="text-xl font-semibold text-fg">{step.title}</h3>
-                    <p class="mt-2 max-w-2xl text-sm leading-6 text-muted sm:text-base sm:leading-7">
+                    <p class="mt-2 text-sm leading-6 text-muted sm:text-base sm:leading-7">
                       {step.description}
                     </p>
                   </div>
                 </div>
-                <p class="max-w-sm rounded-full border border-border/10 bg-surface-inverse/62 px-4 py-2 text-xs leading-5 text-accent-ui sm:text-right sm:text-sm">
+                <p class="rounded-full border border-border/10 bg-surface-inverse/68 px-4 py-2 text-xs leading-5 text-accent-ui sm:max-w-xs sm:text-sm">
                   {step.note}
                 </p>
               </div>
@@ -172,6 +384,12 @@ const { page } = Astro.props as Props;
         }
       </div>
     </section>
+
+    {
+      exampleSections.map((section, index) => (
+        <LearnByExample {...section} mirrored={index === 1} />
+      ))
+    }
 
     <section
       class="rounded-[2rem] border border-border/10 bg-surface-inverse/36 px-6 py-8 sm:px-8 sm:py-10 lg:px-10"
@@ -195,7 +413,7 @@ const { page } = Astro.props as Props;
       <div class="mt-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {
           page.capabilities.items.map((item) => (
-            <article class="rounded-[1.5rem] border border-border-strong/14 bg-surface/45 p-5 sm:p-6">
+            <article class="rounded-[1.5rem] border border-border/12 bg-surface/45 p-5 shadow-[0_16px_50px_rgba(24,32,51,0.05)] sm:p-6">
               <p class="font-mono text-xs tracking-widest text-accent-ui uppercase">
                 {item.eyebrow}
               </p>
@@ -212,55 +430,11 @@ const { page } = Astro.props as Props;
       </div>
     </section>
 
-    <section>
-      <div class="max-w-3xl">
-        <p
-          class="font-mono text-xs tracking-widest text-accent-ui uppercase sm:text-sm"
-        >
-          {page.scenarios.eyebrow}
-        </p>
-        <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-fg sm:text-4xl lg:text-5xl"
-        >
-          {page.scenarios.title}
-        </h2>
-        <p class="mt-5 text-base leading-7 text-muted sm:text-lg sm:leading-8">
-          {page.scenarios.description}
-        </p>
-      </div>
-
-      <div class="mt-8 grid gap-4 xl:grid-cols-3">
-        {
-          page.scenarios.items.map((scenario) => (
-            <article class="rounded-[1.75rem] border border-border-strong/14 bg-surface/45 p-5 sm:p-6">
-              <h3 class="text-2xl font-semibold text-fg">{scenario.title}</h3>
-              <p class="mt-3 text-sm leading-6 text-muted sm:text-base sm:leading-7">
-                {scenario.summary}
-              </p>
-              <ol class="mt-5 space-y-3 border-t border-border/10 pt-5">
-                {scenario.flow.map((line, index) => (
-                  <li class="flex items-start gap-3 text-sm leading-6 text-muted sm:text-base sm:leading-7">
-                    <span class="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/10 bg-surface-inverse/74 font-mono text-xs text-muted">
-                      {index + 1}
-                    </span>
-                    <span>{line}</span>
-                  </li>
-                ))}
-              </ol>
-              <p class="mt-5 rounded-[1.25rem] border border-cyan-300/20 bg-cyan-300/8 px-4 py-4 text-sm leading-6 text-cyan-800 sm:text-base sm:leading-7">
-                {scenario.outcome}
-              </p>
-            </article>
-          ))
-        }
-      </div>
-    </section>
-
     <section
       class="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]"
     >
       <div
-        class="rounded-[2rem] border border-border-strong/14 bg-surface/45 p-6 sm:p-8 lg:p-10"
+        class="rounded-[2rem] border border-border/12 bg-surface/45 p-6 shadow-[0_20px_70px_rgba(24,32,51,0.07)] sm:p-8 lg:p-10"
       >
         <p
           class="font-mono text-xs tracking-widest text-accent-ui uppercase sm:text-sm"
@@ -297,7 +471,7 @@ const { page } = Astro.props as Props;
       </div>
 
       <aside
-        class="rounded-[2rem] border border-border/10 bg-surface-inverse/70 p-6 sm:p-8"
+        class="rounded-[2rem] border border-border/10 bg-surface-inverse/72 p-6 shadow-[0_20px_70px_rgba(24,32,51,0.07)] sm:p-8"
       >
         <p
           class="font-mono text-xs tracking-widest text-accent-ui uppercase sm:text-sm"
@@ -312,6 +486,36 @@ const { page } = Astro.props as Props;
         <p class="mt-5 text-base leading-7 text-muted sm:text-lg sm:leading-8">
           {page.cta.description}
         </p>
+
+        <div class="mt-6 rounded-2xl border border-border/10 bg-surface/55 p-5">
+          <p
+            class="font-mono text-[0.68rem] tracking-widest text-accent-ui uppercase"
+          >
+            Best first use cases
+          </p>
+          <ul
+            class="mt-4 space-y-3 text-sm leading-6 text-muted sm:text-base sm:leading-7"
+          >
+            <li class="flex gap-3">
+              <span
+                class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-subtle"
+              ></span>
+              <span>{handoffScenario.title}</span>
+            </li>
+            <li class="flex gap-3">
+              <span
+                class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-subtle"
+              ></span>
+              <span>{onboardingScenario.title}</span>
+            </li>
+            <li class="flex gap-3">
+              <span
+                class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-subtle"
+              ></span>
+              <span>{escalationScenario.title}</span>
+            </li>
+          </ul>
+        </div>
 
         <div class="mt-8 flex flex-col gap-3">
           <a
