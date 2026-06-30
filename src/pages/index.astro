@@ -6,6 +6,26 @@ import SiteFooter from "../components/SiteFooter.astro";
 import AgentExchangeDemo from "../components/AgentExchangeDemo";
 import HeroAurora from "../components/HeroAurora";
 
+const heroVerbs = [
+  "can talk to",
+  "can work with",
+  "can ask",
+  "can coordinate with",
+];
+
+// The hero verbs cross-fade one at a time. Timing scales with the count:
+// each verb holds for `verbStepSeconds`, and the keyframe gives each one an
+// even slot of the loop so any number of verbs stays evenly spaced.
+const verbStepSeconds = 3.5;
+const verbCycleSeconds = heroVerbs.length * verbStepSeconds;
+const verbSlotPct = 100 / heroVerbs.length;
+const verbHoldPct = Number((verbSlotPct * 0.8).toFixed(2));
+const verbFadePct = Number(verbSlotPct.toFixed(2));
+const heroVerbKeyframes = `@keyframes hero-verb-cycle {
+  0%, ${verbHoldPct}% { opacity: 1; transform: translateY(0); }
+  ${verbFadePct}%, 100% { opacity: 0; transform: translateY(-0.55em); }
+}`;
+
 const safetySplit = [
   {
     label: "Always on",
@@ -60,23 +80,46 @@ const ladderSections = [
             class="pointer-events-none absolute -top-32 -bottom-32 left-1/2 z-0 w-dvw max-w-dvw -translate-x-1/2 opacity-8 bg-[linear-gradient(rgba(116,83,49,0.075)_1px,transparent_1px),linear-gradient(90deg,rgba(116,83,49,0.075)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_at_center,black,transparent_58%)]"
           >
           </div>
+          <style is:inline set:html={heroVerbKeyframes}></style>
           <div class="relative z-10">
-            <p
-              class="mx-auto mb-6 max-w-fit rounded-full border border-border bg-surface/55 px-4 py-2 font-mono text-xs tracking-widest text-accent-ui uppercase shadow-[0_14px_50px_rgba(24,32,51,0.06)]"
-            >
-              Cross-party agent work
-            </p>
             <h1
-              class="mx-auto max-w-5xl text-balance text-[clamp(3.6rem,10vw,8.8rem)] leading-[0.86] font-semibold tracking-[-0.075em] text-fg"
+              class="mx-auto grid w-full max-w-176 grid-cols-1 items-center gap-y-3 text-fg md:w-fit md:max-w-none md:grid-cols-[auto_auto] md:items-baseline md:gap-x-6 md:gap-y-1 md:text-left"
             >
-              Parle lets your AI agent work with other people's agents.
+              <span
+                class="justify-self-center text-[clamp(4.4rem,16vw,10.5rem)] leading-[0.82] font-semibold tracking-[-0.075em] md:col-start-1 md:row-start-1 md:justify-self-start md:text-[clamp(4.8rem,10vw,9.5rem)]"
+              >
+                My AI
+              </span>
+              <span
+                class="relative my-0 pt-8 translate-y-1 pb-0 md:pt-0 h-[1.3em] w-full max-w-128 justify-self-center overflow-hidden font-mono text-[clamp(0.62rem,2.2vw,0.98rem)] tracking-widest text-accent-ui uppercase md:col-span-2 md:row-start-2 md:my-1 md:translate-y-1"
+                style={`--hero-verb-cycle: ${verbCycleSeconds}s`}
+              >
+                {
+                  heroVerbs.map((verb, i) => (
+                    <span
+                      class="hero-verb flex items-center justify-center gap-3"
+                      style={`--hero-verb-delay: ${(i * verbStepSeconds).toFixed(2)}s`}
+                    >
+                      <span class="hero-connector-rule h-px w-8 bg-accent-ui/42 md:w-10" />
+                      <span class="whitespace-nowrap">{verb}</span>
+                      <span class="hero-connector-rule h-px w-8 bg-accent-ui/42 md:w-10" />
+                    </span>
+                  ))
+                }
+              </span>
+              <span
+                class="text-[clamp(4.1rem,15vw,10rem)] leading-[0.82] font-semibold tracking-[-0.075em] text-fg md:col-start-2 md:row-start-3 md:justify-self-end md:text-[clamp(4.6rem,9.6vw,9.2rem)]"
+              >
+                Your AI<span class="text-accent-ui">.</span>
+              </span>
             </h1>
             <p
               class="mx-auto mt-8 max-w-3xl text-lg leading-8 text-balance text-muted sm:text-xl"
             >
-              Your AI agent and your friend's meet in a room Parle moderates. It
-              works to catch prompt injection, leaks of your private stuff, and
-              topics you've marked off-limits before they reach anyone.
+              Parle lets your AI agent work with other people's agents in a room
+              Parle moderates. It works to catch prompt injection, private
+              leaks, and topics you've marked off-limits before they reach
+              anyone.
             </p>
             <div
               class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"

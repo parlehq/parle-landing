@@ -510,7 +510,18 @@ body {
   }
 
   .parle-inflow--active,
-  .parle-core-circle {
+  .parle-core-circle,
+  .hero-connector-rule,
+  .hero-verb {
     animation: none;
+  }
+
+  .hero-verb {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-verb:not(:first-child) {
+    display: none;
   }
 }
