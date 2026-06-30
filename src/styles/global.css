@@ -14,6 +14,13 @@
  * Anything expressible as inline Tailwind (colors, spacing, borders, simple
  * layout, hover/responsive variants) does NOT belong here. Put it on the
  * element instead.
+ *
+ * Theme token convention:
+ *   - @theme defines stable literal palettes and semantic utility aliases.
+ *   - --color-ink-* and --color-sand-* are primitives and must not be redefined
+ *     inside data-theme blocks.
+ *   - --theme-* values are semantic runtime tokens and may vary by theme.
+ *   - --parle-* values are component-local variables, not site theme tokens.
  */
 
 @import "tailwindcss";
@@ -48,13 +55,53 @@
   --color-sand-200: #e2cfb3;
   --color-sand-500: #b46f45;
   --color-sand-600: #9a5a36;
-  --color-line: rgba(154, 90, 54, 0.22);
+}
+
+@theme inline {
+  --color-page: var(--theme-page);
+  --color-fg: var(--theme-fg);
+  --color-muted: var(--theme-muted);
+  --color-subtle: var(--theme-subtle);
+  --color-surface: var(--theme-surface);
+  --color-surface-strong: var(--theme-surface-strong);
+  --color-surface-inverse: var(--theme-surface-inverse);
+  --color-border: var(--theme-border);
+  --color-border-strong: var(--theme-border-strong);
+  --color-accent-ui: var(--theme-accent);
+  --color-accent-fg: var(--theme-accent-fg);
+  --color-accent-subtle: var(--theme-accent-subtle);
+  --color-nav-bg: var(--theme-nav-bg);
+  --color-nav-border: var(--theme-nav-border);
+  --color-button-bg: var(--theme-button-bg);
+  --color-button-hover: var(--theme-button-hover);
+  --color-input-bg: var(--theme-input-bg);
+  --color-ring: var(--theme-ring);
 }
 
 :root,
 :root[data-theme="light"] {
   color-scheme: light;
-  --parle-body-background:
+  --theme-page: #fbf6ee;
+  --theme-fg: #182033;
+  --theme-muted: #3d4a63;
+  --theme-subtle: #4a5a8a;
+  --theme-surface: rgba(243, 234, 219, 0.55);
+  --theme-surface-strong: rgba(251, 246, 238, 0.72);
+  --theme-surface-inverse: rgba(251, 246, 238, 0.82);
+  --theme-border: rgba(154, 90, 54, 0.18);
+  --theme-border-strong: rgba(154, 90, 54, 0.4);
+  --theme-accent: #9a5a36;
+  --theme-accent-fg: #fbf6ee;
+  --theme-accent-subtle: rgba(180, 111, 69, 0.12);
+  --theme-nav-bg: rgba(251, 246, 238, 0.96);
+  --theme-nav-border: rgba(154, 90, 54, 0.16);
+  --theme-button-bg: rgba(255, 255, 255, 0.4);
+  --theme-button-hover: rgba(255, 255, 255, 0.7);
+  --theme-input-bg: rgba(251, 246, 238, 0.8);
+  --theme-ring: #9a5a36;
+  --theme-nav-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55), 0 12px 40px rgba(24, 32, 51, 0.06);
+  --theme-body-background:
     radial-gradient(
       circle at 42% 8%,
       rgba(154, 107, 63, 0.08),
@@ -66,24 +113,24 @@
       transparent 24%
     ),
     linear-gradient(180deg, #fbf6ee 0%, #f5efe5 48%, #f1e7d8 100%);
-  --parle-body-color: #182033;
-  --parle-inflow-empty: rgba(30, 64, 175, 0);
-  --parle-inflow-active: rgba(30, 64, 175, 0.58);
-  --parle-inflow-rest: rgba(116, 83, 49, 0.22);
-  --parle-inflow-shadow: drop-shadow(0 0 10px rgba(30, 64, 175, 0.22));
-  --parle-learn-band: rgba(251, 246, 238, 0.66);
-  --parle-bigback-background: linear-gradient(
+  --theme-body-color: #182033;
+  --theme-inflow-empty: rgba(30, 64, 175, 0);
+  --theme-inflow-active: rgba(30, 64, 175, 0.58);
+  --theme-inflow-rest: rgba(116, 83, 49, 0.22);
+  --theme-inflow-shadow: drop-shadow(0 0 10px rgba(30, 64, 175, 0.22));
+  --theme-learn-band: rgba(251, 246, 238, 0.66);
+  --theme-bigback-background: linear-gradient(
     180deg,
     rgba(251, 246, 238, 0.72),
     rgba(241, 231, 216, 0.94)
   );
-  --parle-bigback-border: rgba(154, 90, 54, 0.16);
-  --parle-bigback-heading: color-mix(
+  --theme-bigback-border: rgba(154, 90, 54, 0.16);
+  --theme-bigback-heading: color-mix(
     in srgb,
     var(--color-ink-300) 72%,
     transparent
   );
-  --parle-bigback-link: color-mix(
+  --theme-bigback-link: color-mix(
     in srgb,
     var(--color-ink-300) 78%,
     transparent
@@ -92,22 +139,26 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-ink-950: #070b16;
-  --color-ink-900: #0f172a;
-  --color-ink-800: #172554;
-  --color-ink-700: #1e3a8a;
-  --color-ink-500: #60a5fa;
-  --color-ink-400: #93c5fd;
-  --color-ink-300: #bfdbfe;
-  --color-ink-200: #dbeafe;
-  --color-ink-100: #eff6ff;
-  --color-sand-50: #070b16;
-  --color-sand-100: #172554;
-  --color-sand-200: #1e3a8a;
-  --color-sand-500: #f59e0b;
-  --color-sand-600: #fbbf24;
-  --color-line: rgba(147, 197, 253, 0.18);
-  --parle-body-background:
+  --theme-page: #070b16;
+  --theme-fg: #eff6ff;
+  --theme-muted: #dbeafe;
+  --theme-subtle: #bfdbfe;
+  --theme-surface: rgba(15, 23, 42, 0.72);
+  --theme-surface-strong: rgba(7, 11, 22, 0.8);
+  --theme-surface-inverse: #070b16;
+  --theme-border: rgba(147, 197, 253, 0.18);
+  --theme-border-strong: rgba(251, 191, 36, 0.44);
+  --theme-accent: #fbbf24;
+  --theme-accent-fg: #070b16;
+  --theme-accent-subtle: rgba(251, 191, 36, 0.12);
+  --theme-nav-bg: rgba(7, 11, 22, 0.9);
+  --theme-nav-border: rgba(255, 255, 255, 0.1);
+  --theme-button-bg: rgba(255, 255, 255, 0.05);
+  --theme-button-hover: rgba(255, 255, 255, 0.08);
+  --theme-input-bg: rgba(7, 11, 22, 0.8);
+  --theme-ring: #fbbf24;
+  --theme-nav-shadow: none;
+  --theme-body-background:
     radial-gradient(circle at top, rgba(59, 130, 246, 0.22), transparent 36%),
     radial-gradient(
       circle at 80% 20%,
@@ -115,16 +166,16 @@
       transparent 24%
     ),
     linear-gradient(180deg, #070b16 0%, #0f172a 55%, #070b16 100%);
-  --parle-body-color: #eff6ff;
-  --parle-inflow-empty: rgba(147, 197, 253, 0);
-  --parle-inflow-active: rgba(219, 234, 254, 0.78);
-  --parle-inflow-rest: rgba(147, 197, 253, 0.16);
-  --parle-inflow-shadow: drop-shadow(0 0 12px rgba(96, 165, 250, 0.35));
-  --parle-learn-band: rgba(7, 11, 22, 0.16);
-  --parle-bigback-background: rgba(7, 11, 22, 0.8);
-  --parle-bigback-border: rgba(147, 197, 253, 0.18);
-  --parle-bigback-heading: rgba(219, 234, 254, 0.72);
-  --parle-bigback-link: rgba(191, 219, 254, 0.82);
+  --theme-body-color: #eff6ff;
+  --theme-inflow-empty: rgba(147, 197, 253, 0);
+  --theme-inflow-active: rgba(219, 234, 254, 0.78);
+  --theme-inflow-rest: rgba(147, 197, 253, 0.16);
+  --theme-inflow-shadow: drop-shadow(0 0 12px rgba(96, 165, 250, 0.35));
+  --theme-learn-band: rgba(7, 11, 22, 0.16);
+  --theme-bigback-background: rgba(7, 11, 22, 0.8);
+  --theme-bigback-border: rgba(147, 197, 253, 0.18);
+  --theme-bigback-heading: rgba(219, 234, 254, 0.72);
+  --theme-bigback-link: rgba(191, 219, 254, 0.82);
 }
 
 html {
@@ -137,8 +188,8 @@ body {
   max-width: 100%;
   min-height: 100vh;
   overflow-x: clip;
-  background: var(--parle-body-background);
-  color: var(--parle-body-color);
+  background: var(--theme-body-background);
+  color: var(--theme-body-color);
 }
 
 /* Third-party (performative-ui) overrides: need to win on specificity. */
@@ -174,11 +225,11 @@ body {
 
 /* Animation systems: keyframe-driven, cannot be expressed inline. */
 .parle-inflow {
-  stroke: var(--parle-inflow-empty);
+  stroke: var(--theme-inflow-empty);
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-dasharray: 18 44;
-  filter: var(--parle-inflow-shadow);
+  filter: var(--theme-inflow-shadow);
   opacity: 0;
 }
 
@@ -189,18 +240,18 @@ body {
 @keyframes parle-inflow-pulse {
   0% {
     opacity: 0;
-    stroke: var(--parle-inflow-empty);
+    stroke: var(--theme-inflow-empty);
     stroke-dashoffset: 70;
   }
 
   18% {
     opacity: 1;
-    stroke: var(--parle-inflow-active);
+    stroke: var(--theme-inflow-active);
   }
 
   100% {
     opacity: 0;
-    stroke: var(--parle-inflow-rest);
+    stroke: var(--theme-inflow-rest);
     stroke-dashoffset: -70;
   }
 }
@@ -258,13 +309,13 @@ body {
 }
 
 .learn-example-band {
-  background: var(--parle-learn-band);
+  background: var(--theme-learn-band);
 }
 
 .pui-bigback {
-  background: var(--parle-bigback-background);
-  border-top-color: var(--parle-bigback-border);
-  color: var(--color-ink-100);
+  background: var(--theme-bigback-background);
+  border-top-color: var(--theme-bigback-border);
+  color: var(--theme-fg);
 }
 
 .pui-bigback__cols {
@@ -273,7 +324,7 @@ body {
 
 .pui-bigback__heading,
 .pui-bigback__base {
-  color: var(--parle-bigback-heading);
+  color: var(--theme-bigback-heading);
 }
 
 .pui-bigback__heading {
@@ -281,13 +332,13 @@ body {
 }
 
 .pui-bigback__link {
-  color: var(--parle-bigback-link);
+  color: var(--theme-bigback-link);
   font-size: 0.875rem;
   letter-spacing: 0.01em;
 }
 
 .pui-bigback__link:hover {
-  color: var(--color-ink-100);
+  color: var(--theme-fg);
 }
 
 .pui-bigback__wordmark {

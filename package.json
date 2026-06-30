@@ -11,7 +11,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check:theme": "node scripts/check-theme-conventions.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.7",

@@ -1,4 +1,9 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  type FocusEvent,
+  type KeyboardEvent,
+} from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -25,10 +30,31 @@ function cx(...classes: Array<string | false | undefined>) {
 
 function DesktopNavItem({ item, path }: { item: NavItem; path: string }) {
   const active = isActivePath(path, item.href);
+  const [open, setOpen] = useState(false);
+  const dropdownId = item.dropdown
+    ? `nav-dropdown-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`
+    : undefined;
+
+  function closeOnBlur(event: FocusEvent<HTMLDivElement>) {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setOpen(false);
+    }
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
 
   return (
     <div
-      className="group h-full"
+      className="h-full"
+      onMouseEnter={() => item.dropdown && setOpen(true)}
+      onMouseLeave={() => item.dropdown && setOpen(false)}
+      onFocus={() => item.dropdown && setOpen(true)}
+      onBlur={closeOnBlur}
+      onKeyDown={handleKeyDown}
       onMouseDown={(event) => event.stopPropagation()}
     >
       <a
@@ -36,23 +62,37 @@ function DesktopNavItem({ item, path }: { item: NavItem; path: string }) {
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noopener noreferrer" : undefined}
         className={cx(
-          "flex h-full items-center px-3 text-sm font-semibold text-ink-100/82 transition hover:text-ink-100",
-          active && "text-ink-100",
+          "flex h-full items-center px-3 text-sm font-semibold text-muted transition hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          active && "text-fg",
         )}
         aria-current={active ? "page" : undefined}
+        aria-haspopup={item.dropdown ? "true" : undefined}
+        aria-expanded={item.dropdown ? open : undefined}
+        aria-controls={dropdownId}
       >
         <span className="inline-flex items-center gap-1.5 rounded-md px-2 py-1">
           {item.label}
           {item.dropdown && (
             <FontAwesomeIcon
               icon={faChevronDown}
-              className="text-xs transition duration-200 group-hover:rotate-180"
+              className={cx(
+                "text-xs transition duration-200",
+                open && "rotate-180",
+              )}
             />
           )}
         </span>
       </a>
       {item.dropdown && (
-        <div className="pointer-events-none fixed left-0 top-16 z-30 w-full translate-y-1 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+        <div
+          id={dropdownId}
+          className={cx(
+            "fixed left-0 top-16 z-30 w-full transition duration-200",
+            open
+              ? "pointer-events-auto translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-1 opacity-0",
+          )}
+        >
           <NavDropdown dropdown={item.dropdown} />
         </div>
       )}
@@ -72,14 +112,18 @@ function ThemeToggle() {
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = nextTheme;
-    localStorage.setItem("parle-theme", nextTheme);
+    try {
+      localStorage.setItem("parle-theme", nextTheme);
+    } catch {
+      // Keep the in-page theme switch even when storage is unavailable.
+    }
     setTheme(nextTheme);
   }
 
   return (
     <button
       type="button"
-      className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-ink-100/15 text-ink-100 transition hover:border-sand-600 hover:bg-ink-100/5"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border text-fg transition hover:border-accent-ui hover:bg-button-hover"
       onClick={toggleTheme}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
       title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
@@ -91,11 +135,11 @@ function ThemeToggle() {
 
 function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
   return (
-    <div className="border-t border-ink-100/10 bg-ink-950/95 px-6 py-6 shadow-2xl backdrop-blur-xl lg:hidden">
+    <div className="border-t border-border bg-nav-bg px-6 py-6 shadow-2xl backdrop-blur-xl lg:hidden">
       <div className="space-y-5">
         <a
           href="/install"
-          className="flex items-center justify-center gap-2 rounded-md border border-sand-600/18 bg-sand-100/55 px-4 py-3 text-sm font-semibold text-ink-100"
+          className="flex items-center justify-center gap-2 rounded-md border border-border bg-button-bg px-4 py-3 text-sm font-semibold text-fg"
         >
           <FontAwesomeIcon icon={faTerminal} /> Install
         </a>
@@ -103,7 +147,7 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
           <div key={item.label}>
             {item.dropdown ? (
               <>
-                <p className="font-mono text-xs tracking-widest text-sand-600 uppercase">
+                <p className="font-mono text-xs tracking-widest text-accent-ui uppercase">
                   {item.label}
                 </p>
                 <div className="mt-3 grid gap-3">
@@ -111,12 +155,12 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
                     <a
                       key={column.title}
                       href={column.href}
-                      className="rounded-md border border-sand-600/14 bg-sand-100/45 p-4"
+                      className="rounded-md border border-border bg-surface p-4"
                     >
-                      <span className="text-sm font-semibold text-ink-100">
+                      <span className="text-sm font-semibold text-fg">
                         {column.title}
                       </span>
-                      <span className="mt-1 block text-sm leading-6 text-ink-200">
+                      <span className="mt-1 block text-sm leading-6 text-muted">
                         {column.description}
                       </span>
                     </a>
@@ -129,8 +173,8 @@ function MobileMenu({ items, path }: { items: NavItem[]; path: string }) {
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
                 className={cx(
-                  "block rounded-md border border-sand-600/14 bg-sand-100/45 px-4 py-3 text-sm font-semibold text-ink-100",
-                  isActivePath(path, item.href) && "border-sand-600",
+                  "block rounded-md border border-border bg-surface px-4 py-3 text-sm font-semibold text-fg",
+                  isActivePath(path, item.href) && "border-accent-ui",
                 )}
               >
                 {item.label}
@@ -147,7 +191,7 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-sand-600/16 bg-sand-50/96 shadow-[0_1px_0_rgba(255,255,255,0.55),0_12px_40px_rgba(24,32,51,0.06)] backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-nav-border bg-nav-bg shadow-[var(--theme-nav-shadow)] backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
         <div className="flex h-full items-center gap-8">
           <a
@@ -157,7 +201,7 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
           >
             <img src="/parle-icon-v4.png" alt="" className="h-8 w-auto" />
             <span
-              className="text-2xl tracking-wide text-ink-100"
+              className="text-2xl tracking-wide text-fg"
               style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
             >
               Parlè
@@ -177,21 +221,21 @@ export default function SiteNav({ path = "/" }: SiteNavProps) {
           <div className="hidden items-center gap-3 lg:flex">
             <a
               href="/login"
-              className="inline-flex items-center justify-center rounded-md border border-ink-100/18 bg-white/40 px-4 py-2 text-sm font-semibold text-ink-100 transition hover:border-sand-600/50 hover:bg-white/70"
+              className="inline-flex items-center justify-center rounded-md border border-border bg-button-bg px-4 py-2 text-sm font-semibold text-fg transition hover:border-accent-ui hover:bg-button-hover"
               aria-label="Log in"
             >
               <FontAwesomeIcon icon={faLock} />
             </a>
             <a
               href="/install"
-              className="inline-flex items-center gap-2 rounded-md border border-ink-100/18 bg-white/40 px-4 py-2 text-sm font-semibold text-ink-100 transition hover:border-sand-600/50 hover:bg-white/70"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-button-bg px-4 py-2 text-sm font-semibold text-fg transition hover:border-accent-ui hover:bg-button-hover"
             >
               <FontAwesomeIcon icon={faTerminal} /> Install
             </a>
           </div>
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-sand-600/14 bg-sand-100/55 text-ink-100 lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-button-bg text-fg lg:hidden"
             onClick={() => setMobileOpen((open) => !open)}
             aria-expanded={mobileOpen}
             aria-label="Toggle navigation"

@@ -70,7 +70,7 @@ const resolvedArtifactRows = artifactRows ?? [
 ---
 
 <section
-  class="learn-example-band relative left-1/2 isolate w-dvw max-w-dvw -translate-x-1/2 overflow-hidden border-y border-ink-100/12 px-6 lg:px-8"
+  class="learn-example-band relative left-1/2 isolate w-dvw max-w-dvw -translate-x-1/2 overflow-hidden border-y border-border/12 px-6 lg:px-8"
 >
   <div
     class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(116,83,49,0.075)_1px,transparent_1px),linear-gradient(90deg,rgba(116,83,49,0.075)_1px,transparent_1px)] bg-size-[6rem_6rem] opacity-45"
@@ -85,24 +85,24 @@ const resolvedArtifactRows = artifactRows ?? [
     aria-hidden="true"
   >
     <span
-      class="learn-example-vertical absolute inset-y-0 left-[calc(50%-36rem+3.25rem)] w-px bg-ink-300/16"
+      class="learn-example-vertical absolute inset-y-0 left-[calc(50%-36rem+3.25rem)] w-px bg-accent-subtle/16"
     ></span>
     <span
       class:list={[
-        "learn-example-vertical absolute inset-y-0 w-px bg-sand-100/70",
+        "learn-example-vertical absolute inset-y-0 w-px bg-surface/70",
         mirrored ? "left-[47%]" : "left-[53%]",
       ]}
     >
     </span>
     <span
-      class="learn-example-vertical absolute inset-y-0 right-[7rem] w-px bg-ink-300/16"
+      class="learn-example-vertical absolute inset-y-0 right-[7rem] w-px bg-accent-subtle/16"
     ></span>
   </div>
   <span
-    class="absolute top-0 left-1/2 h-px w-screen -translate-x-1/2 bg-ink-300/20"
+    class="absolute top-0 left-1/2 h-px w-screen -translate-x-1/2 bg-accent-subtle/20"
     aria-hidden="true"></span>
   <span
-    class="absolute bottom-0 left-1/2 h-px w-screen -translate-x-1/2 bg-ink-300/20"
+    class="absolute bottom-0 left-1/2 h-px w-screen -translate-x-1/2 bg-accent-subtle/20"
     aria-hidden="true"></span>
 
   <div
@@ -112,10 +112,10 @@ const resolvedArtifactRows = artifactRows ?? [
     ]}
   >
     <span
-      class="absolute top-8 -left-6 size-3 border-t border-l border-ink-100/25"
+      class="absolute top-8 -left-6 size-3 border-t border-l border-border/25"
       aria-hidden="true"></span>
     <span
-      class="absolute -right-6 bottom-8 size-3 border-r border-b border-ink-100/25"
+      class="absolute -right-6 bottom-8 size-3 border-r border-b border-border/25"
       aria-hidden="true"></span>
 
     <div
@@ -127,31 +127,31 @@ const resolvedArtifactRows = artifactRows ?? [
       ]}
     >
       <div class="mb-8 max-w-2xl sm:mb-10">
-        <p class="font-mono text-xs tracking-widest text-sand-600 uppercase">
+        <p class="font-mono text-xs tracking-widest text-accent-ui uppercase">
           {eyebrow}
         </p>
         <h2
-          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-ink-100 sm:text-4xl xl:text-5xl"
+          class="mt-4 text-3xl font-semibold tracking-tight text-balance text-fg sm:text-4xl xl:text-5xl"
         >
           {title}
         </h2>
         {
           description && (
-            <p class="mt-5 max-w-xl text-base leading-7 text-balance text-ink-100/68 sm:text-lg">
+            <p class="mt-5 max-w-xl text-base leading-7 text-balance text-fg/68 sm:text-lg">
               {description}
             </p>
           )
         }
       </div>
 
-      <ol class="relative border-y border-ink-100/10">
+      <ol class="relative border-y border-border/10">
         {
           timeline.map((step, index) => {
             const stepNumber = String(index + 1).padStart(2, "0");
             const nextColor = timeline[index + 1]?.color;
             return (
               <li
-                class="learn-example-step relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-ink-100/10 py-5 last:border-b-0 sm:py-6"
+                class="learn-example-step relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-5 border-b border-border/10 py-5 last:border-b-0 sm:py-6"
                 style={`animation-delay: ${step.delay}ms`}
               >
                 {nextColor && (
@@ -167,7 +167,7 @@ const resolvedArtifactRows = artifactRows ?? [
                 <div class="relative flex justify-center">
                   <span
                     class:list={[
-                      "relative z-10 grid size-10 place-items-center rounded-md border bg-ink-950 font-mono text-[0.68rem] shadow-[0_0_24px_rgba(96,165,250,0.14)]",
+                      "relative z-10 grid size-10 place-items-center rounded-md border bg-surface-inverse font-mono text-[0.68rem] shadow-[0_0_24px_rgba(96,165,250,0.14)]",
                       `border-${step.color}-400/50`,
                       `text-${step.color}-700`,
                     ]}
@@ -177,10 +177,10 @@ const resolvedArtifactRows = artifactRows ?? [
                 </div>
 
                 <div class="min-w-0 pt-0.5">
-                  <p class="font-mono text-xs tracking-widest text-sand-600/65 uppercase">
+                  <p class="font-mono text-xs tracking-widest text-accent-ui/65 uppercase">
                     {step.label}
                   </p>
-                  <p class="mt-2 max-w-xl text-base leading-6 text-balance text-ink-200 sm:text-lg sm:leading-7">
+                  <p class="mt-2 max-w-xl text-base leading-6 text-balance text-muted sm:text-lg sm:leading-7">
                     {step.text}
                   </p>
                 </div>
@@ -201,28 +201,28 @@ const resolvedArtifactRows = artifactRows ?? [
     >
       <div class="learn-example-feature w-full max-w-md lg:max-w-lg">
         <div
-          class="mb-10 h-px w-24 bg-linear-to-r from-sand-600/45 to-transparent"
+          class="mb-10 h-px w-24 bg-linear-to-r from-accent-ui/45 to-transparent"
         >
         </div>
         <div class="text-left">
-          <p class="font-mono text-sm tracking-widest text-sand-600 uppercase">
+          <p class="font-mono text-sm tracking-widest text-accent-ui uppercase">
             {featureLabel}
           </p>
           <p
-            class="mt-7 max-w-[115%] overflow-visible font-mono text-[clamp(2.8rem,5.2vw,5rem)] leading-none tracking-[-0.08em] text-ink-200"
+            class="mt-7 max-w-[115%] overflow-visible font-mono text-[clamp(2.8rem,5.2vw,5rem)] leading-none tracking-[-0.08em] text-muted"
           >
             {feature}
           </p>
         </div>
 
         <div
-          class="mt-8 rounded-2xl border border-ink-100/10 bg-ink-950/75 p-4 text-left shadow-[0_20px_70px_rgba(15,23,42,0.10)]"
+          class="mt-8 rounded-2xl border border-border/10 bg-surface-inverse/75 p-4 text-left shadow-[0_20px_70px_rgba(15,23,42,0.10)]"
         >
           <div
-            class="flex items-center justify-between gap-3 border-b border-ink-100/10 pb-3"
+            class="flex items-center justify-between gap-3 border-b border-border/10 pb-3"
           >
             <p
-              class="font-mono text-[0.68rem] tracking-widest text-sand-600 uppercase"
+              class="font-mono text-[0.68rem] tracking-widest text-accent-ui uppercase"
             >
               {artifactTitle}
             </p>
@@ -236,10 +236,10 @@ const resolvedArtifactRows = artifactRows ?? [
             {
               resolvedArtifactRows.map((row) => (
                 <div class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3">
-                  <dt class="text-sand-600/65">{row.label}</dt>
+                  <dt class="text-accent-ui/65">{row.label}</dt>
                   <dd
                     class:list={[
-                      "text-ink-200",
+                      "text-muted",
                       row.emphasized && "text-cyan-700",
                     ]}
                   >
@@ -252,7 +252,7 @@ const resolvedArtifactRows = artifactRows ?? [
         </div>
 
         <a
-          class="mt-8 inline-flex items-center rounded-full border border-ink-100/15 bg-ink-100 px-6 py-3 text-sm font-semibold text-ink-950 transition hover:-translate-y-px hover:bg-ink-100"
+          class="mt-8 inline-flex items-center rounded-full border border-border/15 bg-accent-ui px-6 py-3 text-sm font-semibold text-accent-fg transition hover:-translate-y-px hover:bg-accent-ui/80"
           href="/install"
         >
           {cta}

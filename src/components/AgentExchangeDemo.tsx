@@ -741,11 +741,11 @@ function ParleMediationCore({
 
   return (
     <div className="relative z-10 grid min-h-64 place-items-center overflow-visible py-10 lg:min-h-88 lg:py-0">
-      <div className="pointer-events-none absolute inset-x-1/2 -top-16 z-0 h-16 w-px bg-linear-to-b from-transparent via-sand-600/30 to-sand-600/0 lg:hidden" />
-      <div className="pointer-events-none absolute inset-x-1/2 -bottom-16 z-0 h-16 w-px bg-linear-to-b from-sand-600/0 via-sand-600/20 to-transparent lg:hidden" />
+      <div className="pointer-events-none absolute inset-x-1/2 -top-16 z-0 h-16 w-px bg-linear-to-b from-transparent via-accent-ui/30 to-accent-ui/0 lg:hidden" />
+      <div className="pointer-events-none absolute inset-x-1/2 -bottom-16 z-0 h-16 w-px bg-linear-to-b from-accent-ui/0 via-accent-ui/20 to-transparent lg:hidden" />
       <div className="absolute inset-0 rounded-[3rem] bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08),transparent_58%)] blur-2xl" />
-      <div className="parle-core-circle absolute size-72 rounded-full border border-ink-300/12 sm:size-80" />
-      <div className="parle-core-circle parle-core-circle--inner absolute size-52 rounded-full border border-ink-300/14 sm:size-60" />
+      <div className="parle-core-circle absolute size-72 rounded-full border border-border-strong/12 sm:size-80" />
+      <div className="parle-core-circle parle-core-circle--inner absolute size-52 rounded-full border border-border-strong/14 sm:size-60" />
 
       {[
         {
@@ -764,24 +764,24 @@ function ParleMediationCore({
           <span
             className={`absolute ${node.position} size-2 rounded-full transition-all duration-300 ${
               active
-                ? "bg-ink-100 shadow-[0_0_22px_rgba(37,99,235,0.38)]"
-                : "bg-ink-300/25"
+                ? "bg-fg shadow-[0_0_22px_rgba(37,99,235,0.38)]"
+                : "bg-accent-subtle/25"
             }`}
             key={node.side}
           />
         );
       })}
 
-      <div className="relative grid size-40 place-items-center rounded-full border border-ink-300/35 bg-ink-950/70 shadow-[0_0_80px_rgba(37,99,235,0.10)] backdrop-blur-md sm:size-44">
-        <div className="absolute inset-4 rounded-full bg-sand-500/12 blur-xl" />
+      <div className="relative grid size-40 place-items-center rounded-full border border-border-strong/35 bg-surface-inverse/70 shadow-[0_0_80px_rgba(37,99,235,0.10)] backdrop-blur-md sm:size-44">
+        <div className="absolute inset-4 rounded-full bg-accent-subtle/12 blur-xl" />
         <div className="relative text-center">
           <p
-            className="text-4xl tracking-wide text-ink-100"
+            className="text-4xl tracking-wide text-fg"
             style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
           >
             Parlè
           </p>
-          <p className="mt-2 h-4 font-mono text-[0.62rem] tracking-widest text-sand-600 uppercase">
+          <p className="mt-2 h-4 font-mono text-[0.62rem] tracking-widest text-accent-ui uppercase">
             {guaranteeWord}
           </p>
         </div>
