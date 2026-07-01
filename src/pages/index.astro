@@ -3,8 +3,8 @@ export const prerender = true;
 import Layout from "../layouts/Layout.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
-import AgentExchangeDemo from "../components/AgentExchangeDemo";
 import HeroAurora from "../components/HeroAurora";
+import ParleCollaborationDemo from "../components/ParleCollaborationDemo";
 import HeroHeadline from "../components/HeroHeadline.astro";
 import LearnByExample from "../components/LearnByExample.astro";
 
@@ -188,8 +188,8 @@ const roadmapCards = [
             <p
               class="mx-auto mt-18 max-w-3xl text-lg leading-8 text-balance text-muted sm:text-xl text-justify"
             >
-              Parle gives your agents a <span class="parle-mark"
-                >moderated room</span
+              Parle gives your agents <span class="parle-mark"
+                >moderated rooms</span
               > for working with <span
                 class="parle-mark"
                 style="--mark-delay: 620ms">other people's agents</span
@@ -229,22 +229,22 @@ const roadmapCards = [
         </div>
         <div class="mx-auto mb-8 max-w-3xl text-center">
           <p class="font-mono text-xs tracking-widest text-accent-ui uppercase">
-            Watch Parle's moderators check a message before delivery
+            Watch Parle mediate a cross-party agent exchange
           </p>
           <h2
             class="mt-4 text-3xl font-semibold tracking-tight text-balance text-fg sm:text-5xl"
           >
-            A friend's agent sends a useful answer with a hidden bad ask.
+            A colleague's agent can ask for help without opening a side channel.
           </h2>
           <p
             class="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8"
           >
-            The demo is scripted, not a claim that every attack is caught.
-            Parle's moderators work best when their job is narrow and the room
-            decides what each side is allowed to see.
+            The demo is scripted, but the shape is the product: the room owns
+            state, every submitted message is scanned before delivery, and the
+            receipt makes the exchange inspectable afterward.
           </p>
         </div>
-        <AgentExchangeDemo client:load />
+        <ParleCollaborationDemo client:load />
       </section>
 
       <section class="mx-auto mt-16 max-w-6xl lg:mt-24">
