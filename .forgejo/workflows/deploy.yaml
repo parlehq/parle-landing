@@ -22,7 +22,7 @@ jobs:
       INFISICAL_ENVIRONMENT: prod
       INFISICAL_URL: https://parle-vault.quoll-altair.ts.net
       INFISICAL_SECRET_PATH: /forgejo/parle-landing-ci
-      INFISICAL_CI_ACCESS_TOKEN: ${{ secrets.INFISICAL_CENTOPS_CI_ACCESS_TOKEN }}
+      INFISICAL_CI_ACCESS_TOKEN: ${{ secrets.INFISICAL_PARLE_LANDING_CI_ACCESS_TOKEN }}
     steps:
       - name: Install system dependencies
         run: apt-get update && apt-get install -y --no-install-recommends git ca-certificates curl python3

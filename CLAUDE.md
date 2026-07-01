@@ -26,7 +26,7 @@ Cloudflare Pages via Forgejo Actions. Pipeline: `.forgejo/workflows/deploy.yaml`
 - Build: `pnpm build`. Output: `dist/`.
 - Deploy: `pnpm exec wrangler pages deploy dist --project-name=parle-landing --branch="$GITHUB_REF_NAME"`.
 - The workflow ensures the Cloudflare Pages project and production domains `parle.sh` and `www.parle.sh` exist before deploy.
-- Runtime deploy secrets are fetched from Infisical path `/forgejo/parle-landing-ci` using the shared Forgejo Actions bootstrap secret `INFISICAL_CENTOPS_CI_ACCESS_TOKEN` and the runner-local tailnet URL `https://parle-vault.quoll-altair.ts.net`.
+- Runtime deploy secrets are fetched from Infisical path `/forgejo/parle-landing-ci` using the dedicated Forgejo Actions bootstrap secret `INFISICAL_PARLE_LANDING_CI_ACCESS_TOKEN` and the runner-local tailnet URL `https://parle-vault.quoll-altair.ts.net`.
 
 ## Conventions
 
