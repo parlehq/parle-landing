@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MockIDE, type IdeToken } from "performative-ui";
+import { MockIDE, type IdeToken, type IdeTokenClass } from "performative-ui";
 
 type Harness = "claude" | "hermes" | "pi";
 type Side = "left" | "right";
@@ -123,7 +123,7 @@ function plain(c: string): IdeToken[] {
 
 function mixed(
   before: string,
-  highlighted: [string, string],
+  highlighted: [string, IdeTokenClass],
   after = "",
 ): IdeToken[] {
   return [

@@ -5,7 +5,7 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import AgentExchangeDemo from "../components/AgentExchangeDemo";
 import HeroAurora from "../components/HeroAurora";
-import HeroVerbRotator from "../components/HeroVerbRotator";
+import HeroHeadline from "../components/HeroHeadline.astro";
 import LearnByExample from "../components/LearnByExample.astro";
 
 const safetySplit = [
@@ -184,124 +184,19 @@ const roadmapCards = [
           >
           </div>
           <div class="relative z-10 mx-auto w-full max-w-3xl">
-            <h1
-              class="mx-auto grid w-full max-w-3xl grid-cols-1 items-center gap-y-3 text-center text-fg md:gap-y-4 xl:grid-cols-12 xl:gap-x-0 xl:gap-y-0 xl:text-left"
-            >
-              <span
-                class="justify-self-center text-[clamp(3rem,11vw,4rem)] leading-[0.84] font-semibold tracking-[-0.075em] sm:text-[clamp(3.5rem,8vw,4.6rem)] md:text-[clamp(4.2rem,8.5vw,5.4rem)] xl:col-span-8 xl:col-start-1 xl:row-start-1 xl:justify-self-start xl:text-[clamp(4.4rem,6.2vw,6.6rem)]"
-              >
-                Your AI<br class="hidden xl:block" /> Agents
-              </span>
-              <span
-                class="relative my-5 grid w-full grid-cols-[minmax(2.5rem,1fr)_auto_minmax(2.5rem,1fr)] items-center gap-4 justify-self-center overflow-visible font-mono text-[clamp(1.1rem,3.4vw,1.3rem)] font-light tracking-widest text-accent-ui uppercase md:my-6 md:grid-cols-[minmax(4rem,1fr)_auto_minmax(4rem,1fr)] md:gap-6 md:text-[clamp(1.35rem,2.6vw,1.65rem)] xl:col-span-12 xl:col-start-1 xl:row-start-2 xl:my-10 xl:text-[clamp(1.65rem,2.15vw,1.9rem)]"
-              >
-                <svg
-                  class="hero-connector hero-connector-left -my-3 h-12 w-9 justify-self-end overflow-visible sm:w-12 md:-my-4 md:h-16 md:w-16 xl:hidden"
-                  viewBox="0 0 90 72"
-                  preserveAspectRatio="xMaxYMid meet"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M52 8 V28 Q52 36 60 36 H90"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"></path>
-                  <path
-                    d="M90 27 V45"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"></path>
-                  <circle cx="52" cy="8" r="5" fill="currentColor"></circle>
-                </svg>
-                <svg
-                  class="hero-connector hero-connector-left -my-4 hidden h-16 w-44 justify-self-end overflow-visible xl:block"
-                  viewBox="0 0 180 72"
-                  preserveAspectRatio="xMaxYMid meet"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M104 8 V28 Q104 36 112 36 H180"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"></path>
-                  <path
-                    d="M180 27 V45"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"></path>
-                  <circle cx="104" cy="8" r="5" fill="currentColor"></circle>
-                </svg>
-                <span
-                  class="inline-grid shrink-0 grid-cols-[auto_12.25ch_auto] items-center gap-x-4 md:gap-x-5 xl:gap-x-6"
-                >
-                  <span>can</span>
-                  <HeroVerbRotator client:load />
-                  <span>with</span>
-                </span>
-                <svg
-                  class="hero-connector hero-connector-right -my-3 h-12 w-9 justify-self-start overflow-visible sm:w-12 md:-my-4 md:h-16 md:w-16 xl:hidden"
-                  viewBox="0 0 90 72"
-                  preserveAspectRatio="xMinYMid meet"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M0 36 H30 Q38 36 38 44 V64"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"></path>
-                  <path
-                    d="M0 27 V45"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"></path>
-                  <circle cx="38" cy="64" r="5" fill="currentColor"></circle>
-                </svg>
-                <svg
-                  class="hero-connector hero-connector-right -my-4 hidden h-16 w-44 justify-self-start overflow-visible xl:block"
-                  viewBox="0 0 180 72"
-                  preserveAspectRatio="xMinYMid meet"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M0 36 H68 Q76 36 76 44 V64"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"></path>
-                  <path
-                    d="M0 27 V45"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"></path>
-                  <circle cx="76" cy="64" r="5" fill="currentColor"></circle>
-                </svg>
-              </span>
-              <span
-                class="justify-self-center text-[clamp(3rem,11vw,4rem)] leading-[0.84] font-semibold tracking-[-0.075em] text-fg sm:text-[clamp(3.5rem,8vw,4.6rem)] md:text-[clamp(4.2rem,8.5vw,5.4rem)] xl:col-span-8 xl:col-start-5 xl:row-start-3 xl:-mt-2 xl:justify-self-end xl:text-right xl:text-[clamp(4.4rem,6.2vw,6.6rem)]"
-              >
-                Other<br class="hidden xl:block" /> People's<br
-                  class="hidden xl:block"
-                /> Agents<span class="text-accent-ui">.</span>
-              </span>
-            </h1>
+            <HeroHeadline />
             <p
-              class="mx-auto mt-18 max-w-3xl text-lg leading-8 text-balance text-muted sm:text-xl"
+              class="mx-auto mt-18 max-w-3xl text-lg leading-8 text-balance text-muted sm:text-xl text-justify"
             >
               Parle gives your agents a <span class="parle-mark"
                 >moderated room</span
               > for working with <span
                 class="parle-mark"
                 style="--mark-delay: 620ms">other people's agents</span
-              > without risking your BTC holdings or disclosing the size of your beanie
-              baby collection. It works to catch prompt injection, private leaks,
-              and topics you've marked off-limits before they reach anyone.
+              > without risking your secret keys or inadvertently disclosing the size
+              of your beanie baby collection. It works to catch prompt injection,
+              private leaks, and a wide variety of optional protections, including
+              your own custom rules.
             </p>
             <div
               class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
